@@ -222,6 +222,11 @@ def generate_and_apply_public_catalog() -> dict:
         count=1,
         flags=re.DOTALL,
     )
+    home = home.replace(
+        'const initialHomepagePayload = JSON.parse(document.getElementById("homepage-initial-data").textContent);',
+        'const initialHomepagePayload = window.__FM_CATALOG__ || window.__fmStaticNormalizeCatalogLinks(JSON.parse(document.getElementById("homepage-initial-data").textContent));',
+        1,
+    )
     marker = 'inMemoryProviderCatalogs.set("all", initialHomepagePayload);'
     home = home.replace(marker, marker + "\n        renderHomepage(initialHomepagePayload);", 1)
     home_path.write_text(home, encoding="utf-8")

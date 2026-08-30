@@ -7662,7 +7662,7 @@
             });
         }
 
-        const initialHomepagePayload = JSON.parse(document.getElementById("homepage-initial-data").textContent);
+        const initialHomepagePayload = window.__FM_CATALOG__ || window.__fmStaticNormalizeCatalogLinks(JSON.parse(document.getElementById("homepage-initial-data").textContent));
         const shouldReplaceInitialHomepage = !initialHomepagePayload.has_home_content || true;
         const storedHomepagePayload = readHomepageCache();
         inMemoryProviderCatalogs.set("all", initialHomepagePayload);

@@ -45,6 +45,7 @@
         return value;
     }
 
+    window.__fmStaticNormalizeCatalogLinks = normalizeCatalogLinks;
     normalizeCatalogLinks(window.__FM_CATALOG__);
 
     function requestUrl(input) {
