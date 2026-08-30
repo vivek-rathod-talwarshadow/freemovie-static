@@ -291,15 +291,18 @@
     async function hydrateGenericTitle() {
         if (!location.pathname.endsWith("/title/index.html")) return;
         const params = new URLSearchParams(location.search);
-        const tmdbId = params.get("tmdb_id");
-        const mangaId = params.get("manga_id");
-        const anilistId = params.get("anilist_id");
-        const mediaType = params.get("media_type") === "series" ? "tv" : "movie";
+        const param = function (name) {
+            return params.get(name) || params.get(name.replace("_", "\\_")) || "";
+        };
+        const tmdbId = param("tmdb_id");
+        const mangaId = param("manga_id");
+        const anilistId = param("anilist_id");
+        const mediaType = param("media_type") === "series" ? "tv" : "movie";
         const fallback = localCatalogItems().find(function (entry) {
             return (tmdbId && String(entry.tmdb_id || "") === tmdbId) || (mangaId && String(entry.manga_id || "") === mangaId) || (anilistId && String(entry.anilist_id || "") === anilistId);
         }) || {};
         let item = fallback;
-        let title = fallback.title || params.get("title") || "Title";
+        let title = fallback.title || param("title") || "Title";
         let plot = fallback.plot || "";
         let poster = fallback.poster || "";
         let backdrop = fallback.backdrop || poster;
