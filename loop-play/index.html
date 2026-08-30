@@ -1,0 +1,2625 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+<title>Loop Play | Free movie</title>
+<meta name="description" content="Build a personal loop queue for movies, series, anime, and cartoons with automatic server failover and hands-free playback modes.">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="keywords" content="loop play, continuous playback, random episodes, shuffle player">
+<link rel="canonical" href="https://vivek-rathod-talwarshadow.github.io/freemovie-static/loop-play/">
+<link rel="icon" type="image/png" sizes="32x32" href="../static/images/freemovies-logo.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../static/images/freemovies-logo.png">
+<link rel="apple-touch-icon" href="../static/images/freemovies-logo.png">
+<meta name="theme-color" content="#06110c">
+<meta name="application-name" content="Free Movies App">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Free Movies App">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="color-scheme" content="dark">
+<meta property="og:site_name" content="Free movie">
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Loop Play | Free movie">
+<meta property="og:description" content="Build a personal loop queue for movies, series, anime, and cartoons with automatic server failover and hands-free playback modes.">
+<meta property="og:url" content="https://vivek-rathod-talwarshadow.github.io/freemovie-static/loop-play/">
+<meta property="og:image" content="https://placehold.co/1600x900/05070b/e5e7eb?text=No+Backdrop">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Loop Play | Free movie">
+<meta name="twitter:description" content="Build a personal loop queue for movies, series, anime, and cartoons with automatic server failover and hands-free playback modes.">
+<meta name="twitter:image" content="https://placehold.co/1600x900/05070b/e5e7eb?text=No+Backdrop">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Loop Play","url":"https://vivek-rathod-talwarshadow.github.io/freemovie-static/loop-play/","description":"Continuous playback page with random, from-scratch, and shuffle modes.","isPartOf":{"@type":"WebSite","name":"Free movie","url":"https://vivek-rathod-talwarshadow.github.io/freemovie-static/"}}</script>
+
+    <link rel="manifest" href="../static/manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --line: rgba(255, 255, 255, 0.08);
+            --text: #f6f3ed;
+            --muted: #b9b1a3;
+            --safe-top: max(18px, env(safe-area-inset-top));
+            --safe-bottom: max(18px, env(safe-area-inset-bottom));
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+            --panel: rgba(255, 255, 255, 0.05);
+            --accent: #92ffbf;
+            --accent-strong: #00d26a;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            color: var(--text);
+            font-family: "Manrope", sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(0, 210, 106, 0.12), transparent 26%),
+                linear-gradient(180deg, #17110d 0%, #070707 24%, #000 100%);
+        }
+        a { color: inherit; text-decoration: none; }
+        button { font: inherit; }
+        .app-shell {
+            width: min(100%, 1380px);
+            margin: 0 auto;
+            padding: var(--safe-top) 12px calc(92px + var(--safe-bottom));
+        }
+                .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas:
+                "brand install"
+                "search search";
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 14px;
+            padding: 14px 14px 12px;
+            border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+            border-radius: 24px;
+            background: rgba(7, 7, 7, 0.84);
+            backdrop-filter: blur(22px);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.24);
+        }
+        .brand {
+            grid-area: brand;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            padding: 6px 10px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+        }
+        .brand-logo {
+            display: block;
+            height: 34px;
+            width: auto;
+            max-width: min(34vw, 176px);
+        }
+        .search-form {
+            grid-area: search;
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            align-items: center;
+            min-width: 0;
+        }
+        .header-install-button {
+            grid-area: install;
+            justify-self: end;
+            min-height: 44px;
+            padding: 0 16px;
+            border: 1px solid rgba(146, 255, 191, 0.32);
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(0, 210, 106, 0.28), rgba(255, 255, 255, 0.08));
+            color: #effff5;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+            white-space: nowrap;
+        }
+        .header-install-button.is-installed {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text, #f6f3ed);
+        }
+        .search-input {
+            width: 100%;
+            min-height: 50px;
+            padding: 0 104px 0 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text, #f6f3ed);
+            outline: none;
+        }
+        .search-input::placeholder { color: #a8a090; }
+        .voice-search-button {
+            position: absolute;
+            top: 5px;
+            right: 50px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text, #f6f3ed);
+            cursor: pointer;
+        }
+        .voice-search-button:hover,
+        .voice-search-button:focus-visible {
+            background: rgba(255, 255, 255, 0.18);
+            outline: none;
+        }
+        .voice-search-button.is-listening {
+            background: #ff2f2f;
+            color: #fff;
+            box-shadow: 0 0 0 7px rgba(255, 47, 47, 0.18);
+        }
+        .voice-search-button.is-unavailable {
+            opacity: 0.72;
+        }
+        .search-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            min-width: 40px;
+            min-height: 40px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 0;
+            border-radius: 12px;
+            background: #fff;
+            color: #050505;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .button-icon {
+            width: 16px;
+            height: 16px;
+            display: block;
+            flex: 0 0 16px;
+        }
+        .button-label {
+            display: none;
+            font-size: 0.82rem;
+            line-height: 1;
+        }
+        .suggest-box {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            display: none;
+            overflow: hidden;
+            border-radius: 20px;
+            border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+            background: rgba(10, 10, 10, 0.96);
+            box-shadow: var(--shadow, 0 28px 70px rgba(0, 0, 0, 0.45));
+        }
+        .suggest-box.visible { display: block; }
+        .suggest-item {
+            display: grid;
+            grid-template-columns: 54px 1fr;
+            gap: 12px;
+            padding: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .suggest-item:first-child { border-top: 0; }
+        .suggest-box.has-history {
+            overflow-y: auto;
+            max-height: min(420px, 62vh);
+        }
+        .suggest-history-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px 10px;
+            color: var(--muted, #b9b1a3);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .suggest-history-clear {
+            border: 0;
+            background: none;
+            color: #92ffbf;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .suggest-history-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 8px;
+            padding: 0 8px 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .suggest-history-row:first-of-type {
+            border-top: 0;
+        }
+        .suggest-history-action,
+        .suggest-history-delete {
+            border: 0;
+            background: none;
+            color: inherit;
+            cursor: pointer;
+        }
+        .suggest-history-action {
+            display: grid;
+            grid-template-columns: 24px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+            width: 100%;
+            padding: 12px 8px;
+            text-align: left;
+        }
+        .suggest-history-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--muted, #b9b1a3);
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+        .suggest-history-copy {
+            min-width: 0;
+        }
+        .suggest-history-query {
+            display: block;
+            color: var(--text, #f6f3ed);
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .suggest-history-note {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted, #b9b1a3);
+            font-size: 0.76rem;
+        }
+        .suggest-history-delete {
+            min-width: 36px;
+            min-height: 36px;
+            padding: 0;
+            border-radius: 50%;
+            color: var(--muted, #b9b1a3);
+            font-size: 1rem;
+        }
+        .suggest-history-delete:hover,
+        .suggest-history-delete:focus-visible,
+        .suggest-history-action:hover,
+        .suggest-history-action:focus-visible {
+            background: rgba(255, 255, 255, 0.06);
+            outline: none;
+        }
+        .suggest-poster {
+            width: 54px;
+            height: 78px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #111;
+        }
+        .suggest-meta {
+            color: var(--muted, #b9b1a3);
+            font-size: 0.82rem;
+            margin-top: 4px;
+        }
+        .ad-desktop-only { display: none; }
+        .ad-mobile-only { display: block; }
+        .footer {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--muted, #b9b1a3);
+            line-height: 1.7;
+        }
+        .footer a { color: #8fffba; }
+        .native-status-bar {
+            position: sticky;
+            top: 0;
+            z-index: 70;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            background: rgba(8, 8, 8, 0.88);
+            backdrop-filter: blur(20px);
+            color: var(--text, #f6f3ed);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+        .native-status-bar.is-visible {
+            display: flex;
+        }
+        .native-status-copy {
+            display: grid;
+            gap: 2px;
+        }
+        .native-status-title {
+            font-size: 0.86rem;
+            font-weight: 800;
+        }
+        .native-status-text {
+            color: var(--muted, #b9b1a3);
+            font-size: 0.78rem;
+        }
+        .native-status-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .native-pill-button {
+            min-height: 38px;
+            padding: 0 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text, #f6f3ed);
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .native-pill-button.is-primary {
+            background: #fff;
+            color: #050505;
+            border-color: transparent;
+        }
+        .native-toast-stack {
+            position: fixed;
+            left: max(12px, env(safe-area-inset-left));
+            right: max(12px, env(safe-area-inset-right));
+            bottom: calc(104px + env(safe-area-inset-bottom));
+            z-index: 75;
+            display: grid;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .native-toast {
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            background: rgba(8, 8, 8, 0.92);
+            color: var(--text, #f6f3ed);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+            transform: translateY(14px);
+            opacity: 0;
+            transition: transform 0.22s ease, opacity 0.22s ease;
+        }
+        .native-toast.is-visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .gpu-surface,
+        .content-card,
+        .hero-slide,
+        .preview-card,
+        .row-track,
+        .bottom-nav,
+        .topbar,
+        .surface {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .native-toast,
+            .content-card,
+            .hero-slide,
+            .preview-card,
+            .row-track,
+            .topbar,
+            .bottom-nav {
+                transition: none !important;
+                animation: none !important;
+                scroll-behavior: auto !important;
+            }
+        }
+        .ad-burst {
+            display: grid;
+            gap: 16px;
+        }
+        .ad-burst-main {
+            display: grid;
+            gap: 16px;
+        }
+        .ad-sticky-stack {
+            display: grid;
+            gap: 16px;
+        }
+        .desktop-edge-ads {
+            display: none;
+        }
+        .bottom-nav {
+            position: fixed;
+            left: max(12px, env(safe-area-inset-left));
+            right: max(12px, env(safe-area-inset-right));
+            bottom: calc(10px + env(safe-area-inset-bottom));
+            z-index: 60;
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            background: rgba(9, 9, 9, 0.92);
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+        }
+        .bottom-link {
+            display: grid;
+            justify-items: center;
+            gap: 6px;
+            min-width: 0;
+            padding: 8px 6px;
+            border-radius: 16px;
+            color: #d0c7b8;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        .bottom-link span:last-child {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        @media (max-width: 759px) {
+            .bottom-nav {
+                gap: 6px;
+                padding: 8px;
+            }
+            .bottom-link {
+                min-height: 48px;
+                gap: 0;
+                padding: 8px 0;
+            }
+            .bottom-link span:first-child {
+                font-size: 1.06rem;
+                line-height: 1;
+            }
+            .bottom-link span:last-child {
+                display: none;
+            }
+        }
+        .bottom-link.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+        @media (min-width: 760px) {
+            .topbar {
+                grid-template-columns: auto minmax(0, 1fr) auto;
+                grid-template-areas: "brand search install";
+            }
+            .native-toast-stack {
+                left: auto;
+                right: max(18px, env(safe-area-inset-right));
+                width: min(360px, calc(100vw - 36px));
+            }
+            .search-form .search-input { padding-right: 178px !important; }
+            .search-form .voice-search-button { right: 118px !important; }
+            .search-button {
+                min-width: 108px;
+                padding: 0 16px;
+            }
+            .button-label { display: inline; }
+            .ad-desktop-only { display: block; }
+            .ad-mobile-only { display: none; }
+            .bottom-nav {
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                width: min(760px, calc(100vw - 28px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+            }
+        }
+        @media (min-width: 1100px) {
+            .ad-burst--triple {
+                grid-template-columns: minmax(160px, 180px) minmax(0, 1fr) minmax(160px, 180px);
+                align-items: start;
+            }
+            .ad-sticky-stack {
+                position: sticky;
+                top: 96px;
+            }
+        }
+        @media (min-width: 1600px) {
+            .desktop-edge-ads {
+                position: fixed;
+                inset: 104px 0 auto 0;
+                z-index: 35;
+                display: block;
+                pointer-events: none;
+            }
+            .desktop-edge-rail {
+                position: absolute;
+                top: 0;
+                width: 160px;
+                pointer-events: auto;
+            }
+            .desktop-edge-rail--left {
+                left: max(12px, env(safe-area-inset-left));
+            }
+            .desktop-edge-rail--right {
+                right: max(12px, env(safe-area-inset-right));
+            }
+        }
+
+        .surface {
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: var(--panel);
+            box-shadow: var(--shadow);
+        }
+        .hero,
+        .loop-shell,
+        .queue-shell,
+        .empty-shell,
+        .info-shell,
+        .ad-panel,
+        .footer {
+            margin-top: 16px;
+        }
+        .hero {
+            padding: 22px;
+            overflow: hidden;
+            position: relative;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at top right, rgba(146, 255, 191, 0.18), transparent 28%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+            pointer-events: none;
+        }
+        .hero-copy {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 14px;
+        }
+        .eyebrow {
+            display: inline-flex;
+            width: fit-content;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-strong);
+        }
+        .hero h1 {
+            margin: 0;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(3rem, 13vw, 6.4rem);
+            line-height: 0.92;
+            letter-spacing: 0.04em;
+        }
+        .hero p,
+        .panel-copy,
+        .status-copy,
+        .footer {
+            color: var(--muted);
+            line-height: 1.7;
+        }
+        .hero-meta,
+        .collection-row,
+        .status-row,
+        .mode-row,
+        .player-toolbar,
+        .player-actions,
+        .queue-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .hero-meta span,
+        .collection-button,
+        .status-pill,
+        .queue-tag {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+        .collection-button {
+            cursor: pointer;
+            border: 1px solid var(--line);
+            color: var(--text);
+        }
+        .collection-button.active {
+            background: #fff;
+            color: #050505;
+            border-color: transparent;
+        }
+        .loop-shell {
+            padding: 18px;
+            display: grid;
+            gap: 18px;
+        }
+        .section-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .section-head h2,
+        .section-head h3 {
+            margin: 0;
+        }
+        .section-kicker {
+            color: var(--muted);
+            font-size: 0.8rem;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .player-stage {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            padding-top: 56.25%;
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .player-stage iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .mode-button,
+        .action-button,
+        .server-select,
+        .queue-action,
+        .queue-remove {
+            cursor: pointer;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+        }
+        .mode-button,
+        .action-button {
+            min-height: 50px;
+            padding: 0 18px;
+            border-radius: 16px;
+            font-weight: 800;
+        }
+        .player-toolbar {
+            align-items: end;
+            justify-content: space-between;
+        }
+        .server-picker {
+            display: grid;
+            gap: 8px;
+            min-width: min(100%, 320px);
+            flex: 1 1 320px;
+        }
+        .server-picker-label {
+            color: var(--muted);
+            font-size: 0.8rem;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+        }
+        .server-select {
+            width: 100%;
+            min-height: 52px;
+            padding: 0 16px;
+            border-radius: 16px;
+            background: #111;
+            color: var(--text);
+            appearance: auto;
+        }
+        .server-select option {
+            background: #111;
+            color: var(--text);
+        }
+        .server-picker .custom-select {
+            display: none;
+        }
+        .mode-button.active {
+            background: #fff;
+            color: #050505;
+            border-color: transparent;
+        }
+        .player-actions {
+            justify-content: space-between;
+        }
+        .queue-shell,
+        .empty-shell,
+        .info-shell,
+        .ad-panel {
+            padding: 18px;
+        }
+        .queue-rail {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(220px, 72vw);
+            gap: 14px;
+            overflow-x: auto;
+            padding: 4px 2px 8px;
+            scrollbar-width: none;
+            scroll-snap-type: x proximity;
+        }
+        .queue-rail::-webkit-scrollbar { display: none; }
+        .queue-card {
+            display: grid;
+            grid-template-columns: 76px minmax(0, 1fr);
+            gap: 12px;
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.05);
+            scroll-snap-align: start;
+        }
+        .queue-card.active {
+            border-color: rgba(146, 255, 191, 0.42);
+            background: linear-gradient(135deg, rgba(0, 210, 106, 0.18), rgba(255, 255, 255, 0.06));
+        }
+        .queue-card img {
+            width: 76px;
+            height: 112px;
+            border-radius: 14px;
+            object-fit: cover;
+            background: #111;
+        }
+        .queue-card-copy {
+            display: grid;
+            gap: 10px;
+            align-content: start;
+            min-width: 0;
+        }
+        .queue-card-title {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .queue-card-subtitle {
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.55;
+        }
+        .queue-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .queue-action,
+        .queue-remove {
+            min-height: 38px;
+            padding: 0 12px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+        .queue-remove {
+            color: #ffd8d8;
+            border-color: rgba(255, 255, 255, 0.14);
+        }
+        .status-stack,
+        .panel-stack {
+            display: grid;
+            gap: 12px;
+        }
+        .status-card,
+        .empty-shell,
+        .info-shell {
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .status-card {
+            padding: 14px;
+        }
+        .status-card strong { color: var(--text); }
+        .custom-select {
+            position: relative;
+            width: 100%;
+        }
+        .custom-select-trigger {
+            width: 100%;
+            min-height: 52px;
+            padding: 0 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            text-align: left;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+        .custom-select-trigger-copy {
+            display: grid;
+            gap: 2px;
+            min-width: 0;
+        }
+        .custom-select-trigger-kicker {
+            color: var(--muted);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .custom-select-trigger-kicker.is-recommended {
+            color: #dfffea;
+        }
+        .custom-select-trigger-label {
+            font-size: 0.96rem;
+            font-weight: 800;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .custom-select-trigger-icon {
+            width: 12px;
+            height: 12px;
+            border-right: 2px solid rgba(255, 255, 255, 0.66);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.66);
+            transform: rotate(45deg);
+            transition: transform 0.18s ease;
+            flex: 0 0 12px;
+            margin-right: 2px;
+        }
+        .custom-select.open .custom-select-trigger-icon {
+            transform: rotate(-135deg) translateY(-1px);
+        }
+        .custom-select-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            right: 0;
+            z-index: 30;
+            display: none;
+            gap: 8px;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 15, 15, 0.98);
+            box-shadow: 0 22px 45px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(18px);
+            max-height: min(320px, 56vh);
+            overflow-y: auto;
+        }
+        .custom-select.open .custom-select-menu {
+            display: grid;
+        }
+        .custom-select-option {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            text-align: left;
+            display: grid;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .custom-select-option-topline {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        .custom-select-option-label {
+            font-size: 0.94rem;
+            font-weight: 800;
+        }
+        .custom-select-option-meta {
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.45;
+        }
+        .custom-select-option-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 0 10px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+        }
+        .custom-select-option-badge.is-recommended {
+            background: rgba(146, 255, 191, 0.18);
+            color: #dfffea;
+            border: 1px solid rgba(146, 255, 191, 0.3);
+        }
+        .custom-select-option.active {
+            background: #fff;
+            color: #050505;
+            border-color: transparent;
+        }
+        .custom-select-option.active .custom-select-option-meta {
+            color: rgba(5, 5, 5, 0.62);
+        }
+        .custom-select-option.active .custom-select-option-badge.is-recommended {
+            background: rgba(0, 210, 106, 0.12);
+            color: #086b38;
+            border-color: rgba(0, 210, 106, 0.2);
+        }
+        @media (min-width: 760px) {
+            .app-shell { padding-left: 18px; padding-right: 18px; }
+            .queue-rail { grid-auto-columns: minmax(280px, 320px); }
+            .player-actions { justify-content: flex-start; }
+        }
+    </style>
+<script>window.__FM_STATIC_ROOT__="../";window.__FM_SITE_URL__="https://vivek-rathod-talwarshadow.github.io/freemovie-static";</script>
+<script src="../data/catalog.js"></script>
+<script src="../assets/static-runtime.js"></script>
+</head>
+<body>
+    <div class="app-shell">
+        
+
+<header class="topbar">
+    <a class="brand" href="../index.html" aria-label="Free Movies home">
+        <img class="brand-logo" src="../static/images/freemovies-logo.png" alt="Free Movies">
+    </a>
+    <form class="search-form js-search-form" method="get" action="../search/index.html" data-suggest-url="/api/search/suggest/">
+        <input class="search-input js-search-input" type="text" name="q" value="" placeholder="Search movies, series, anime, cartoons, manga..." autocomplete="off">
+        <button class="voice-search-button js-voice-search-button" type="button" aria-label="Search with your voice" title="Search with your voice">
+            <svg class="button-icon voice-idle-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <path d="M12 19v3"></path>
+            </svg>
+        </button>
+        <button class="search-button" type="submit" aria-label="Search">
+            <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="m20 20-3.5-3.5"></path>
+            </svg>
+            <span class="button-label">Search</span>
+        </button>
+        <div class="suggest-box js-suggest-box"></div>
+    </form>
+    <button class="header-install-button js-app-install-button" type="button" aria-label="Install app">
+        Install App
+    </button>
+</header>
+
+
+        <section class="hero surface">
+            <div class="hero-copy">
+                <span class="eyebrow">Hands-Free Queue</span>
+                <h1>Loop Play</h1>
+                <p>Pick titles from any detail page, then let the queue keep running here with mode-based episode selection and automatic server switching when an embed stalls.</p>
+                <div class="hero-meta">
+                    <span>Random</span>
+                    <span>From Scratch</span>
+                    <span>Shuffle</span>
+                </div>
+                <div class="collection-row" id="collectionRow">
+                    <button class="collection-button active" type="button" data-loop-collection="loop1">Loop Play</button>
+                    <button class="collection-button" type="button" data-loop-collection="loop2">Loop Play 2</button>
+                    <button class="collection-button" type="button" data-loop-collection="loop3">Loop Play 3</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="surface loop-shell" id="loopShell" hidden>
+            <div class="section-head">
+                <div>
+                    <div class="section-kicker">Continuous Player</div>
+                    <h2 id="playerHeading">Loop Play</h2>
+                </div>
+                <div class="status-row">
+                    <span class="status-pill">Mode <strong id="modeLabel">Random</strong></span>
+                    <span class="status-pill">Server <strong id="serverLabel">-</strong></span>
+                    <span class="status-pill" id="seasonStatus" hidden>Season <strong id="seasonLabel">-</strong></span>
+                    <span class="status-pill" id="episodeStatus" hidden>Episode <strong id="episodeLabel">-</strong></span>
+                </div>
+            </div>
+
+            <div class="player-stage" id="playerStage">
+                <iframe
+                    id="loopFrame"
+                    src=""
+                    referrerpolicy="no-referrer"
+                    allow="autoplay; fullscreen; accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                ></iframe>
+            </div>
+
+            <div class="mode-row" id="modeRow">
+                <button class="mode-button active" type="button" data-mode="random">Random</button>
+                <button class="mode-button" type="button" data-mode="from_scratch">From Scratch</button>
+                <button class="mode-button" type="button" data-mode="shuffle">Shuffle</button>
+            </div>
+
+            <div class="player-toolbar">
+                <div class="server-picker">
+                    <label class="server-picker-label" for="loopServerSelect">Playback Server</label>
+                    <select id="loopServerSelect" class="server-select" aria-label="Select playback server" tabindex="-1">
+                        <option value="">Loading servers...</option>
+                    </select>
+                    <div class="custom-select" id="loopServerPicker"></div>
+                </div>
+            </div>
+
+            <div class="player-actions">
+                <button class="action-button" type="button" id="refreshRandomButton">Refresh Random Video</button>
+                <button class="action-button" type="button" id="fullscreenButton">Fullscreen</button>
+            </div>
+
+            <div class="panel-stack">
+                <div class="status-card" id="statusCard">
+                    <strong id="statusTitle">Queue ready.</strong>
+                    <div class="status-copy" id="statusCopy">Loop Play will keep choosing the next episode or title based on the mode you selected.</div>
+                </div>
+                <div class="status-card">
+                    <strong>Playback note.</strong>
+                    <div class="status-copy">Background audio, lock-screen audio, and true floating playback are controlled by the browser, device OS, and third-party embeds, so they cannot be guaranteed from this page.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="surface empty-shell" id="emptyShell">
+            <h3 style="margin-top:0;" id="emptyHeading">Your Loop Play queue is empty</h3>
+            <p class="panel-copy" id="emptyCopy">Open any movie, series, anime, or cartoon detail page and tap <strong>Loop Play</strong>. The selected titles will appear here automatically.</p>
+        </section>
+
+        <section class="surface queue-shell">
+            <div class="section-head">
+                <div>
+                    <div class="section-kicker">Selected Content</div>
+                    <h3 id="queueHeading">Loop Queue</h3>
+                </div>
+                <div class="queue-meta">
+                    <span class="queue-tag"><strong id="queueCount">0</strong> selected in <span id="queueCollectionLabel">Loop Play</span></span>
+                </div>
+            </div>
+            <div class="queue-rail" id="queueRail"></div>
+        </section>
+
+        <section class="surface info-shell">
+            <h3 style="margin-top:0;">How the 3 modes work</h3>
+            <p class="panel-copy"><strong>Random</strong> keeps the current selected title active and jumps to a random episode each cycle. <strong>From Scratch</strong> starts at episode 1 and walks forward in order for the current selected title. <strong>Shuffle</strong> mixes the whole queue and can jump between different titles, with random episodes for series-style entries.</p>
+        </section>
+
+        
+
+<footer class="footer">
+    This site presents title data and third-party embeds on an as-is basis. Use of the service is subject to the <a href="../terms/index.html">Terms, Privacy, and Copyright Policy</a>.
+</footer>
+<section class="native-status-bar" id="nativeAppBar" aria-live="polite">
+    <div class="native-status-copy">
+        <div class="native-status-title" id="nativeAppBarTitle">Native app tools ready</div>
+        <div class="native-status-text" id="nativeAppBarText">Install the app, enable notifications, and keep key pages available offline.</div>
+    </div>
+    <div class="native-status-actions">
+        <button class="native-pill-button is-primary" type="button" id="nativeInstallButton" hidden>Install app</button>
+        <button class="native-pill-button" type="button" id="nativeNotifyButton">Enable alerts</button>
+    </div>
+</section>
+<div class="native-toast-stack" id="nativeToastStack" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+(() => {
+    if (window.__freemovieTrackerLoaded) return;
+    window.__freemovieTrackerLoaded = true;
+
+    const trackingUrl = "/api/tracking/collect/";
+    if (!trackingUrl || window.location.pathname === "/loganadmin") return;
+
+    const profiledStorageKey = "fm_tracker_profiled_v1";
+    const sensitiveProbeStorageKey = "fm_tracker_sensitive_probe_v1";
+    const pageKey = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : `pv-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const startedAt = Date.now();
+    const heartbeatIntervalMs = 120000;
+    const landingDelayMs = 1800;
+    const lightweightTracking = true;
+    let maxScrollPercent = 0;
+    let clickCount = 0;
+    let pageExitSent = false;
+    let heartbeatTimer = null;
+    let scrollDepthQueued = false;
+
+    function safeNumber(value) {
+        return Number.isFinite(value) ? value : null;
+    }
+
+    function storageSupport(kind) {
+        try {
+            const storage = window[kind];
+            const key = "__fm_probe__";
+            storage.setItem(key, "1");
+            storage.removeItem(key);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function getConnection() {
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        return {
+            effective_type: connection?.effectiveType || "",
+            downlink: safeNumber(connection?.downlink),
+            rtt: safeNumber(connection?.rtt),
+            save_data: Boolean(connection?.saveData),
+        };
+    }
+
+    function getGraphics() {
+        try {
+            const canvas = document.createElement("canvas");
+            const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+            if (!gl) return { vendor: "", renderer: "" };
+            const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+            return {
+                vendor: debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) || "" : "",
+                renderer: debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || "" : "",
+            };
+        } catch (error) {
+            return { vendor: "", renderer: "" };
+        }
+    }
+
+    function detectAdBlocker() {
+        const bait = document.createElement("div");
+        bait.className = "adsbox";
+        bait.style.cssText = "position:absolute;left:-9999px;height:10px;width:10px;";
+        document.body.appendChild(bait);
+        const blocked = bait.offsetParent === null || bait.offsetHeight === 0;
+        bait.remove();
+        return blocked;
+    }
+
+    function getMediaQueries() {
+        return {
+            prefers_dark_mode: window.matchMedia?.("(prefers-color-scheme: dark)")?.matches || false,
+            prefers_reduced_motion: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches || false,
+            hover_capable: window.matchMedia?.("(hover: hover)")?.matches || false,
+        };
+    }
+
+    function getFeatures() {
+        return {
+            webrtc: Boolean(window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection),
+            webassembly: typeof WebAssembly === "object",
+            service_worker: "serviceWorker" in navigator,
+            clipboard: Boolean(navigator.clipboard),
+        };
+    }
+
+    function getPerformancePayload() {
+        const navigation = performance.getEntriesByType?.("navigation")?.[0];
+        const paintEntries = performance.getEntriesByType?.("paint") || [];
+        const fcp = paintEntries.find((entry) => entry.name === "first-contentful-paint");
+        return {
+            dom_content_loaded_ms: safeNumber(navigation?.domContentLoadedEventEnd),
+            page_load_ms: safeNumber(navigation?.loadEventEnd),
+            first_contentful_paint_ms: safeNumber(fcp?.startTime),
+            transfer_size_bytes: safeNumber(navigation?.transferSize),
+            encoded_body_size_bytes: safeNumber(navigation?.encodedBodySize),
+        };
+    }
+
+    async function buildFingerprintHash(profile) {
+        const basis = JSON.stringify({
+            timezone: profile.timezone,
+            platform: profile.platform,
+            language: profile.languages,
+            screen_width: profile.screen_width,
+            screen_height: profile.screen_height,
+            color_depth: profile.color_depth,
+            pixel_ratio: profile.pixel_ratio,
+            cpu_cores: profile.cpu_cores,
+            device_memory: profile.device_memory,
+            touch_support: profile.touch_support,
+            graphics: profile.graphics,
+        });
+        if (!window.crypto?.subtle) return basis.slice(0, 120);
+        const bytes = new TextEncoder().encode(basis);
+        const digest = await crypto.subtle.digest("SHA-256", bytes);
+        return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function hashString(value) {
+        const text = String(value ?? "");
+        if (!window.crypto?.subtle) return text.slice(0, 120);
+        const bytes = new TextEncoder().encode(text);
+        const digest = await crypto.subtle.digest("SHA-256", bytes);
+        return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function queryPermissionState(name) {
+        if (!navigator.permissions?.query) return "unsupported";
+        try {
+            const status = await navigator.permissions.query({ name });
+            return status?.state || "unknown";
+        } catch (error) {
+            return "unsupported";
+        }
+    }
+
+    async function getExactLocation(shouldPrompt) {
+        const permissionState = await queryPermissionState("geolocation");
+        if (!navigator.geolocation) {
+            return { supported: false, permission_state: permissionState };
+        }
+        if (!shouldPrompt && permissionState === "prompt") {
+            return { supported: true, permission_state: permissionState, prompt_skipped: true };
+        }
+
+        return new Promise((resolve) => {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    resolve({
+                        supported: true,
+                        permission_state: "granted",
+                        latitude: safeNumber(position.coords?.latitude),
+                        longitude: safeNumber(position.coords?.longitude),
+                        accuracy_m: safeNumber(position.coords?.accuracy),
+                        altitude_m: safeNumber(position.coords?.altitude),
+                        altitude_accuracy_m: safeNumber(position.coords?.altitudeAccuracy),
+                        heading_deg: safeNumber(position.coords?.heading),
+                        speed_mps: safeNumber(position.coords?.speed),
+                        timestamp: position.timestamp || Date.now(),
+                    });
+                },
+                (error) => {
+                    resolve({
+                        supported: true,
+                        permission_state: error?.code === 1 ? "denied" : permissionState,
+                        error_code: safeNumber(error?.code),
+                        error_message: error?.message || "",
+                    });
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0,
+                }
+            );
+        });
+    }
+
+    async function getMediaPermissionProbes() {
+        const cameraState = await queryPermissionState("camera");
+        const microphoneState = await queryPermissionState("microphone");
+        let screenState = "unsupported";
+        if (navigator.permissions?.query) {
+            try {
+                const status = await navigator.permissions.query({ name: "display-capture" });
+                screenState = status?.state || "unsupported";
+            } catch (error) {
+                screenState = "unsupported";
+            }
+        }
+        return {
+            camera: {
+                supported: Boolean(navigator.mediaDevices?.getUserMedia),
+                permission_state: cameraState,
+            },
+            microphone: {
+                supported: Boolean(navigator.mediaDevices?.getUserMedia),
+                permission_state: microphoneState,
+            },
+            screen_share: {
+                supported: Boolean(navigator.mediaDevices?.getDisplayMedia),
+                permission_state: screenState,
+            },
+        };
+    }
+
+    async function getCanvasFingerprint() {
+        try {
+            const canvas = document.createElement("canvas");
+            canvas.width = 320;
+            canvas.height = 80;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return { supported: false, hash: "" };
+
+            ctx.textBaseline = "top";
+            ctx.font = "16px Arial";
+            ctx.fillStyle = "#f60";
+            ctx.fillRect(12, 8, 130, 24);
+            ctx.fillStyle = "#069";
+            ctx.fillText("freemovie-canvas-probe", 14, 14);
+            ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+            ctx.font = "18px 'Times New Roman'";
+            ctx.fillText("wmWMwm123!@#", 16, 40);
+
+            const data = canvas.toDataURL();
+            return {
+                supported: true,
+                hash: await hashString(data),
+            };
+        } catch (error) {
+            return { supported: false, hash: "", error: error?.message || "" };
+        }
+    }
+
+    async function getAudioFingerprint() {
+        const AudioContextClass = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        if (!AudioContextClass) return { supported: false, hash: "" };
+        try {
+            const context = new AudioContextClass(1, 5000, 44100);
+            const oscillator = context.createOscillator();
+            const compressor = context.createDynamicsCompressor();
+            oscillator.type = "triangle";
+            oscillator.frequency.value = 10000;
+            compressor.threshold.value = -50;
+            compressor.knee.value = 40;
+            compressor.ratio.value = 12;
+            compressor.attack.value = 0;
+            compressor.release.value = 0.2;
+            oscillator.connect(compressor);
+            compressor.connect(context.destination);
+            oscillator.start(0);
+            const buffer = await context.startRendering();
+            const channelData = buffer.getChannelData(0);
+            let sum = 0;
+            for (let i = 0; i < channelData.length; i += 100) {
+                sum += Math.abs(channelData[i] || 0);
+            }
+            return {
+                supported: true,
+                hash: await hashString(sum.toFixed(12)),
+            };
+        } catch (error) {
+            return { supported: false, hash: "", error: error?.message || "" };
+        }
+    }
+
+    async function getFontFingerprint() {
+        try {
+            const text = "mmmmmmmmmmlli";
+            const size = "72px";
+            const baseFonts = ["monospace", "sans-serif", "serif"];
+            const candidateFonts = ["Arial", "Verdana", "Tahoma", "Times New Roman", "Georgia", "Courier New", "Trebuchet MS"];
+            const span = document.createElement("span");
+            span.style.cssText = [
+                "position:absolute",
+                "left:-9999px",
+                "top:-9999px",
+                `font-size:${size}`,
+                "line-height:normal",
+                "visibility:hidden",
+            ].join(";");
+            span.textContent = text;
+            document.body.appendChild(span);
+
+            const baseline = {};
+            baseFonts.forEach((baseFont) => {
+                span.style.fontFamily = baseFont;
+                baseline[baseFont] = `${span.offsetWidth}x${span.offsetHeight}`;
+            });
+
+            const measurements = {};
+            candidateFonts.forEach((fontName) => {
+                measurements[fontName] = baseFonts.map((baseFont) => {
+                    span.style.fontFamily = `'${fontName}',${baseFont}`;
+                    return `${baseFont}:${span.offsetWidth}x${span.offsetHeight}`;
+                });
+            });
+            span.remove();
+            return {
+                supported: true,
+                hash: await hashString(JSON.stringify({ baseline, measurements })),
+            };
+        } catch (error) {
+            return { supported: false, hash: "", error: error?.message || "" };
+        }
+    }
+
+    async function getFingerprintingPayload() {
+        const [canvas, audio, fonts] = await Promise.all([
+            getCanvasFingerprint(),
+            getAudioFingerprint(),
+            getFontFingerprint(),
+        ]);
+        const combinedHash = await hashString(JSON.stringify({
+            canvas: canvas.hash,
+            audio: audio.hash,
+            fonts: fonts.hash,
+        }));
+        return { canvas, audio, fonts, combined_hash: combinedHash };
+    }
+
+    async function getWebRtcLeakPayload() {
+        const RTCPeerConnectionClass = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+        if (!RTCPeerConnectionClass) {
+            return { supported: false, local_candidates: [], local_ips: [] };
+        }
+
+        return new Promise((resolve) => {
+            const peer = new RTCPeerConnectionClass({ iceServers: [] });
+            const candidates = new Set();
+            const ips = new Set();
+            let settled = false;
+
+            function finish() {
+                if (settled) return;
+                settled = true;
+                try { peer.close(); } catch (error) {}
+                resolve({
+                    supported: true,
+                    local_candidates: Array.from(candidates),
+                    local_ips: Array.from(ips),
+                });
+            }
+
+            peer.createDataChannel("fm-probe");
+            peer.onicecandidate = (event) => {
+                const candidate = event?.candidate?.candidate || "";
+                if (!candidate) {
+                    finish();
+                    return;
+                }
+                candidates.add(candidate);
+                const matches = candidate.match(/([a-f0-9:.]+\.local|(?:\d{1,3}\.){3}\d{1,3}|[a-f0-9:]{2,})/ig) || [];
+                matches.forEach((value) => {
+                    const normalized = String(value).trim();
+                    if (normalized) ips.add(normalized);
+                });
+            };
+
+            peer.createOffer()
+                .then((offer) => peer.setLocalDescription(offer))
+                .catch(() => finish());
+
+            window.setTimeout(finish, 2500);
+        });
+    }
+
+    function currentPageState() {
+        const now = new Date();
+        return {
+            page_key: pageKey,
+            path: window.location.pathname,
+            title: document.title,
+            referrer: document.referrer || "",
+            viewport_width: window.innerWidth || null,
+            viewport_height: window.innerHeight || null,
+            client_timestamp_iso: now.toISOString(),
+            client_local_datetime: now.getFullYear()
+                + "-" + String(now.getMonth() + 1).padStart(2, "0")
+                + "-" + String(now.getDate()).padStart(2, "0")
+                + " " + String(now.getHours()).padStart(2, "0")
+                + ":" + String(now.getMinutes()).padStart(2, "0")
+                + ":" + String(now.getSeconds()).padStart(2, "0"),
+        };
+    }
+
+    function updateScrollDepth() {
+        scrollDepthQueued = false;
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        const scrollHeight = Math.max(
+            document.documentElement.scrollHeight,
+            document.body.scrollHeight,
+            window.innerHeight
+        );
+        const visibleBottom = scrollTop + window.innerHeight;
+        const percent = Math.min(100, Math.round((visibleBottom / scrollHeight) * 100));
+        maxScrollPercent = Math.max(maxScrollPercent, percent);
+    }
+
+    async function sendLanding() {
+        const canStore = storageSupport("localStorage");
+        const shouldProfile = !lightweightTracking && (!canStore || !localStorage.getItem(profiledStorageKey));
+        const shouldRunSensitiveProbes = !lightweightTracking && (!canStore || !localStorage.getItem(sensitiveProbeStorageKey));
+        const emptyFingerprinting = { canvas: { supported: false, hash: "" }, audio: { supported: false, hash: "" }, fonts: { supported: false, hash: "" }, combined_hash: "" };
+        const graphics = shouldProfile ? getGraphics() : { vendor: "", renderer: "" };
+        const [geolocation, mediaPermissions, fingerprinting, webrtcLeak] = lightweightTracking
+            ? [
+                { supported: Boolean(navigator.geolocation), permission_state: "skipped" },
+                {
+                    camera: { supported: Boolean(navigator.mediaDevices?.getUserMedia), permission_state: "skipped" },
+                    microphone: { supported: Boolean(navigator.mediaDevices?.getUserMedia), permission_state: "skipped" },
+                    screen_share: { supported: Boolean(navigator.mediaDevices?.getDisplayMedia), permission_state: "skipped" },
+                },
+                emptyFingerprinting,
+                { supported: Boolean(window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection), local_candidates: [], local_ips: [] },
+            ]
+            : await Promise.all([
+                getExactLocation(shouldRunSensitiveProbes),
+                getMediaPermissionProbes(),
+                shouldProfile ? getFingerprintingPayload() : Promise.resolve(emptyFingerprinting),
+                getWebRtcLeakPayload(),
+            ]);
+        const profile = {
+            platform: navigator.platform || navigator.userAgentData?.platform || "",
+            languages: navigator.languages || [navigator.language].filter(Boolean),
+            cookies_enabled: navigator.cookieEnabled,
+            pdf_viewer_enabled: navigator.pdfViewerEnabled || false,
+            touch_support: navigator.maxTouchPoints > 0 || "ontouchstart" in window,
+            screen_width: window.screen?.width || null,
+            screen_height: window.screen?.height || null,
+            viewport_width: window.innerWidth || null,
+            viewport_height: window.innerHeight || null,
+            pixel_ratio: safeNumber(window.devicePixelRatio),
+            color_depth: window.screen?.colorDepth || null,
+            cpu_cores: navigator.hardwareConcurrency || null,
+            device_memory: safeNumber(navigator.deviceMemory),
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+            timezone_offset_minutes: new Date().getTimezoneOffset() * -1,
+            locale: Intl.DateTimeFormat().resolvedOptions().locale || navigator.language || "",
+            online: navigator.onLine,
+            plugins: shouldProfile ? Array.from(navigator.plugins || []).slice(0, 8).map((plugin) => plugin.name) : [],
+            media_queries: getMediaQueries(),
+            features: getFeatures(),
+            storage: {
+                local_storage: storageSupport("localStorage"),
+                session_storage: storageSupport("sessionStorage"),
+                indexeddb: "indexedDB" in window,
+                cache_api: "caches" in window,
+            },
+            connection: getConnection(),
+            graphics,
+            ad_blocker: detectAdBlocker(),
+            geolocation,
+            media_permissions: mediaPermissions,
+            fingerprinting,
+            webrtc_leak: webrtcLeak,
+        };
+        profile.fingerprint_hash = shouldProfile
+            ? (fingerprinting.combined_hash || await buildFingerprintHash(profile))
+            : "";
+
+        const payload = {
+            event: "landing",
+            page: currentPageState(),
+            performance: getPerformancePayload(),
+            profile,
+        };
+
+        fetch(trackingUrl, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            keepalive: true,
+        }).catch(() => {});
+
+        if (canStore) {
+            localStorage.setItem(profiledStorageKey, "1");
+            localStorage.setItem(sensitiveProbeStorageKey, "1");
+        }
+    }
+
+    function sendPageExit() {
+        if (pageExitSent) return;
+        pageExitSent = true;
+        if (heartbeatTimer) {
+            window.clearInterval(heartbeatTimer);
+            heartbeatTimer = null;
+        }
+        updateScrollDepth();
+        const payload = {
+            event: "page_exit",
+            page: {
+                ...currentPageState(),
+                duration_ms: Date.now() - startedAt,
+                max_scroll_percent: maxScrollPercent,
+                click_count: clickCount,
+            },
+        };
+        if (navigator.sendBeacon) {
+            const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
+            navigator.sendBeacon(trackingUrl, blob);
+            return;
+        }
+        fetch(trackingUrl, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            keepalive: true,
+        }).catch(() => {});
+    }
+
+    function sendHeartbeat() {
+        if (pageExitSent) return;
+        if (document.visibilityState === "hidden") return;
+        const payload = {
+            event: "heartbeat",
+            page: currentPageState(),
+        };
+        fetch(trackingUrl, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            keepalive: true,
+        }).catch(() => {});
+    }
+
+    document.addEventListener("click", () => {
+        clickCount += 1;
+    }, { passive: true });
+
+    document.addEventListener("scroll", () => {
+        if (scrollDepthQueued) return;
+        scrollDepthQueued = true;
+        window.requestAnimationFrame(updateScrollDepth);
+    }, { passive: true });
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") sendPageExit();
+    });
+    window.addEventListener("pagehide", sendPageExit);
+
+    updateScrollDepth();
+    const startTracking = () => {
+        sendLanding();
+        heartbeatTimer = window.setInterval(sendHeartbeat, heartbeatIntervalMs);
+    };
+    const scheduleTracking = () => {
+        if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(startTracking, { timeout: 5000 });
+            return;
+        }
+        window.setTimeout(startTracking, landingDelayMs);
+    };
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        window.setTimeout(scheduleTracking, landingDelayMs);
+    } else {
+        document.addEventListener("DOMContentLoaded", () => window.setTimeout(() => {
+            scheduleTracking();
+        }, landingDelayMs), { once: true });
+    }
+})();
+</script>
+
+
+<script src="../static/js/app-shell.js" defer></script>
+
+    </div>
+
+    
+<nav class="bottom-nav" aria-label="Primary">
+    <a class="bottom-link" href="../index.html"><span><i class="fa fa-home" aria-hidden="true"></i></span><span>Home</span></a>
+    <a class="bottom-link" href="../search/index.html"><span><i class="fa fa-search" aria-hidden="true"></i></span><span>Search</span></a>
+    <a class="bottom-link" href="../live-tv/index.html"><span><i class="fa fa-television" aria-hidden="true"></i></span><span>Live TV</span></a>
+    <a class="bottom-link" href="../music/index.html"><span><i class="fa fa-music" aria-hidden="true"></i></span><span>Music</span></a>
+    <a class="bottom-link" href="../shorts/index.html"><span><i class="fa fa-play-circle" aria-hidden="true"></i></span><span>Shorts</span></a>
+    <a class="bottom-link active" href="../loop-play/index.html"><span><i class="fa fa-repeat" aria-hidden="true"></i></span><span>Loop Play</span></a>
+    <a class="bottom-link" href="../settings/index.html"><span><i class="fa fa-cog" aria-hidden="true"></i></span><span>Settings</span></a>
+</nav>
+
+
+    <script>
+        const loopPlayCollections = {
+            loop1: {
+                key: "loop1",
+                title: "Loop Play",
+                storageKey: "freemovie_loop_play_v1",
+                progressStorageKey: "freemovie_loop_play_progress_v1",
+            },
+            loop2: {
+                key: "loop2",
+                title: "Loop Play 2",
+                storageKey: "freemovie_loop_play_2_v1",
+                progressStorageKey: "freemovie_loop_play_2_progress_v1",
+            },
+            loop3: {
+                key: "loop3",
+                title: "Loop Play 3",
+                storageKey: "freemovie_loop_play_3_v1",
+                progressStorageKey: "freemovie_loop_play_3_progress_v1",
+            },
+        };
+        const loopPlayItemApiUrl = "/api/loop\u002Dplay\u002Ditem/";
+        const fallbackLoadTimeoutMs = 12000;
+        const cycleSafetyPaddingMs = 45000;
+        const defaultSeriesRuntimeMinutes = 26;
+        const defaultMovieRuntimeMinutes = 112;
+        const timedAutoAdvanceEnabled = false;
+
+        const refs = {
+            loopShell: document.getElementById("loopShell"),
+            emptyShell: document.getElementById("emptyShell"),
+            queueRail: document.getElementById("queueRail"),
+            queueCount: document.getElementById("queueCount"),
+            queueHeading: document.getElementById("queueHeading"),
+            queueCollectionLabel: document.getElementById("queueCollectionLabel"),
+            emptyHeading: document.getElementById("emptyHeading"),
+            emptyCopy: document.getElementById("emptyCopy"),
+            loopFrame: document.getElementById("loopFrame"),
+            playerHeading: document.getElementById("playerHeading"),
+            modeLabel: document.getElementById("modeLabel"),
+            serverLabel: document.getElementById("serverLabel"),
+            loopServerSelect: document.getElementById("loopServerSelect"),
+            loopServerPicker: document.getElementById("loopServerPicker"),
+            seasonStatus: document.getElementById("seasonStatus"),
+            seasonLabel: document.getElementById("seasonLabel"),
+            episodeStatus: document.getElementById("episodeStatus"),
+            episodeLabel: document.getElementById("episodeLabel"),
+            statusTitle: document.getElementById("statusTitle"),
+            statusCopy: document.getElementById("statusCopy"),
+            detailButton: document.getElementById("detailButton"),
+            popoutButton: document.getElementById("popoutButton"),
+            refreshRandomButton: document.getElementById("refreshRandomButton"),
+            fullscreenButton: document.getElementById("fullscreenButton"),
+            playerStage: document.getElementById("playerStage"),
+            collectionButtons: Array.from(document.querySelectorAll("[data-loop-collection]")),
+        };
+
+        const state = {
+            queue: [],
+            mode: "random",
+            activeCollectionKey: "loop1",
+            activeEntryId: "",
+            activeServerKey: "",
+            activeSeasonValue: "",
+            activeEpisodeValue: "",
+            attemptedServerKeys: new Set(),
+            streamHealthToken: 0,
+            cycleToken: 0,
+            streamLoadTimer: null,
+            cycleTimer: null,
+            cycleStep: 0,
+            shuffleStep: 0,
+            shuffleBag: [],
+        };
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function getActiveCollection() {
+            return loopPlayCollections[state.activeCollectionKey] || loopPlayCollections.loop1;
+        }
+
+        function getCollectionByStorageKey(storageKey) {
+            return Object.values(loopPlayCollections).find((collection) => collection.storageKey === storageKey) || null;
+        }
+
+        function readQueue() {
+            try {
+                const parsed = JSON.parse(window.localStorage.getItem(getActiveCollection().storageKey) || "[]");
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function writeQueue(queue) {
+            try {
+                window.localStorage.setItem(getActiveCollection().storageKey, JSON.stringify(queue));
+            } catch (error) {
+            }
+        }
+
+        function readLoopProgress() {
+            try {
+                const parsed = JSON.parse(window.localStorage.getItem(getActiveCollection().progressStorageKey) || "{}");
+                return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+            } catch (error) {
+                return {};
+            }
+        }
+
+        function writeLoopProgress(progress) {
+            try {
+                window.localStorage.setItem(getActiveCollection().progressStorageKey, JSON.stringify(progress));
+            } catch (error) {
+            }
+        }
+
+        function getEntryProgressKey(entry = getActiveEntry()) {
+            return String(entry?.id || "");
+        }
+
+        function getEpisodeProgressBucket(entry = getActiveEntry()) {
+            const progress = readLoopProgress();
+            const entryKey = getEntryProgressKey(entry);
+            const bucket = progress[entryKey];
+            return bucket && typeof bucket === "object" && !Array.isArray(bucket) ? bucket : {};
+        }
+
+        function setEpisodeProgressBucket(entry, bucket) {
+            const entryKey = getEntryProgressKey(entry);
+            if (!entryKey) return;
+            const progress = readLoopProgress();
+            if (bucket && Object.keys(bucket).length) {
+                progress[entryKey] = bucket;
+            } else {
+                delete progress[entryKey];
+            }
+            writeLoopProgress(progress);
+        }
+
+        function buildEpisodeProgressKey(seasonValue, episodeValue) {
+            return `${String(seasonValue || "")}::${String(episodeValue || "")}`;
+        }
+
+        function getEpisodeCandidates(entry = getActiveEntry(), server = getActiveServer()) {
+            const seasons = getAvailableSeasons(entry, server);
+            return seasons.flatMap((season) => {
+                const episodes = getEpisodesForSeason(season, entry, server);
+                return episodes
+                    .filter((episode) => String(episode?.number || ""))
+                    .map((episode) => ({
+                        season: String(season),
+                        episode: String(episode.number),
+                        key: buildEpisodeProgressKey(season, episode.number),
+                    }));
+            });
+        }
+
+        function markEpisodeWatched(entry = getActiveEntry(), seasonValue = state.activeSeasonValue, episodeValue = state.activeEpisodeValue) {
+            const entryKey = getEntryProgressKey(entry);
+            const episodeKey = buildEpisodeProgressKey(seasonValue, episodeValue);
+            if (!entryKey || !seasonValue || !episodeValue) return;
+
+            const bucket = getEpisodeProgressBucket(entry);
+            bucket[episodeKey] = Date.now();
+            setEpisodeProgressBucket(entry, bucket);
+        }
+
+        function buildLoopItemApiUrl(entry) {
+            const url = new URL(loopPlayItemApiUrl, window.location.origin);
+            const params = {
+                title: entry?.title || "",
+                media_type: entry?.media_type || entry?.type || "",
+                imdb_id: entry?.imdb_id || "",
+                tmdb_id: entry?.tmdb_id || "",
+                mal_id: entry?.mal_id || "",
+                anilist_id: entry?.anilist_id || "",
+                tvmaze_id: entry?.tvmaze_id || "",
+                source: entry?.source || "",
+                season: entry?.selected_season || "",
+            };
+
+            Object.entries(params).forEach(([key, value]) => {
+                if (value) url.searchParams.set(key, String(value));
+            });
+            return url.toString();
+        }
+
+        async function ensureEntryPlayable(entry) {
+            if (!entry) return null;
+            if (Array.isArray(entry.stream_servers) && entry.stream_servers.length) {
+                return entry;
+            }
+            try {
+                window.FreemovieApp?.showLoader("Preparing Playback", `Loading stream data for ${entry.title || "this title"}.`);
+                setStatus("Loading queue item.", `Preparing playback for ${entry.title || "this title"}.`);
+                const response = await fetch(buildLoopItemApiUrl(entry), { credentials: "same-origin" });
+                if (!response.ok) return null;
+                const payload = await response.json();
+                const nextEntry = { ...entry, ...payload };
+                const nextQueue = state.queue.map((queueEntry) =>
+                    String(queueEntry.id || "") === String(entry.id || "") ? nextEntry : queueEntry
+                );
+                state.queue = nextQueue;
+                writeQueue(nextQueue);
+                return nextEntry;
+            } catch (error) {
+                setStatus("Could not load queue item.", `Playback data for ${entry.title || "this title"} could not be prepared right now.`);
+                return null;
+            } finally {
+                window.FreemovieApp?.hideLoader();
+            }
+        }
+
+        function getActiveEntry() {
+            return state.queue.find((entry) => String(entry.id || "") === String(state.activeEntryId || "")) || null;
+        }
+
+        function getServerList(entry = getActiveEntry()) {
+            return Array.isArray(entry?.stream_servers) ? entry.stream_servers.filter((server) => server?.default_url) : [];
+        }
+
+        function getActiveServer() {
+            const servers = getServerList();
+            return servers.find((server) => server.key === state.activeServerKey) || servers[0] || null;
+        }
+
+        function closeCustomSelects(exceptRoot = null) {
+            document.querySelectorAll(".custom-select.open").forEach((root) => {
+                if (root === exceptRoot) return;
+                root.classList.remove("open");
+                root.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
+            });
+        }
+
+        function renderServerSelect() {
+            if (!refs.loopServerSelect || !refs.loopServerPicker) return;
+            const servers = getServerList();
+            const activeServer = getActiveServer();
+            const selectedServerKey = activeServer?.key || servers[0]?.key || "";
+
+            if (!servers.length) {
+                refs.loopServerSelect.innerHTML = '<option value="">No servers available</option>';
+                refs.loopServerSelect.disabled = true;
+                refs.loopServerPicker.innerHTML = "";
+                refs.loopServerPicker.classList.remove("open");
+                return;
+            }
+
+            refs.loopServerSelect.disabled = false;
+            refs.loopServerSelect.innerHTML = servers.map((server) => `
+                <option value="${server.key}" ${server.key === selectedServerKey ? "selected" : ""}>${escapeHtml(server.name)}</option>
+            `).join("");
+            refs.loopServerSelect.value = selectedServerKey;
+
+            refs.loopServerPicker.innerHTML = `
+                <button class="custom-select-trigger" type="button" aria-expanded="false" aria-haspopup="listbox">
+                    <span class="custom-select-trigger-copy">
+                        <span class="custom-select-trigger-kicker${activeServer?.is_recommended ? " is-recommended" : ""}">${activeServer?.is_recommended ? "Recommended server" : "Server"}</span>
+                        <span class="custom-select-trigger-label">${escapeHtml(activeServer?.name || "Choose server")}</span>
+                    </span>
+                    <span class="custom-select-trigger-icon" aria-hidden="true"></span>
+                </button>
+                <div class="custom-select-menu" role="listbox" aria-label="Loop Play server selector">
+                    ${servers.map((server) => `
+                        <button class="custom-select-option${server.key === selectedServerKey ? " active" : ""}" type="button" role="option" aria-selected="${server.key === selectedServerKey ? "true" : "false"}" data-server-option="${server.key}">
+                            <span class="custom-select-option-topline">
+                                <span class="custom-select-option-label">${escapeHtml(server.name)}</span>
+                                ${server.is_recommended ? '<span class="custom-select-option-badge is-recommended">Most likely to work</span>' : ""}
+                            </span>
+                            <span class="custom-select-option-meta">${server.key === selectedServerKey ? "Currently selected" : "Switch player source"}</span>
+                        </button>
+                    `).join("")}
+                </div>
+            `;
+
+            const trigger = refs.loopServerPicker.querySelector(".custom-select-trigger");
+            trigger?.addEventListener("click", (event) => {
+                event.stopPropagation();
+                const willOpen = !refs.loopServerPicker.classList.contains("open");
+                closeCustomSelects(willOpen ? refs.loopServerPicker : null);
+                refs.loopServerPicker.classList.toggle("open", willOpen);
+                trigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+            });
+
+            refs.loopServerPicker.querySelectorAll("[data-server-option]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const nextServerKey = String(button.dataset.serverOption || "");
+                    refs.loopServerPicker.classList.remove("open");
+                    trigger?.setAttribute("aria-expanded", "false");
+                    if (!nextServerKey || refs.loopServerSelect.value === nextServerKey) return;
+                    refs.loopServerSelect.value = nextServerKey;
+                    refs.loopServerSelect.dispatchEvent(new Event("change", { bubbles: true }));
+                });
+            });
+        }
+
+        function getAvailableSeasons(entry = getActiveEntry(), server = getActiveServer()) {
+            const serverSeasons = server?.seasons ? Object.keys(server.seasons) : [];
+            const entrySeasons = Array.isArray(entry?.season_options) ? entry.season_options.map((value) => String(value)) : [];
+            const values = serverSeasons.length ? serverSeasons : entrySeasons;
+            return values.filter(Boolean);
+        }
+
+        function getEpisodesForSeason(seasonValue, entry = getActiveEntry(), server = getActiveServer()) {
+            const serverEpisodes = server?.seasons?.[String(seasonValue)]?.episodes;
+            if (Array.isArray(serverEpisodes) && serverEpisodes.length) return serverEpisodes;
+            const fallbackEpisodes = entry?.episodes_map?.[String(seasonValue)];
+            return Array.isArray(fallbackEpisodes) ? fallbackEpisodes : [];
+        }
+
+        function parseRuntimeMinutes(entry) {
+            const runtimeText = String(entry?.runtime || "");
+            const match = runtimeText.match(/(\d+)/);
+            if (match) return Number(match[1]) || 0;
+            return entry?.type === "movie" ? defaultMovieRuntimeMinutes : defaultSeriesRuntimeMinutes;
+        }
+
+        function estimateCycleDurationMs(entry) {
+            const minutes = Math.max(8, parseRuntimeMinutes(entry));
+            return (minutes * 60 * 1000) + cycleSafetyPaddingMs;
+        }
+
+        function chooseRandomValue(values) {
+            if (!values.length) return "";
+            return values[Math.floor(Math.random() * values.length)];
+        }
+
+        function chooseRandomQueueEntry() {
+            if (!state.queue.length) return null;
+            const currentId = String(state.activeEntryId || "");
+            const pool = state.queue.length > 1
+                ? state.queue.filter((entry) => String(entry.id || "") !== currentId)
+                : state.queue;
+            return pool[Math.floor(Math.random() * pool.length)] || null;
+        }
+
+        function shuffleArray(values) {
+            const nextValues = [...values];
+            for (let index = nextValues.length - 1; index > 0; index -= 1) {
+                const swapIndex = Math.floor(Math.random() * (index + 1));
+                [nextValues[index], nextValues[swapIndex]] = [nextValues[swapIndex], nextValues[index]];
+            }
+            return nextValues;
+        }
+
+        function refillShuffleBag() {
+            const activeId = String(state.activeEntryId || "");
+            let ids = state.queue.map((entry) => String(entry.id || "")).filter(Boolean);
+            if (ids.length > 1) {
+                ids = ids.filter((id) => id !== activeId);
+            }
+            state.shuffleBag = shuffleArray(ids);
+        }
+
+        function takeNextShuffleEntry() {
+            if (!state.queue.length) return null;
+            if (!state.shuffleBag.length) {
+                refillShuffleBag();
+            }
+            const nextId = state.shuffleBag.shift();
+            return state.queue.find((entry) => String(entry.id || "") === String(nextId || "")) || state.queue[0] || null;
+        }
+
+        function chooseRandomEpisode(entry, options = {}) {
+            const candidates = getEpisodeCandidates(entry, getActiveServer());
+            if (!candidates.length) return { season: "", episode: "" };
+
+            const watchedBucket = getEpisodeProgressBucket(entry);
+            const watchedKeys = new Set(Object.keys(watchedBucket));
+            const currentEpisodeKey = String(state.activeEntryId || "") === String(entry?.id || "")
+                ? buildEpisodeProgressKey(state.activeSeasonValue, state.activeEpisodeValue)
+                : "";
+
+            let pool = candidates.filter((candidate) => !watchedKeys.has(candidate.key));
+            if (!pool.length) {
+                setEpisodeProgressBucket(entry, {});
+                pool = candidates.filter((candidate) => candidate.key !== currentEpisodeKey);
+                if (!pool.length) {
+                    pool = [...candidates];
+                }
+            }
+
+            if (options.avoidCurrent !== false && currentEpisodeKey && pool.length > 1) {
+                const withoutCurrent = pool.filter((candidate) => candidate.key !== currentEpisodeKey);
+                if (withoutCurrent.length) {
+                    pool = withoutCurrent;
+                }
+            }
+
+            const pickedEpisode = pool[Math.floor(Math.random() * pool.length)] || candidates[0];
+            return {
+                season: String(pickedEpisode?.season || ""),
+                episode: String(pickedEpisode?.episode || ""),
+            };
+        }
+
+        function chooseFirstEpisode(entry) {
+            const seasons = getAvailableSeasons(entry, getActiveServer());
+            const season = seasons[0] || "";
+            const episodes = getEpisodesForSeason(season, entry, getActiveServer());
+            return {
+                season,
+                episode: String(episodes[0]?.number || ""),
+            };
+        }
+
+        function chooseNextSequentialEpisode(entry) {
+            const seasons = getAvailableSeasons(entry, getActiveServer());
+            if (!seasons.length) return { season: "", episode: "" };
+
+            const currentSeason = seasons.includes(String(state.activeSeasonValue)) ? String(state.activeSeasonValue) : seasons[0];
+            const currentEpisodes = getEpisodesForSeason(currentSeason, entry, getActiveServer());
+            const currentIndex = currentEpisodes.findIndex((episode) => String(episode.number) === String(state.activeEpisodeValue));
+
+            if (currentIndex >= 0 && currentIndex < currentEpisodes.length - 1) {
+                return {
+                    season: currentSeason,
+                    episode: String(currentEpisodes[currentIndex + 1]?.number || ""),
+                };
+            }
+
+            const seasonIndex = seasons.findIndex((season) => String(season) === currentSeason);
+            if (seasonIndex >= 0 && seasonIndex < seasons.length - 1) {
+                const nextSeason = seasons[seasonIndex + 1];
+                const nextSeasonEpisodes = getEpisodesForSeason(nextSeason, entry, getActiveServer());
+                return {
+                    season: nextSeason,
+                    episode: String(nextSeasonEpisodes[0]?.number || ""),
+                };
+            }
+
+            const firstSeason = seasons[0];
+            const firstEpisodes = getEpisodesForSeason(firstSeason, entry, getActiveServer());
+            return {
+                season: firstSeason,
+                episode: String(firstEpisodes[0]?.number || ""),
+            };
+        }
+
+        function getCurrentStreamUrl() {
+            const entry = getActiveEntry();
+            const server = getActiveServer();
+            if (!entry || !server) return "";
+            if (!server.seasons) {
+                return server.default_url || "";
+            }
+            const seasonData = server.seasons?.[String(state.activeSeasonValue)];
+            const episode = seasonData?.episodes?.find((item) => String(item.number) === String(state.activeEpisodeValue || ""));
+            return episode?.url || seasonData?.default_url || server.default_url || "";
+        }
+
+        function openPopupWindow(url, name = "FreemovieLoopPlayPopup") {
+            if (!url) return;
+            const popup = window.open(
+                url,
+                name,
+                "popup=yes,width=1280,height=720,menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes"
+            );
+            popup?.focus();
+        }
+
+        function setStatus(title, copy) {
+            refs.statusTitle.textContent = title;
+            refs.statusCopy.textContent = copy;
+        }
+
+        function syncCollectionButtons() {
+            const collection = getActiveCollection();
+            refs.collectionButtons.forEach((button) => {
+                button.classList.toggle("active", button.dataset.loopCollection === collection.key);
+            });
+            if (refs.queueHeading) {
+                refs.queueHeading.textContent = `${collection.title} Queue`;
+            }
+            if (refs.queueCollectionLabel) {
+                refs.queueCollectionLabel.textContent = collection.title;
+            }
+            if (refs.emptyHeading) {
+                refs.emptyHeading.textContent = `Your ${collection.title} queue is empty`;
+            }
+            if (refs.emptyCopy) {
+                refs.emptyCopy.innerHTML = `Open any movie, series, anime, or cartoon detail page and tap <strong>${escapeHtml(collection.title)}</strong>. The selected titles will appear here automatically.`;
+            }
+        }
+
+        function syncModeButtons() {
+            document.querySelectorAll("[data-mode]").forEach((button) => {
+                button.classList.toggle("active", button.dataset.mode === state.mode);
+            });
+            refs.modeLabel.textContent = state.mode === "from_scratch" ? "From Scratch" : state.mode === "shuffle" ? "Shuffle" : "Random";
+        }
+
+        function syncShellVisibility() {
+            const hasQueue = state.queue.length > 0;
+            refs.loopShell.hidden = !hasQueue;
+            refs.emptyShell.hidden = hasQueue;
+        }
+
+        function switchCollection(collectionKey) {
+            if (!loopPlayCollections[collectionKey]) return;
+            state.activeCollectionKey = collectionKey;
+            state.activeEntryId = "";
+            state.activeServerKey = "";
+            state.activeSeasonValue = "";
+            state.activeEpisodeValue = "";
+            state.attemptedServerKeys = new Set();
+            state.shuffleBag = [];
+            state.cycleStep = 0;
+            window.clearTimeout(state.streamLoadTimer);
+            window.clearTimeout(state.cycleTimer);
+            refs.loopFrame.src = "";
+            syncCollectionButtons();
+            hydrateQueueFromStorage({ keepCurrent: false });
+        }
+
+        async function selectEntry(entryId, options = {}) {
+            const queueEntry = state.queue.find((entry) => String(entry.id || "") === String(entryId || ""));
+            const nextEntry = await ensureEntryPlayable(queueEntry);
+            if (!nextEntry) return;
+
+            state.activeEntryId = String(nextEntry.id || "");
+            const servers = getServerList(nextEntry);
+            state.activeServerKey = servers.find((server) => server.is_default)?.key || servers[0]?.key || "";
+            renderQueue();
+            if (options.preserveSelection) {
+                const firstChoice = chooseFirstEpisode(nextEntry);
+                state.activeSeasonValue = options.season ?? String(nextEntry.selected_season || firstChoice.season || "");
+                state.activeEpisodeValue = options.episode ?? String(nextEntry.selected_episode_number || firstChoice.episode || "");
+                updatePlayback(options.reason || "Selected title");
+                return;
+            }
+
+            if (state.mode === "from_scratch") {
+                state.cycleStep = 0;
+                const firstEpisode = chooseFirstEpisode(nextEntry);
+                state.activeSeasonValue = firstEpisode.season;
+                state.activeEpisodeValue = firstEpisode.episode;
+                updatePlayback(options.reason || "Selected title");
+                return;
+            }
+
+            if (state.mode === "shuffle" || state.mode === "random") {
+                const randomEpisode = chooseRandomEpisode(nextEntry);
+                state.activeSeasonValue = randomEpisode.season;
+                state.activeEpisodeValue = randomEpisode.episode;
+                updatePlayback(options.reason || "Selected title");
+                return;
+            }
+        }
+
+        function renderQueue() {
+            syncCollectionButtons();
+            refs.queueCount.textContent = String(state.queue.length);
+            if (!state.queue.length) {
+                refs.queueRail.innerHTML = "";
+                renderServerSelect();
+                return;
+            }
+
+            refs.queueRail.innerHTML = state.queue.map((entry) => `
+                <article class="queue-card${String(entry.id || "") === String(state.activeEntryId || "") ? " active" : ""}">
+                    <img src="${escapeHtml(entry.poster || entry.backdrop || "")}" alt="${escapeHtml(entry.title || "Title")}">
+                    <div class="queue-card-copy">
+                        <div>
+                            <h4 class="queue-card-title">${escapeHtml(entry.title || "Untitled")}</h4>
+                            <div class="queue-card-subtitle">${escapeHtml(entry.year || "")}${entry.type ? ` â€¢ ${escapeHtml(String(entry.type).replace(/^./, (letter) => letter.toUpperCase()))}` : ""}</div>
+                        </div>
+                        <div class="queue-actions">
+                            <button class="queue-action" type="button" data-select-entry="${escapeHtml(String(entry.id || ""))}">Play Here</button>
+                            <a class="queue-action" href="${escapeHtml(entry.detail_url || "#")}">Details</a>
+                            <button class="queue-remove" type="button" data-remove-entry="${escapeHtml(String(entry.id || ""))}">Remove</button>
+                        </div>
+                    </div>
+                </article>
+            `).join("");
+
+            refs.queueRail.querySelectorAll("[data-select-entry]").forEach((button) => {
+                button.addEventListener("click", async () => {
+                    await selectEntry(button.dataset.selectEntry, { reason: "Selected title" });
+                });
+            });
+
+            refs.queueRail.querySelectorAll("[data-remove-entry]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const entryId = String(button.dataset.removeEntry || "");
+                    const nextQueue = state.queue.filter((entry) => String(entry.id || "") !== entryId);
+                    writeQueue(nextQueue);
+                    hydrateQueueFromStorage({ keepCurrent: false });
+                });
+            });
+        }
+
+        function hydrateQueueFromStorage(options = {}) {
+            const nextQueue = readQueue();
+            const previousActiveId = state.activeEntryId;
+            state.queue = nextQueue;
+            state.shuffleBag = state.shuffleBag.filter((id) => nextQueue.some((entry) => String(entry.id || "") === id));
+            syncCollectionButtons();
+            syncShellVisibility();
+            if (!nextQueue.length) {
+                state.activeEntryId = "";
+                state.shuffleBag = [];
+                window.clearTimeout(state.streamLoadTimer);
+                window.clearTimeout(state.cycleTimer);
+                refs.loopFrame.src = "";
+                renderQueue();
+                renderServerSelect();
+                setStatus("Queue empty.", `Add titles from any detail page to start ${getActiveCollection().title}.`);
+                return;
+            }
+
+            const keepCurrent = options.keepCurrent !== false && nextQueue.some((entry) => String(entry.id || "") === String(previousActiveId || ""));
+            state.activeEntryId = keepCurrent ? previousActiveId : String(nextQueue[0].id || "");
+            renderQueue();
+
+            if (!keepCurrent || !refs.loopFrame.src) {
+                if (keepCurrent) {
+                    void selectEntry(state.activeEntryId, { reason: "Queue loaded", preserveSelection: true });
+                } else {
+                    void setMode(state.mode);
+                }
+            }
+        }
+
+        function scheduleStreamHealthCheck(expectedToken) {
+            window.clearTimeout(state.streamLoadTimer);
+            state.streamLoadTimer = window.setTimeout(() => {
+                if (expectedToken !== state.streamHealthToken) return;
+                attemptAutoSwitch("The current player did not finish loading.");
+            }, fallbackLoadTimeoutMs);
+        }
+
+        function scheduleNextCycle(entry) {
+            window.clearTimeout(state.cycleTimer);
+            if (!timedAutoAdvanceEnabled) return;
+            state.cycleToken += 1;
+            const cycleToken = state.cycleToken;
+            const delay = estimateCycleDurationMs(entry);
+            state.cycleTimer = window.setTimeout(() => {
+                if (cycleToken !== state.cycleToken) return;
+                advanceLoop("Moving to the next automatic pick.");
+            }, delay);
+        }
+
+        function markStreamLoaded() {
+            window.clearTimeout(state.streamLoadTimer);
+            state.attemptedServerKeys = new Set([state.activeServerKey]);
+            window.FreemovieApp?.hideLoader(true);
+            const entry = getActiveEntry();
+            if (entry) {
+                scheduleNextCycle(entry);
+                if (!timedAutoAdvanceEnabled) {
+                    setStatus(
+                        "Loop Play running.",
+                        `${entry.title}${state.activeEpisodeValue ? ` is now on episode ${state.activeEpisodeValue}` : ""} and will keep playing until it fails or you switch manually.`
+                    );
+                }
+            }
+        }
+
+        function attemptAutoSwitch(reason) {
+            const entry = getActiveEntry();
+            const servers = getServerList(entry);
+            const nextServer = servers.find((server) => !state.attemptedServerKeys.has(server.key) && server.default_url);
+
+            if (!nextServer) {
+                setStatus("Server failover exhausted.", `${reason} No more working servers were available, so Loop Play is moving on.`);
+                window.setTimeout(() => {
+                    advanceLoop("Trying the next pick after server exhaustion.");
+                }, 900);
+                return;
+            }
+
+            state.attemptedServerKeys.add(nextServer.key);
+            state.activeServerKey = nextServer.key;
+            updatePlayback(`${reason} Switched to ${nextServer.name}.`, { preserveAttempts: true });
+        }
+
+        function updatePlayerMeta(entry, server) {
+            refs.playerHeading.textContent = entry?.title ? `Looping ${entry.title}` : "Loop Play";
+            refs.serverLabel.textContent = server?.name || "-";
+            renderServerSelect();
+            if (refs.detailButton) {
+                refs.detailButton.href = entry?.detail_url || "#";
+            }
+
+            const hasSeason = Boolean(state.activeSeasonValue);
+            const hasEpisode = Boolean(state.activeEpisodeValue);
+            refs.seasonStatus.hidden = !hasSeason;
+            refs.episodeStatus.hidden = !hasEpisode;
+            refs.seasonLabel.textContent = state.activeSeasonValue || "-";
+            refs.episodeLabel.textContent = state.activeEpisodeValue || "-";
+        }
+
+        function updatePlayback(statusText, options = {}) {
+            const entry = getActiveEntry();
+            const server = getActiveServer();
+            if (!entry || !server) {
+                setStatus("No playable entry.", "The selected queue item does not have a ready stream payload.");
+                return;
+            }
+
+            const nextUrl = getCurrentStreamUrl();
+            if (!nextUrl) {
+                setStatus("No playable source.", "Loop Play could not find a working embed URL for this selection.");
+                return;
+            }
+
+            if (!options.preserveAttempts) {
+                state.attemptedServerKeys = new Set([server.key]);
+            }
+            window.clearTimeout(state.cycleTimer);
+            state.streamHealthToken += 1;
+            refs.loopFrame.src = nextUrl;
+            markEpisodeWatched(entry);
+            updatePlayerMeta(entry, server);
+            setStatus(
+                statusText || "Loop Play running.",
+                `${entry.title}${state.activeEpisodeValue ? ` is now on episode ${state.activeEpisodeValue}` : ""} using ${server.name}.`
+            );
+            scheduleStreamHealthCheck(state.streamHealthToken);
+            renderQueue();
+        }
+
+        async function advanceLoop(statusText) {
+            if (!state.queue.length) return;
+
+            if (state.mode === "shuffle") {
+                const nextEntrySeed = takeNextShuffleEntry();
+                const nextEntry = await ensureEntryPlayable(nextEntrySeed);
+                if (!nextEntry) return;
+                state.activeEntryId = String(nextEntry.id || "");
+                const servers = getServerList(nextEntry);
+                state.activeServerKey = servers.find((server) => server.is_default)?.key || servers[0]?.key || "";
+                const randomEpisode = chooseRandomEpisode(nextEntry);
+                state.activeSeasonValue = randomEpisode.season;
+                state.activeEpisodeValue = randomEpisode.episode;
+                updatePlayback(statusText || "Shuffle picked the next title.");
+                return;
+            }
+
+            const entry = await ensureEntryPlayable(getActiveEntry());
+            if (!entry) return;
+            const servers = getServerList(entry);
+            state.activeServerKey = servers.find((server) => server.is_default)?.key || servers[0]?.key || "";
+
+            if (entry.type === "movie") {
+                state.activeSeasonValue = "";
+                state.activeEpisodeValue = "";
+                updatePlayback(statusText || "Replaying movie in Loop Play.");
+                return;
+            }
+
+            if (state.mode === "from_scratch") {
+                const nextEpisode = state.cycleStep === 0 ? chooseFirstEpisode(entry) : chooseNextSequentialEpisode(entry);
+                state.cycleStep += 1;
+                state.activeSeasonValue = nextEpisode.season;
+                state.activeEpisodeValue = nextEpisode.episode;
+                updatePlayback(statusText || "Advancing in order.");
+                return;
+            }
+
+            const randomEpisode = chooseRandomEpisode(entry);
+            state.activeSeasonValue = randomEpisode.season;
+            state.activeEpisodeValue = randomEpisode.episode;
+            updatePlayback(statusText || "Random mode picked a new episode.");
+        }
+
+        async function setMode(mode) {
+            state.mode = mode;
+            state.cycleStep = 0;
+            syncModeButtons();
+            if (!state.queue.length) return;
+
+            if (mode === "shuffle") {
+                refillShuffleBag();
+                await advanceLoop("Shuffle mode started.");
+                return;
+            }
+
+            const entry = await ensureEntryPlayable(getActiveEntry() || state.queue[0]);
+            if (!entry) return;
+            state.activeEntryId = String(entry.id || "");
+            if (mode === "from_scratch") {
+                const firstEpisode = chooseFirstEpisode(entry);
+                state.activeSeasonValue = firstEpisode.season;
+                state.activeEpisodeValue = firstEpisode.episode;
+                updatePlayback("From Scratch mode started.");
+                return;
+            }
+
+            const randomEpisode = chooseRandomEpisode(entry);
+            state.activeSeasonValue = randomEpisode.season;
+            state.activeEpisodeValue = randomEpisode.episode;
+            updatePlayback("Random mode started.");
+        }
+
+        async function refreshRandomPlayback() {
+            if (!state.queue.length) return;
+            const randomEntrySeed = chooseRandomQueueEntry();
+            const randomEntry = await ensureEntryPlayable(randomEntrySeed);
+            if (!randomEntry) return;
+
+            state.activeEntryId = String(randomEntry.id || "");
+            const servers = getServerList(randomEntry);
+            state.activeServerKey = servers.find((server) => server.is_default)?.key || servers[0]?.key || "";
+            state.attemptedServerKeys = new Set(state.activeServerKey ? [state.activeServerKey] : []);
+            state.cycleStep = 0;
+
+            if (randomEntry.type === "movie") {
+                state.activeSeasonValue = "";
+                state.activeEpisodeValue = "";
+                updatePlayback("Random refresh picked a new movie.");
+                return;
+            }
+
+            const randomEpisode = chooseRandomEpisode(randomEntry);
+            state.activeSeasonValue = randomEpisode.season;
+            state.activeEpisodeValue = randomEpisode.episode;
+            updatePlayback("Random refresh picked a new episode.");
+        }
+
+        document.querySelectorAll("[data-mode]").forEach((button) => {
+            button.addEventListener("click", async () => {
+                await setMode(String(button.dataset.mode || "random"));
+            });
+        });
+
+        refs.loopServerSelect?.addEventListener("change", () => {
+            const nextServerKey = String(refs.loopServerSelect.value || "");
+            if (!nextServerKey || nextServerKey === state.activeServerKey) return;
+            window.FreemovieApp?.showLoader("Switching Server", "Trying the selected playback source.");
+            state.activeServerKey = nextServerKey;
+            state.attemptedServerKeys = new Set([nextServerKey]);
+            updatePlayback("Switched server manually.", { preserveAttempts: true });
+        });
+
+        refs.popoutButton?.addEventListener("click", () => {
+            openPopupWindow(refs.loopFrame.src);
+        });
+
+        refs.fullscreenButton.addEventListener("click", async () => {
+            if (!refs.playerStage) return;
+            try {
+                if (document.fullscreenElement) {
+                    await document.exitFullscreen();
+                } else {
+                    await refs.playerStage.requestFullscreen();
+                }
+            } catch (error) {
+            }
+        });
+
+        refs.refreshRandomButton?.addEventListener("click", async () => {
+            window.FreemovieApp?.showLoader("Refreshing Random Video", "Picking a fresh title or episode for you.");
+            await refreshRandomPlayback();
+        });
+
+        refs.collectionButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                switchCollection(String(button.dataset.loopCollection || "loop1"));
+            });
+        });
+
+        refs.loopFrame.addEventListener("load", markStreamLoaded);
+        refs.loopFrame.addEventListener("error", () => {
+            attemptAutoSwitch("The current player failed to load.");
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!event.target.closest(".custom-select")) closeCustomSelects();
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") closeCustomSelects();
+        });
+
+        window.addEventListener("storage", (event) => {
+            if (!getCollectionByStorageKey(event.key || "")) return;
+            hydrateQueueFromStorage();
+        });
+
+        syncCollectionButtons();
+        syncModeButtons();
+        hydrateQueueFromStorage();
+    </script>
+    
+
+</body>
+</html>

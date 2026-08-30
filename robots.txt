@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /media/external-asset/
+Disallow: /read/
+Disallow: /live-tv/
+Disallow: /music/
+Disallow: /loop-play/
+Disallow: /post-comment/
+Disallow: /search/
+Disallow: /*?*
+Crawl-delay: 10
+Sitemap: https://vivek-rathod-talwarshadow.github.io/freemovie-static/sitemap.xml

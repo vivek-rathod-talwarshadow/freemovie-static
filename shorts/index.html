@@ -1,0 +1,892 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+<title>Shorts | Free movie</title>
+<meta name="description" content="Swipe through random portrait movie, series, anime, and cartoon players with lightweight loading.">
+<meta name="robots" content="noindex, follow">
+<meta name="keywords" content="shorts, movie shorts, series shorts, anime shorts, cartoon shorts">
+<link rel="canonical" href="https://vivek-rathod-talwarshadow.github.io/freemovie-static/shorts/">
+<link rel="icon" type="image/png" sizes="32x32" href="../static/images/freemovies-logo.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../static/images/freemovies-logo.png">
+<link rel="apple-touch-icon" href="../static/images/freemovies-logo.png">
+<meta name="theme-color" content="#06110c">
+<meta name="application-name" content="Free Movies App">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Free Movies App">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="color-scheme" content="dark">
+<meta property="og:site_name" content="Free movie">
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Shorts | Free movie">
+<meta property="og:description" content="Swipe through random portrait movie, series, anime, and cartoon players with lightweight loading.">
+<meta property="og:url" content="https://vivek-rathod-talwarshadow.github.io/freemovie-static/shorts/">
+<meta property="og:image" content="https://placehold.co/1600x900/05070b/e5e7eb?text=No+Backdrop">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Shorts | Free movie">
+<meta name="twitter:description" content="Swipe through random portrait movie, series, anime, and cartoon players with lightweight loading.">
+<meta name="twitter:image" content="https://placehold.co/1600x900/05070b/e5e7eb?text=No+Backdrop">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Shorts","url":"https://vivek-rathod-talwarshadow.github.io/freemovie-static/shorts/","description":"A lightweight vertical feed for random streaming titles."}</script>
+
+    <link rel="manifest" href="../static/manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        :root {
+            --line: rgba(255, 255, 255, 0.12);
+            --text: #f7f7f4;
+            --muted: rgba(247, 247, 244, 0.72);
+            --safe-top: max(12px, env(safe-area-inset-top));
+            --safe-bottom: max(12px, env(safe-area-inset-bottom));
+        }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; background: #000; }
+        body {
+            margin: 0;
+            color: var(--text);
+            font-family: "Manrope", sans-serif;
+        }
+        a { color: inherit; text-decoration: none; }
+        button, select { font: inherit; }
+        .shorts-app {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            overflow: hidden;
+        }
+        .shorts-topbar {
+            position: fixed;
+            left: max(12px, env(safe-area-inset-left));
+            right: max(12px, env(safe-area-inset-right));
+            top: var(--safe-top);
+            z-index: 55;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            pointer-events: none;
+        }
+        .shorts-brand,
+        .shorts-refresh {
+            min-height: 42px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(7, 7, 7, 0.58);
+            color: var(--text);
+            backdrop-filter: blur(18px);
+            pointer-events: auto;
+        }
+        .shorts-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 14px;
+            font-weight: 900;
+        }
+        .shorts-brand img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: #fff;
+        }
+        .shorts-refresh {
+            width: 42px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+        }
+        .shorts-feed {
+            height: 100%;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+            overscroll-behavior-y: contain;
+        }
+        .shorts-feed::-webkit-scrollbar { display: none; }
+        .short-card {
+            position: relative;
+            min-height: 100svh;
+            height: 100svh;
+            display: grid;
+            place-items: center;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            background: #000;
+            overflow: hidden;
+        }
+        .short-backdrop {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.38;
+            filter: blur(16px) saturate(1.1);
+            transform: scale(1.08);
+        }
+        .portrait-stage {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border: 0;
+            border-radius: 0;
+            background: #050505;
+            box-shadow: none;
+        }
+        .poster-layer,
+        .frame-mount,
+        .frame-mount iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .poster-layer {
+            object-fit: cover;
+            background: #111;
+        }
+        .frame-mount iframe {
+            border: 0;
+            background: #000;
+        }
+        .frame-placeholder {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            padding: 18px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.7));
+            color: rgba(255, 255, 255, 0.76);
+            font-weight: 800;
+            text-align: center;
+        }
+        .short-gradient {
+            position: absolute;
+            inset: auto 0 0;
+            height: 46%;
+            background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.9));
+            pointer-events: none;
+        }
+        .short-copy {
+            position: absolute;
+            left: max(14px, env(safe-area-inset-left));
+            right: 86px;
+            bottom: calc(22px + var(--safe-bottom));
+            z-index: 2;
+            display: grid;
+            gap: 8px;
+            min-width: 0;
+        }
+        .short-title {
+            margin: 0;
+            font-size: 1.2rem;
+            line-height: 1.18;
+            font-weight: 900;
+            overflow-wrap: anywhere;
+        }
+        .short-meta,
+        .short-plot {
+            color: var(--muted);
+            font-size: 0.84rem;
+            line-height: 1.5;
+        }
+        .short-plot {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .server-select {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .short-server-picker {
+            position: relative;
+            width: min(100%, 320px);
+            z-index: 5;
+        }
+        .short-server-picker.is-open {
+            z-index: 10;
+        }
+        .short-server-trigger {
+            width: 100%;
+            min-height: 46px;
+            padding: 0 14px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(8, 8, 8, 0.72));
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            text-align: left;
+            cursor: pointer;
+            backdrop-filter: blur(18px);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 14px 34px rgba(0, 0, 0, 0.24);
+        }
+        .short-server-copy {
+            display: grid;
+            min-width: 0;
+            gap: 2px;
+        }
+        .short-server-kicker {
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .short-server-label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 0.94rem;
+            font-weight: 900;
+        }
+        .short-server-chevron {
+            width: 12px;
+            height: 12px;
+            flex: 0 0 12px;
+            border-right: 2px solid rgba(255, 255, 255, 0.72);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.72);
+            transform: rotate(45deg);
+            transition: transform 0.18s ease;
+        }
+        .short-server-picker.is-open .short-server-chevron {
+            transform: rotate(-135deg) translateY(-1px);
+        }
+        .short-server-menu {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: calc(100% + 10px);
+            display: none;
+            gap: 8px;
+            max-height: min(330px, 44svh);
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 18px;
+            background: rgba(12, 12, 12, 0.96);
+            box-shadow: 0 22px 48px rgba(0, 0, 0, 0.42);
+            backdrop-filter: blur(20px);
+        }
+        .short-server-picker.is-open .short-server-menu {
+            display: grid;
+        }
+        .short-server-option {
+            width: 100%;
+            min-height: 54px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            display: grid;
+            gap: 5px;
+            text-align: left;
+            cursor: pointer;
+        }
+        .short-server-option.active {
+            background: #fff;
+            color: #050505;
+            border-color: transparent;
+        }
+        .short-server-option-topline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .short-server-option-label {
+            font-weight: 900;
+        }
+        .short-server-option-meta {
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 0.76rem;
+            line-height: 1.35;
+        }
+        .short-server-option.active .short-server-option-meta {
+            color: rgba(5, 5, 5, 0.62);
+        }
+        .short-server-badge {
+            min-height: 22px;
+            padding: 0 8px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            background: rgba(146, 255, 191, 0.18);
+            color: #dfffea;
+            font-size: 0.66rem;
+            font-weight: 900;
+        }
+        .short-server-option.active .short-server-badge {
+            background: rgba(0, 210, 106, 0.12);
+            color: #086b38;
+        }
+        .short-actions {
+            position: absolute;
+            right: max(12px, env(safe-area-inset-right));
+            bottom: calc(118px + var(--safe-bottom));
+            z-index: 3;
+            display: grid;
+            gap: 12px;
+            justify-items: center;
+        }
+        .action-button {
+            width: 52px;
+            min-height: 52px;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            background: rgba(8, 8, 8, 0.56);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(16px);
+        }
+        .action-button.is-liked {
+            background: #fff;
+            color: #050505;
+        }
+        .action-label {
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-align: center;
+        }
+        .empty-feed {
+            min-height: 100svh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+        .shorts-side-nav {
+            position: fixed;
+            left: max(10px, env(safe-area-inset-left));
+            top: calc(var(--safe-top) + 54px);
+            z-index: 58;
+            display: grid;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            background: rgba(5, 5, 5, 0.82);
+            transform: translateX(calc(-100% - 18px));
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            backdrop-filter: blur(18px);
+        }
+        .shorts-side-nav.is-open {
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .shorts-menu-toggle {
+            position: fixed;
+            left: max(12px, env(safe-area-inset-left));
+            top: var(--safe-top);
+            z-index: 62;
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            background: rgba(8, 8, 8, 0.62);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+        }
+        .side-nav-link {
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            background: rgba(8, 8, 8, 0.58);
+            color: rgba(255, 255, 255, 0.86);
+            display: grid;
+            place-items: center;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+        }
+        .side-nav-link.active {
+            background: #fff;
+            color: #050505;
+        }
+        @media (min-width: 760px) {
+            .short-copy {
+                left: max(24px, env(safe-area-inset-left));
+                right: 112px;
+            }
+            .short-actions {
+                right: max(24px, env(safe-area-inset-right));
+            }
+        }
+    </style>
+<script>window.__FM_STATIC_ROOT__="../";window.__FM_SITE_URL__="https://vivek-rathod-talwarshadow.github.io/freemovie-static";</script>
+<script src="../data/catalog.js"></script>
+<script src="../assets/static-runtime.js"></script>
+</head>
+<body>
+    <main class="shorts-app">
+        <div class="shorts-topbar">
+            <a class="shorts-brand" href="../index.html" aria-label="Free Movies home">
+                <img src="../static/images/freemovies-logo.png" alt="">
+                <span>Shorts</span>
+            </a>
+            <button class="shorts-refresh" type="button" id="refreshFeed" aria-label="Load new shorts" title="Load new shorts">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+        </div>
+        <section class="shorts-feed" id="shortsFeed" aria-label="Shorts feed"></section>
+    </main>
+
+    <button class="shorts-menu-toggle" type="button" id="shortsMenuToggle" aria-label="Open navigation" aria-expanded="false">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </button>
+    <nav class="shorts-side-nav" id="shortsSideNav" aria-label="Shorts navigation">
+        <a class="side-nav-link" href="../index.html" aria-label="Home" title="Home"><i class="fa fa-home" aria-hidden="true"></i></a>
+        <a class="side-nav-link" href="../search/index.html" aria-label="Search" title="Search"><i class="fa fa-search" aria-hidden="true"></i></a>
+        <a class="side-nav-link" href="../live-tv/index.html" aria-label="Live TV" title="Live TV"><i class="fa fa-television" aria-hidden="true"></i></a>
+        <a class="side-nav-link" href="../music/index.html" aria-label="Music" title="Music"><i class="fa fa-music" aria-hidden="true"></i></a>
+        <a class="side-nav-link active" href="../shorts/index.html" aria-label="Shorts" title="Shorts"><i class="fa fa-play-circle" aria-hidden="true"></i></a>
+        <a class="side-nav-link" href="../loop-play/index.html" aria-label="Loop Play" title="Loop Play"><i class="fa fa-repeat" aria-hidden="true"></i></a>
+        <a class="side-nav-link" href="../settings/index.html" aria-label="Settings" title="Settings"><i class="fa fa-cog" aria-hidden="true"></i></a>
+    </nav>
+
+    <script>
+        const shortsApiUrl = "/api/shorts/";
+        const initialShorts = JSON.parse("[{\u0022id\u0022:\u0022movie:27064:::mishimaalifeinfourchapters\u0022,\u0022title\u0022:\u0022Mishima: A Life in Four Chapters\u0022,\u0022year\u0022:\u00221985\u0022,\u0022type\u0022:\u0022movie\u0022,\u0022season_number\u0022:\u0022\u0022,\u0022episode_number\u0022:\u0022\u0022,\u0022poster\u0022:\u0022https://image.tmdb.org/t/p/w342/4kIXsE4SwUjO0eUqpolsHNO5GLH.jpg\u0022,\u0022backdrop\u0022:\u0022https://image.tmdb.org/t/p/w780/PnwQJeWhmx9wh9wWM0a0YhLmE.jpg\u0022,\u0022rating\u0022:\u00227.8\u0022,\u0022plot\u0022:\u0022A fictional account of the life of Japanese author Yukio Mishima, combining dramatizations of three of his novels and a depiction of the events of November 25th, 1970.\u0022,\u0022detail_url\u0022:\u0022/title/movie/mishima\u002Da\u002Dlife\u002Din\u002Dfour\u002Dchapters/?title\u003DMishima%3A+A+Life+in+Four+Chapters\u0026tmdb_id\u003D27064\u0026source\u003Dtmdb\u0022,\u0022servers\u0022:[{\u0022key\u0022:\u0022server1\u0022,\u0022name\u0022:\u0022VS Embed\u0022,\u0022url\u0022:\u0022https://vsembed.ru/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server2\u0022,\u0022name\u0022:\u0022VidSrc RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server3\u0022,\u0022name\u0022:\u0022VidSrc SU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server4\u0022,\u0022name\u0022:\u0022111Movies\u0022,\u0022url\u0022:\u0022https://111movies.net/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server5\u0022,\u0022name\u0022:\u00222Embed\u0022,\u0022url\u0022:\u0022https://2embed.online/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.online/embed/tmdb/movie?id\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server6\u0022,\u0022name\u0022:\u0022VidFast\u0022,\u0022url\u0022:\u0022https://vidfast.pro/movie/27064?autoPlay\u003Dtrue\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:true,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server7\u0022,\u0022name\u0022:\u0022VidSrc Mov\u0022,\u0022url\u0022:\u0022https://vidsrc.mov/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.mov/embed/movie?tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server8\u0022,\u0022name\u0022:\u0022VidLink\u0022,\u0022url\u0022:\u0022https://vidlink.pro/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server9\u0022,\u0022name\u0022:\u0022GoDrive\u0022,\u0022url\u0022:\u0022https://godriveplayer.com/player.php?imdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://godriveplayer.com/player.php?type\u003Dmovie\u0026tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server10\u0022,\u0022name\u0022:\u0022MultiEmbed\u0022,\u0022url\u0022:\u0022https://multiembed.mov/?video_id\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server11\u0022,\u0022name\u0022:\u0022VidStreams\u0022,\u0022url\u0022:\u0022https://vidstreams.net/embed/tmdb27064/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server12\u0022,\u0022name\u0022:\u0022VidSrc To\u0022,\u0022url\u0022:\u0022https://vidsrc.to/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.to/embed/movie?tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server13\u0022,\u0022name\u0022:\u0022VidSrc Pro\u0022,\u0022url\u0022:\u0022https://vidsrc.pro/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.pro/embed/movie?tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server14\u0022,\u0022name\u0022:\u0022VidSrcMe RU\u0022,\u0022url\u0022:\u0022https://vidsrcme.ru/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.ru/embed/movie?tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server15\u0022,\u0022name\u0022:\u0022VidSrc\u002DMe RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dme.ru/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc\u002Dme.ru/embed/movie?tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server16\u0022,\u0022name\u0022:\u0022VidSrcMe SU\u0022,\u0022url\u0022:\u0022https://vidsrcme.su/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.su/embed/movie?tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server17\u0022,\u0022name\u0022:\u0022VidSrc Embed RU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server18\u0022,\u0022name\u0022:\u0022VidSrc Embed SU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server19\u0022,\u0022name\u0022:\u0022VSrc SU\u0022,\u0022url\u0022:\u0022https://vsrc.su/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vsrc.su/embed/movie?tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server20\u0022,\u0022name\u0022:\u00222Embed CC\u0022,\u0022url\u0022:\u0022https://2embed.cc/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.cc/embed/tmdb/movie?id\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server21\u0022,\u0022name\u0022:\u0022SuperEmbed\u0022,\u0022url\u0022:\u0022https://superembed.stream/embed/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server22\u0022,\u0022name\u0022:\u0022VidSrc CC\u0022,\u0022url\u0022:\u0022https://vidsrc.cc/v2/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server23\u0022,\u0022name\u0022:\u0022Embed SU\u0022,\u0022url\u0022:\u0022https://embed.su/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server24\u0022,\u0022name\u0022:\u0022VidPlay Online\u0022,\u0022url\u0022:\u0022https://vidplay.online/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server25\u0022,\u0022name\u0022:\u0022VidSrc Dev\u0022,\u0022url\u0022:\u0022https://vidsrc.dev/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.dev/embed/movie?tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server26\u0022,\u0022name\u0022:\u0022VidSrc Win\u0022,\u0022url\u0022:\u0022https://vidsrc.win/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.win/embed/movie?tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server27\u0022,\u0022name\u0022:\u0022VidSrc VIP\u0022,\u0022url\u0022:\u0022https://vidsrc.wiki/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.wiki/embed/movie?tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server28\u0022,\u0022name\u0022:\u0022FSAPI\u0022,\u0022url\u0022:\u0022https://fsapi.xyz/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server29\u0022,\u0022name\u0022:\u00222Embed Skin\u0022,\u0022url\u0022:\u0022https://2embed.skin/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.skin/embed/tmdb/movie?id\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server30\u0022,\u0022name\u0022:\u0022KimoStream\u0022,\u0022url\u0022:\u0022https://embed.kimostream.eu.org/?id\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server31\u0022,\u0022name\u0022:\u0022CurtStream\u0022,\u0022url\u0022:\u0022https://curtstream.com/movies/imdb/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server32\u0022,\u0022name\u0022:\u0022MovieWP\u0022,\u0022url\u0022:\u0022https://moviewp.com/se.php?video_id\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server33\u0022,\u0022name\u0022:\u0022VidPlay Pro\u0022,\u0022url\u0022:\u0022https://vidplay.pro/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server34\u0022,\u0022name\u0022:\u0022StreamWish\u0022,\u0022url\u0022:\u0022https://streamwish.com/embed\u002D27064.html?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server35\u0022,\u0022name\u0022:\u0022MyCloudPlayer\u0022,\u0022url\u0022:\u0022https://mycloudplayer.com/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server36\u0022,\u0022name\u0022:\u0022VidSrc In\u0022,\u0022url\u0022:\u0022https://vidsrc.in/embed/movie/27064?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.in/embed/movie?tmdb\u003D27064\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server37\u0022,\u0022name\u0022:\u0022MegaPlay\u0022,\u0022url\u0022:\u0022https://megaplay.buzz/stream/mal/27064/1/sub\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true}],\u0022active_server_key\u0022:\u0022server6\u0022},{\u0022id\u0022:\u0022movie:1165369:::degaullelibert\u0022,\u0022title\u0022:\u0022De Gaulle: Libert\u005Cu00e9\u0022,\u0022year\u0022:\u00222026\u0022,\u0022type\u0022:\u0022movie\u0022,\u0022season_number\u0022:\u0022\u0022,\u0022episode_number\u0022:\u0022\u0022,\u0022poster\u0022:\u0022https://image.tmdb.org/t/p/w342/tcypmwT43pt5jWiUyy2BomyPD1Y.jpg\u0022,\u0022backdrop\u0022:\u0022https://image.tmdb.org/t/p/w780/pS7VXwb1sNk79F5GzgtEP5YzEHE.jpg\u0022,\u0022rating\u0022:\u00227.8\u0022,\u0022plot\u0022:\u0022Part two of a two\u002Dpart biopic following French army officer Charles De Gaulle\u0027s life and political commitment between 1940 and 1945, and trace his development towards a political\u005Cu2026\u0022,\u0022detail_url\u0022:\u0022/title/movie/de\u002Dgaulle\u002Dliberte/?title\u003DDe+Gaulle%3A+Libert%C3%A9\u0026tmdb_id\u003D1165369\u0026source\u003Dtmdb\u0022,\u0022servers\u0022:[{\u0022key\u0022:\u0022server1\u0022,\u0022name\u0022:\u0022VS Embed\u0022,\u0022url\u0022:\u0022https://vsembed.ru/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server2\u0022,\u0022name\u0022:\u0022VidSrc RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server3\u0022,\u0022name\u0022:\u0022VidSrc SU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server4\u0022,\u0022name\u0022:\u0022111Movies\u0022,\u0022url\u0022:\u0022https://111movies.net/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server5\u0022,\u0022name\u0022:\u00222Embed\u0022,\u0022url\u0022:\u0022https://2embed.online/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.online/embed/tmdb/movie?id\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server6\u0022,\u0022name\u0022:\u0022VidFast\u0022,\u0022url\u0022:\u0022https://vidfast.pro/movie/1165369?autoPlay\u003Dtrue\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:true,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server7\u0022,\u0022name\u0022:\u0022VidSrc Mov\u0022,\u0022url\u0022:\u0022https://vidsrc.mov/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.mov/embed/movie?tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server8\u0022,\u0022name\u0022:\u0022VidLink\u0022,\u0022url\u0022:\u0022https://vidlink.pro/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server9\u0022,\u0022name\u0022:\u0022GoDrive\u0022,\u0022url\u0022:\u0022https://godriveplayer.com/player.php?imdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://godriveplayer.com/player.php?type\u003Dmovie\u0026tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server10\u0022,\u0022name\u0022:\u0022MultiEmbed\u0022,\u0022url\u0022:\u0022https://multiembed.mov/?video_id\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server11\u0022,\u0022name\u0022:\u0022VidStreams\u0022,\u0022url\u0022:\u0022https://vidstreams.net/embed/tmdb1165369/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server12\u0022,\u0022name\u0022:\u0022VidSrc To\u0022,\u0022url\u0022:\u0022https://vidsrc.to/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.to/embed/movie?tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server13\u0022,\u0022name\u0022:\u0022VidSrc Pro\u0022,\u0022url\u0022:\u0022https://vidsrc.pro/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.pro/embed/movie?tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server14\u0022,\u0022name\u0022:\u0022VidSrcMe RU\u0022,\u0022url\u0022:\u0022https://vidsrcme.ru/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.ru/embed/movie?tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server15\u0022,\u0022name\u0022:\u0022VidSrc\u002DMe RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dme.ru/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc\u002Dme.ru/embed/movie?tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server16\u0022,\u0022name\u0022:\u0022VidSrcMe SU\u0022,\u0022url\u0022:\u0022https://vidsrcme.su/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.su/embed/movie?tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server17\u0022,\u0022name\u0022:\u0022VidSrc Embed RU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server18\u0022,\u0022name\u0022:\u0022VidSrc Embed SU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server19\u0022,\u0022name\u0022:\u0022VSrc SU\u0022,\u0022url\u0022:\u0022https://vsrc.su/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vsrc.su/embed/movie?tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server20\u0022,\u0022name\u0022:\u00222Embed CC\u0022,\u0022url\u0022:\u0022https://2embed.cc/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.cc/embed/tmdb/movie?id\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server21\u0022,\u0022name\u0022:\u0022SuperEmbed\u0022,\u0022url\u0022:\u0022https://superembed.stream/embed/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server22\u0022,\u0022name\u0022:\u0022VidSrc CC\u0022,\u0022url\u0022:\u0022https://vidsrc.cc/v2/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server23\u0022,\u0022name\u0022:\u0022Embed SU\u0022,\u0022url\u0022:\u0022https://embed.su/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server24\u0022,\u0022name\u0022:\u0022VidPlay Online\u0022,\u0022url\u0022:\u0022https://vidplay.online/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server25\u0022,\u0022name\u0022:\u0022VidSrc Dev\u0022,\u0022url\u0022:\u0022https://vidsrc.dev/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.dev/embed/movie?tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server26\u0022,\u0022name\u0022:\u0022VidSrc Win\u0022,\u0022url\u0022:\u0022https://vidsrc.win/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.win/embed/movie?tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server27\u0022,\u0022name\u0022:\u0022VidSrc VIP\u0022,\u0022url\u0022:\u0022https://vidsrc.wiki/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.wiki/embed/movie?tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server28\u0022,\u0022name\u0022:\u0022FSAPI\u0022,\u0022url\u0022:\u0022https://fsapi.xyz/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server29\u0022,\u0022name\u0022:\u00222Embed Skin\u0022,\u0022url\u0022:\u0022https://2embed.skin/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.skin/embed/tmdb/movie?id\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server30\u0022,\u0022name\u0022:\u0022KimoStream\u0022,\u0022url\u0022:\u0022https://embed.kimostream.eu.org/?id\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server31\u0022,\u0022name\u0022:\u0022CurtStream\u0022,\u0022url\u0022:\u0022https://curtstream.com/movies/imdb/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server32\u0022,\u0022name\u0022:\u0022MovieWP\u0022,\u0022url\u0022:\u0022https://moviewp.com/se.php?video_id\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server33\u0022,\u0022name\u0022:\u0022VidPlay Pro\u0022,\u0022url\u0022:\u0022https://vidplay.pro/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server34\u0022,\u0022name\u0022:\u0022StreamWish\u0022,\u0022url\u0022:\u0022https://streamwish.com/embed\u002D1165369.html?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server35\u0022,\u0022name\u0022:\u0022MyCloudPlayer\u0022,\u0022url\u0022:\u0022https://mycloudplayer.com/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server36\u0022,\u0022name\u0022:\u0022VidSrc In\u0022,\u0022url\u0022:\u0022https://vidsrc.in/embed/movie/1165369?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.in/embed/movie?tmdb\u003D1165369\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server37\u0022,\u0022name\u0022:\u0022MegaPlay\u0022,\u0022url\u0022:\u0022https://megaplay.buzz/stream/mal/1165369/1/sub\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true}],\u0022active_server_key\u0022:\u0022server6\u0022},{\u0022id\u0022:\u0022cartoon:39383:2:2:photontheidiotadventures\u0022,\u0022title\u0022:\u0022Photon: The Idiot Adventures\u0022,\u0022year\u0022:\u00221997\u0022,\u0022type\u0022:\u0022cartoon\u0022,\u0022season_number\u0022:2,\u0022episode_number\u0022:2,\u0022poster\u0022:\u0022https://image.tmdb.org/t/p/w342/yjteefu6XIOkNFz2E3u4VCKEm0Z.jpg\u0022,\u0022backdrop\u0022:\u0022https://image.tmdb.org/t/p/w780/jFaGUBSkZ9zLlCyfsYBA7T2pqSU.jpg\u0022,\u0022rating\u0022:\u00225.8\u0022,\u0022plot\u0022:\u0022Photon, a young man with a kind heart and superhuman strength, leaves his village on Sandy Planet (a desert world) in search of a runaway friend. During this heroic quest, he is a\u005Cu2026\u0022,\u0022detail_url\u0022:\u0022/title/cartoon/photon\u002Dthe\u002Didiot\u002Dadventures/?title\u003DPhoton%3A+The+Idiot+Adventures\u0026tmdb_id\u003D39383\u0026source\u003Dtmdb\u0022,\u0022servers\u0022:[{\u0022key\u0022:\u0022server1\u0022,\u0022name\u0022:\u0022VS Embed\u0022,\u0022url\u0022:\u0022https://vsembed.ru/embed/tv?imdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server2\u0022,\u0022name\u0022:\u0022VidSrc RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?imdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server3\u0022,\u0022name\u0022:\u0022VidSrc SU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server4\u0022,\u0022name\u0022:\u0022111Movies\u0022,\u0022url\u0022:\u0022https://111movies.net/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server5\u0022,\u0022name\u0022:\u00222Embed\u0022,\u0022url\u0022:\u0022https://2embed.online/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.online/embed/tmdb/tv?id\u003D39383\u0026s\u003D2\u0026e\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server6\u0022,\u0022name\u0022:\u0022VidFast\u0022,\u0022url\u0022:\u0022https://vidfast.pro/tv/39383/2/2?autoPlay\u003Dtrue\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:true,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server7\u0022,\u0022name\u0022:\u0022VidSrc Mov\u0022,\u0022url\u0022:\u0022https://vidsrc.mov/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.mov/embed/tv?tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server8\u0022,\u0022name\u0022:\u0022VidLink\u0022,\u0022url\u0022:\u0022https://vidlink.pro/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server9\u0022,\u0022name\u0022:\u0022GoDrive\u0022,\u0022url\u0022:\u0022https://godriveplayer.com/player.php?type\u003Dseries\u0026tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server10\u0022,\u0022name\u0022:\u0022MultiEmbed\u0022,\u0022url\u0022:\u0022https://multiembed.mov/?video_id\u003D39383\u0026s\u003D2\u0026e\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server11\u0022,\u0022name\u0022:\u0022VidStreams\u0022,\u0022url\u0022:\u0022https://vidstreams.net/embed/tvd39383/2/2/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server12\u0022,\u0022name\u0022:\u0022VidSrc To\u0022,\u0022url\u0022:\u0022https://vidsrc.to/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.to/embed/tv?tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server13\u0022,\u0022name\u0022:\u0022VidSrc Pro\u0022,\u0022url\u0022:\u0022https://vidsrc.pro/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.pro/embed/tv?tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server14\u0022,\u0022name\u0022:\u0022VidSrcMe RU\u0022,\u0022url\u0022:\u0022https://vidsrcme.ru/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.ru/embed/tv?tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server15\u0022,\u0022name\u0022:\u0022VidSrc\u002DMe RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dme.ru/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc\u002Dme.ru/embed/tv?tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server16\u0022,\u0022name\u0022:\u0022VidSrcMe SU\u0022,\u0022url\u0022:\u0022https://vidsrcme.su/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.su/embed/tv?tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server17\u0022,\u0022name\u0022:\u0022VidSrc Embed RU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?imdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server18\u0022,\u0022name\u0022:\u0022VidSrc Embed SU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server19\u0022,\u0022name\u0022:\u0022VSrc SU\u0022,\u0022url\u0022:\u0022https://vsrc.su/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vsrc.su/embed/tv?tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server20\u0022,\u0022name\u0022:\u00222Embed CC\u0022,\u0022url\u0022:\u0022https://2embed.cc/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.cc/embed/tmdb/tv?id\u003D39383\u0026s\u003D2\u0026e\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server21\u0022,\u0022name\u0022:\u0022SuperEmbed\u0022,\u0022url\u0022:\u0022https://superembed.stream/embed/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server22\u0022,\u0022name\u0022:\u0022VidSrc CC\u0022,\u0022url\u0022:\u0022https://vidsrc.cc/v2/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server23\u0022,\u0022name\u0022:\u0022Embed SU\u0022,\u0022url\u0022:\u0022https://embed.su/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server24\u0022,\u0022name\u0022:\u0022VidPlay Online\u0022,\u0022url\u0022:\u0022https://vidplay.online/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server25\u0022,\u0022name\u0022:\u0022VidSrc Dev\u0022,\u0022url\u0022:\u0022https://vidsrc.dev/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.dev/embed/tv?tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server26\u0022,\u0022name\u0022:\u0022VidSrc Win\u0022,\u0022url\u0022:\u0022https://vidsrc.win/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.win/embed/tv?tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server27\u0022,\u0022name\u0022:\u0022VidSrc VIP\u0022,\u0022url\u0022:\u0022https://vidsrc.wiki/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.wiki/embed/tv?tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server28\u0022,\u0022name\u0022:\u0022FSAPI\u0022,\u0022url\u0022:\u0022https://fsapi.xyz/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server29\u0022,\u0022name\u0022:\u00222Embed Skin\u0022,\u0022url\u0022:\u0022https://2embed.skin/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.skin/embed/tmdb/tv?id\u003D39383\u0026s\u003D2\u0026e\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server30\u0022,\u0022name\u0022:\u0022KimoStream\u0022,\u0022url\u0022:\u0022https://embed.kimostream.eu.org/embed/tv?imdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server31\u0022,\u0022name\u0022:\u0022CurtStream\u0022,\u0022url\u0022:\u0022https://curtstream.com/embed/tv?imdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://curtstream.com/series/tmdb/39383/2/2/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server32\u0022,\u0022name\u0022:\u0022MovieWP\u0022,\u0022url\u0022:\u0022https://moviewp.com/embed/tv?imdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://moviewp.com/se.php?video_id\u003D39383\u0026tmdb\u003D1\u0026s\u003D2\u0026e\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server33\u0022,\u0022name\u0022:\u0022VidPlay Pro\u0022,\u0022url\u0022:\u0022https://vidplay.pro/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server34\u0022,\u0022name\u0022:\u0022StreamWish\u0022,\u0022url\u0022:\u0022https://streamwish.com/embed/tv?imdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server35\u0022,\u0022name\u0022:\u0022MyCloudPlayer\u0022,\u0022url\u0022:\u0022https://mycloudplayer.com/embed/tv?imdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server36\u0022,\u0022name\u0022:\u0022VidSrc In\u0022,\u0022url\u0022:\u0022https://vidsrc.in/embed/tv/39383/2/2?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.in/embed/tv?tmdb\u003D39383\u0026season\u003D2\u0026episode\u003D2\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server37\u0022,\u0022name\u0022:\u0022MegaPlay\u0022,\u0022url\u0022:\u0022https://megaplay.buzz/stream/mal/39383/2/sub\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true}],\u0022active_server_key\u0022:\u0022server6\u0022},{\u0022id\u0022:\u0022cartoon:348966:2:4:dinnerforfew\u0022,\u0022title\u0022:\u0022Dinner for Few\u0022,\u0022year\u0022:\u00222015\u0022,\u0022type\u0022:\u0022cartoon\u0022,\u0022season_number\u0022:2,\u0022episode_number\u0022:4,\u0022poster\u0022:\u0022https://image.tmdb.org/t/p/w342/yiYbpmjmnjif9b4BNa02ObfhVfm.jpg\u0022,\u0022backdrop\u0022:\u0022https://image.tmdb.org/t/p/w780/5nw5fm2fUzTffKA7hqBy3sNWuXr.jpg\u0022,\u0022rating\u0022:\u00227.3\u0022,\u0022plot\u0022:\u0022A sociopolitical metaphor of the world as a formal dinner that takes an unexpected turn when there\u0027s no more food to be served.\u0022,\u0022detail_url\u0022:\u0022/title/cartoon/dinner\u002Dfor\u002Dfew/?title\u003DDinner+for+Few\u0026tmdb_id\u003D348966\u0026source\u003Dtmdb\u0022,\u0022servers\u0022:[{\u0022key\u0022:\u0022server1\u0022,\u0022name\u0022:\u0022VS Embed\u0022,\u0022url\u0022:\u0022https://vsembed.ru/embed/tv?imdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server2\u0022,\u0022name\u0022:\u0022VidSrc RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?imdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server3\u0022,\u0022name\u0022:\u0022VidSrc SU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server4\u0022,\u0022name\u0022:\u0022111Movies\u0022,\u0022url\u0022:\u0022https://111movies.net/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server5\u0022,\u0022name\u0022:\u00222Embed\u0022,\u0022url\u0022:\u0022https://2embed.online/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.online/embed/tmdb/tv?id\u003D348966\u0026s\u003D2\u0026e\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server6\u0022,\u0022name\u0022:\u0022VidFast\u0022,\u0022url\u0022:\u0022https://vidfast.pro/tv/348966/2/4?autoPlay\u003Dtrue\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:true,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server7\u0022,\u0022name\u0022:\u0022VidSrc Mov\u0022,\u0022url\u0022:\u0022https://vidsrc.mov/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.mov/embed/tv?tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server8\u0022,\u0022name\u0022:\u0022VidLink\u0022,\u0022url\u0022:\u0022https://vidlink.pro/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server9\u0022,\u0022name\u0022:\u0022GoDrive\u0022,\u0022url\u0022:\u0022https://godriveplayer.com/player.php?type\u003Dseries\u0026tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server10\u0022,\u0022name\u0022:\u0022MultiEmbed\u0022,\u0022url\u0022:\u0022https://multiembed.mov/?video_id\u003D348966\u0026s\u003D2\u0026e\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server11\u0022,\u0022name\u0022:\u0022VidStreams\u0022,\u0022url\u0022:\u0022https://vidstreams.net/embed/tvd348966/2/4/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server12\u0022,\u0022name\u0022:\u0022VidSrc To\u0022,\u0022url\u0022:\u0022https://vidsrc.to/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.to/embed/tv?tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server13\u0022,\u0022name\u0022:\u0022VidSrc Pro\u0022,\u0022url\u0022:\u0022https://vidsrc.pro/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.pro/embed/tv?tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server14\u0022,\u0022name\u0022:\u0022VidSrcMe RU\u0022,\u0022url\u0022:\u0022https://vidsrcme.ru/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.ru/embed/tv?tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server15\u0022,\u0022name\u0022:\u0022VidSrc\u002DMe RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dme.ru/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc\u002Dme.ru/embed/tv?tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server16\u0022,\u0022name\u0022:\u0022VidSrcMe SU\u0022,\u0022url\u0022:\u0022https://vidsrcme.su/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.su/embed/tv?tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server17\u0022,\u0022name\u0022:\u0022VidSrc Embed RU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?imdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server18\u0022,\u0022name\u0022:\u0022VidSrc Embed SU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server19\u0022,\u0022name\u0022:\u0022VSrc SU\u0022,\u0022url\u0022:\u0022https://vsrc.su/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vsrc.su/embed/tv?tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server20\u0022,\u0022name\u0022:\u00222Embed CC\u0022,\u0022url\u0022:\u0022https://2embed.cc/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.cc/embed/tmdb/tv?id\u003D348966\u0026s\u003D2\u0026e\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server21\u0022,\u0022name\u0022:\u0022SuperEmbed\u0022,\u0022url\u0022:\u0022https://superembed.stream/embed/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server22\u0022,\u0022name\u0022:\u0022VidSrc CC\u0022,\u0022url\u0022:\u0022https://vidsrc.cc/v2/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server23\u0022,\u0022name\u0022:\u0022Embed SU\u0022,\u0022url\u0022:\u0022https://embed.su/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server24\u0022,\u0022name\u0022:\u0022VidPlay Online\u0022,\u0022url\u0022:\u0022https://vidplay.online/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server25\u0022,\u0022name\u0022:\u0022VidSrc Dev\u0022,\u0022url\u0022:\u0022https://vidsrc.dev/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.dev/embed/tv?tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server26\u0022,\u0022name\u0022:\u0022VidSrc Win\u0022,\u0022url\u0022:\u0022https://vidsrc.win/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.win/embed/tv?tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server27\u0022,\u0022name\u0022:\u0022VidSrc VIP\u0022,\u0022url\u0022:\u0022https://vidsrc.wiki/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.wiki/embed/tv?tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server28\u0022,\u0022name\u0022:\u0022FSAPI\u0022,\u0022url\u0022:\u0022https://fsapi.xyz/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server29\u0022,\u0022name\u0022:\u00222Embed Skin\u0022,\u0022url\u0022:\u0022https://2embed.skin/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.skin/embed/tmdb/tv?id\u003D348966\u0026s\u003D2\u0026e\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server30\u0022,\u0022name\u0022:\u0022KimoStream\u0022,\u0022url\u0022:\u0022https://embed.kimostream.eu.org/embed/tv?imdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server31\u0022,\u0022name\u0022:\u0022CurtStream\u0022,\u0022url\u0022:\u0022https://curtstream.com/embed/tv?imdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://curtstream.com/series/tmdb/348966/2/4/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server32\u0022,\u0022name\u0022:\u0022MovieWP\u0022,\u0022url\u0022:\u0022https://moviewp.com/embed/tv?imdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://moviewp.com/se.php?video_id\u003D348966\u0026tmdb\u003D1\u0026s\u003D2\u0026e\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server33\u0022,\u0022name\u0022:\u0022VidPlay Pro\u0022,\u0022url\u0022:\u0022https://vidplay.pro/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server34\u0022,\u0022name\u0022:\u0022StreamWish\u0022,\u0022url\u0022:\u0022https://streamwish.com/embed/tv?imdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server35\u0022,\u0022name\u0022:\u0022MyCloudPlayer\u0022,\u0022url\u0022:\u0022https://mycloudplayer.com/embed/tv?imdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server36\u0022,\u0022name\u0022:\u0022VidSrc In\u0022,\u0022url\u0022:\u0022https://vidsrc.in/embed/tv/348966/2/4?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.in/embed/tv?tmdb\u003D348966\u0026season\u003D2\u0026episode\u003D4\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server37\u0022,\u0022name\u0022:\u0022MegaPlay\u0022,\u0022url\u0022:\u0022https://megaplay.buzz/stream/mal/348966/4/sub\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true}],\u0022active_server_key\u0022:\u0022server6\u0022},{\u0022id\u0022:\u0022cartoon:311073:3:6:\u0022,\u0022title\u0022:\u0022\u005Cu7f85\u005Cu5c0f\u005Cu9ed2\u005Cu6226\u005Cu8a18\u0022,\u0022year\u0022:\u00222025\u0022,\u0022type\u0022:\u0022cartoon\u0022,\u0022season_number\u0022:3,\u0022episode_number\u0022:6,\u0022poster\u0022:\u0022https://image.tmdb.org/t/p/w342/jwqcu6Jf8vZROEFrrV61f1bDNuN.jpg\u0022,\u0022backdrop\u0022:\u0022https://image.tmdb.org/t/p/w780/36W7IxZTBm63vWm6FJ8sC2VgVPZ.jpg\u0022,\u0022rating\u0022:\u0022\u0022,\u0022plot\u0022:\u0022\u0022,\u0022detail_url\u0022:\u0022/title/cartoon/title/?title\u003D%E7%BE%85%E5%B0%8F%E9%BB%92%E6%88%A6%E8%A8%98\u0026tmdb_id\u003D311073\u0026source\u003Dtmdb\u0022,\u0022servers\u0022:[{\u0022key\u0022:\u0022server1\u0022,\u0022name\u0022:\u0022VS Embed\u0022,\u0022url\u0022:\u0022https://vsembed.ru/embed/tv?imdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server2\u0022,\u0022name\u0022:\u0022VidSrc RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?imdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server3\u0022,\u0022name\u0022:\u0022VidSrc SU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server4\u0022,\u0022name\u0022:\u0022111Movies\u0022,\u0022url\u0022:\u0022https://111movies.net/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server5\u0022,\u0022name\u0022:\u00222Embed\u0022,\u0022url\u0022:\u0022https://2embed.online/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.online/embed/tmdb/tv?id\u003D311073\u0026s\u003D3\u0026e\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server6\u0022,\u0022name\u0022:\u0022VidFast\u0022,\u0022url\u0022:\u0022https://vidfast.pro/tv/311073/3/6?autoPlay\u003Dtrue\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:true,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server7\u0022,\u0022name\u0022:\u0022VidSrc Mov\u0022,\u0022url\u0022:\u0022https://vidsrc.mov/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.mov/embed/tv?tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server8\u0022,\u0022name\u0022:\u0022VidLink\u0022,\u0022url\u0022:\u0022https://vidlink.pro/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server9\u0022,\u0022name\u0022:\u0022GoDrive\u0022,\u0022url\u0022:\u0022https://godriveplayer.com/player.php?type\u003Dseries\u0026tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server10\u0022,\u0022name\u0022:\u0022MultiEmbed\u0022,\u0022url\u0022:\u0022https://multiembed.mov/?video_id\u003D311073\u0026s\u003D3\u0026e\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server11\u0022,\u0022name\u0022:\u0022VidStreams\u0022,\u0022url\u0022:\u0022https://vidstreams.net/embed/tvd311073/3/6/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server12\u0022,\u0022name\u0022:\u0022VidSrc To\u0022,\u0022url\u0022:\u0022https://vidsrc.to/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.to/embed/tv?tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server13\u0022,\u0022name\u0022:\u0022VidSrc Pro\u0022,\u0022url\u0022:\u0022https://vidsrc.pro/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.pro/embed/tv?tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server14\u0022,\u0022name\u0022:\u0022VidSrcMe RU\u0022,\u0022url\u0022:\u0022https://vidsrcme.ru/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.ru/embed/tv?tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server15\u0022,\u0022name\u0022:\u0022VidSrc\u002DMe RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dme.ru/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc\u002Dme.ru/embed/tv?tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server16\u0022,\u0022name\u0022:\u0022VidSrcMe SU\u0022,\u0022url\u0022:\u0022https://vidsrcme.su/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.su/embed/tv?tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server17\u0022,\u0022name\u0022:\u0022VidSrc Embed RU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?imdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server18\u0022,\u0022name\u0022:\u0022VidSrc Embed SU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server19\u0022,\u0022name\u0022:\u0022VSrc SU\u0022,\u0022url\u0022:\u0022https://vsrc.su/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vsrc.su/embed/tv?tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server20\u0022,\u0022name\u0022:\u00222Embed CC\u0022,\u0022url\u0022:\u0022https://2embed.cc/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.cc/embed/tmdb/tv?id\u003D311073\u0026s\u003D3\u0026e\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server21\u0022,\u0022name\u0022:\u0022SuperEmbed\u0022,\u0022url\u0022:\u0022https://superembed.stream/embed/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server22\u0022,\u0022name\u0022:\u0022VidSrc CC\u0022,\u0022url\u0022:\u0022https://vidsrc.cc/v2/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server23\u0022,\u0022name\u0022:\u0022Embed SU\u0022,\u0022url\u0022:\u0022https://embed.su/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server24\u0022,\u0022name\u0022:\u0022VidPlay Online\u0022,\u0022url\u0022:\u0022https://vidplay.online/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server25\u0022,\u0022name\u0022:\u0022VidSrc Dev\u0022,\u0022url\u0022:\u0022https://vidsrc.dev/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.dev/embed/tv?tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server26\u0022,\u0022name\u0022:\u0022VidSrc Win\u0022,\u0022url\u0022:\u0022https://vidsrc.win/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.win/embed/tv?tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server27\u0022,\u0022name\u0022:\u0022VidSrc VIP\u0022,\u0022url\u0022:\u0022https://vidsrc.wiki/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.wiki/embed/tv?tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server28\u0022,\u0022name\u0022:\u0022FSAPI\u0022,\u0022url\u0022:\u0022https://fsapi.xyz/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server29\u0022,\u0022name\u0022:\u00222Embed Skin\u0022,\u0022url\u0022:\u0022https://2embed.skin/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.skin/embed/tmdb/tv?id\u003D311073\u0026s\u003D3\u0026e\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server30\u0022,\u0022name\u0022:\u0022KimoStream\u0022,\u0022url\u0022:\u0022https://embed.kimostream.eu.org/embed/tv?imdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server31\u0022,\u0022name\u0022:\u0022CurtStream\u0022,\u0022url\u0022:\u0022https://curtstream.com/embed/tv?imdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://curtstream.com/series/tmdb/311073/3/6/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server32\u0022,\u0022name\u0022:\u0022MovieWP\u0022,\u0022url\u0022:\u0022https://moviewp.com/embed/tv?imdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://moviewp.com/se.php?video_id\u003D311073\u0026tmdb\u003D1\u0026s\u003D3\u0026e\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server33\u0022,\u0022name\u0022:\u0022VidPlay Pro\u0022,\u0022url\u0022:\u0022https://vidplay.pro/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server34\u0022,\u0022name\u0022:\u0022StreamWish\u0022,\u0022url\u0022:\u0022https://streamwish.com/embed/tv?imdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server35\u0022,\u0022name\u0022:\u0022MyCloudPlayer\u0022,\u0022url\u0022:\u0022https://mycloudplayer.com/embed/tv?imdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server36\u0022,\u0022name\u0022:\u0022VidSrc In\u0022,\u0022url\u0022:\u0022https://vidsrc.in/embed/tv/311073/3/6?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.in/embed/tv?tmdb\u003D311073\u0026season\u003D3\u0026episode\u003D6\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server37\u0022,\u0022name\u0022:\u0022MegaPlay\u0022,\u0022url\u0022:\u0022https://megaplay.buzz/stream/mal/311073/6/sub\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true}],\u0022active_server_key\u0022:\u0022server6\u0022},{\u0022id\u0022:\u0022series:135155:1:7:thefabulous\u0022,\u0022title\u0022:\u0022The Fabulous\u0022,\u0022year\u0022:\u00222022\u0022,\u0022type\u0022:\u0022series\u0022,\u0022season_number\u0022:1,\u0022episode_number\u0022:7,\u0022poster\u0022:\u0022https://image.tmdb.org/t/p/w342/1LnPNXQ8upwUT1dYX2ZopQXjmt8.jpg\u0022,\u0022backdrop\u0022:\u0022https://image.tmdb.org/t/p/w780/r19gAamhuLoXBktGnh0KsnNHycN.jpg\u0022,\u0022rating\u0022:\u00227.7\u0022,\u0022plot\u0022:\u0022Four best friends chase their dreams in the competitive world of fashion while juggling demanding jobs, romantic dilemmas and wild nights on the town.\u0022,\u0022detail_url\u0022:\u0022/title/series/the\u002Dfabulous/?title\u003DThe+Fabulous\u0026tmdb_id\u003D135155\u0026source\u003Dtmdb\u0022,\u0022servers\u0022:[{\u0022key\u0022:\u0022server1\u0022,\u0022name\u0022:\u0022VS Embed\u0022,\u0022url\u0022:\u0022https://vsembed.ru/embed/tv?imdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server2\u0022,\u0022name\u0022:\u0022VidSrc RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?imdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server3\u0022,\u0022name\u0022:\u0022VidSrc SU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server4\u0022,\u0022name\u0022:\u0022111Movies\u0022,\u0022url\u0022:\u0022https://111movies.net/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server5\u0022,\u0022name\u0022:\u00222Embed\u0022,\u0022url\u0022:\u0022https://2embed.online/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.online/embed/tmdb/tv?id\u003D135155\u0026s\u003D1\u0026e\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server6\u0022,\u0022name\u0022:\u0022VidFast\u0022,\u0022url\u0022:\u0022https://vidfast.pro/tv/135155/1/7?autoPlay\u003Dtrue\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:true,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server7\u0022,\u0022name\u0022:\u0022VidSrc Mov\u0022,\u0022url\u0022:\u0022https://vidsrc.mov/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.mov/embed/tv?tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server8\u0022,\u0022name\u0022:\u0022VidLink\u0022,\u0022url\u0022:\u0022https://vidlink.pro/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server9\u0022,\u0022name\u0022:\u0022GoDrive\u0022,\u0022url\u0022:\u0022https://godriveplayer.com/player.php?type\u003Dseries\u0026tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server10\u0022,\u0022name\u0022:\u0022MultiEmbed\u0022,\u0022url\u0022:\u0022https://multiembed.mov/?video_id\u003D135155\u0026s\u003D1\u0026e\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server11\u0022,\u0022name\u0022:\u0022VidStreams\u0022,\u0022url\u0022:\u0022https://vidstreams.net/embed/tvd135155/1/7/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server12\u0022,\u0022name\u0022:\u0022VidSrc To\u0022,\u0022url\u0022:\u0022https://vidsrc.to/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.to/embed/tv?tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server13\u0022,\u0022name\u0022:\u0022VidSrc Pro\u0022,\u0022url\u0022:\u0022https://vidsrc.pro/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.pro/embed/tv?tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server14\u0022,\u0022name\u0022:\u0022VidSrcMe RU\u0022,\u0022url\u0022:\u0022https://vidsrcme.ru/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.ru/embed/tv?tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server15\u0022,\u0022name\u0022:\u0022VidSrc\u002DMe RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dme.ru/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc\u002Dme.ru/embed/tv?tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server16\u0022,\u0022name\u0022:\u0022VidSrcMe SU\u0022,\u0022url\u0022:\u0022https://vidsrcme.su/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.su/embed/tv?tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server17\u0022,\u0022name\u0022:\u0022VidSrc Embed RU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?imdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server18\u0022,\u0022name\u0022:\u0022VidSrc Embed SU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server19\u0022,\u0022name\u0022:\u0022VSrc SU\u0022,\u0022url\u0022:\u0022https://vsrc.su/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vsrc.su/embed/tv?tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server20\u0022,\u0022name\u0022:\u00222Embed CC\u0022,\u0022url\u0022:\u0022https://2embed.cc/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.cc/embed/tmdb/tv?id\u003D135155\u0026s\u003D1\u0026e\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server21\u0022,\u0022name\u0022:\u0022SuperEmbed\u0022,\u0022url\u0022:\u0022https://superembed.stream/embed/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server22\u0022,\u0022name\u0022:\u0022VidSrc CC\u0022,\u0022url\u0022:\u0022https://vidsrc.cc/v2/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server23\u0022,\u0022name\u0022:\u0022Embed SU\u0022,\u0022url\u0022:\u0022https://embed.su/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server24\u0022,\u0022name\u0022:\u0022VidPlay Online\u0022,\u0022url\u0022:\u0022https://vidplay.online/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server25\u0022,\u0022name\u0022:\u0022VidSrc Dev\u0022,\u0022url\u0022:\u0022https://vidsrc.dev/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.dev/embed/tv?tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server26\u0022,\u0022name\u0022:\u0022VidSrc Win\u0022,\u0022url\u0022:\u0022https://vidsrc.win/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.win/embed/tv?tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server27\u0022,\u0022name\u0022:\u0022VidSrc VIP\u0022,\u0022url\u0022:\u0022https://vidsrc.wiki/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.wiki/embed/tv?tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server28\u0022,\u0022name\u0022:\u0022FSAPI\u0022,\u0022url\u0022:\u0022https://fsapi.xyz/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server29\u0022,\u0022name\u0022:\u00222Embed Skin\u0022,\u0022url\u0022:\u0022https://2embed.skin/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.skin/embed/tmdb/tv?id\u003D135155\u0026s\u003D1\u0026e\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server30\u0022,\u0022name\u0022:\u0022KimoStream\u0022,\u0022url\u0022:\u0022https://embed.kimostream.eu.org/embed/tv?imdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server31\u0022,\u0022name\u0022:\u0022CurtStream\u0022,\u0022url\u0022:\u0022https://curtstream.com/embed/tv?imdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://curtstream.com/series/tmdb/135155/1/7/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server32\u0022,\u0022name\u0022:\u0022MovieWP\u0022,\u0022url\u0022:\u0022https://moviewp.com/embed/tv?imdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://moviewp.com/se.php?video_id\u003D135155\u0026tmdb\u003D1\u0026s\u003D1\u0026e\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server33\u0022,\u0022name\u0022:\u0022VidPlay Pro\u0022,\u0022url\u0022:\u0022https://vidplay.pro/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server34\u0022,\u0022name\u0022:\u0022StreamWish\u0022,\u0022url\u0022:\u0022https://streamwish.com/embed/tv?imdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server35\u0022,\u0022name\u0022:\u0022MyCloudPlayer\u0022,\u0022url\u0022:\u0022https://mycloudplayer.com/embed/tv?imdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server36\u0022,\u0022name\u0022:\u0022VidSrc In\u0022,\u0022url\u0022:\u0022https://vidsrc.in/embed/tv/135155/1/7?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.in/embed/tv?tmdb\u003D135155\u0026season\u003D1\u0026episode\u003D7\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server37\u0022,\u0022name\u0022:\u0022MegaPlay\u0022,\u0022url\u0022:\u0022https://megaplay.buzz/stream/mal/135155/7/sub\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true}],\u0022active_server_key\u0022:\u0022server6\u0022},{\u0022id\u0022:\u0022cartoon:174508:3:9:mickeyplayspapa\u0022,\u0022title\u0022:\u0022Mickey Plays Papa\u0022,\u0022year\u0022:\u00221934\u0022,\u0022type\u0022:\u0022cartoon\u0022,\u0022season_number\u0022:3,\u0022episode_number\u0022:9,\u0022poster\u0022:\u0022https://image.tmdb.org/t/p/w342/vHDyLHaTfs0ySpvl2qg8RXP8JPL.jpg\u0022,\u0022backdrop\u0022:\u0022https://image.tmdb.org/t/p/w780/7fYJiDX9rXA18YHce4OyRPM7XXR.jpg\u0022,\u0022rating\u0022:\u00225.9\u0022,\u0022plot\u0022:\u0022Mickey and Pluto are reading scary stories\u003B they go to investigate a noise and find a foundling mouse that\u0027s been left on the porch.\u0022,\u0022detail_url\u0022:\u0022/title/cartoon/mickey\u002Dplays\u002Dpapa/?title\u003DMickey+Plays+Papa\u0026tmdb_id\u003D174508\u0026source\u003Dtmdb\u0022,\u0022servers\u0022:[{\u0022key\u0022:\u0022server1\u0022,\u0022name\u0022:\u0022VS Embed\u0022,\u0022url\u0022:\u0022https://vsembed.ru/embed/tv?imdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server2\u0022,\u0022name\u0022:\u0022VidSrc RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?imdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server3\u0022,\u0022name\u0022:\u0022VidSrc SU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server4\u0022,\u0022name\u0022:\u0022111Movies\u0022,\u0022url\u0022:\u0022https://111movies.net/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server5\u0022,\u0022name\u0022:\u00222Embed\u0022,\u0022url\u0022:\u0022https://2embed.online/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.online/embed/tmdb/tv?id\u003D174508\u0026s\u003D3\u0026e\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server6\u0022,\u0022name\u0022:\u0022VidFast\u0022,\u0022url\u0022:\u0022https://vidfast.pro/tv/174508/3/9?autoPlay\u003Dtrue\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:true,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server7\u0022,\u0022name\u0022:\u0022VidSrc Mov\u0022,\u0022url\u0022:\u0022https://vidsrc.mov/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.mov/embed/tv?tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server8\u0022,\u0022name\u0022:\u0022VidLink\u0022,\u0022url\u0022:\u0022https://vidlink.pro/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server9\u0022,\u0022name\u0022:\u0022GoDrive\u0022,\u0022url\u0022:\u0022https://godriveplayer.com/player.php?type\u003Dseries\u0026tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server10\u0022,\u0022name\u0022:\u0022MultiEmbed\u0022,\u0022url\u0022:\u0022https://multiembed.mov/?video_id\u003D174508\u0026s\u003D3\u0026e\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server11\u0022,\u0022name\u0022:\u0022VidStreams\u0022,\u0022url\u0022:\u0022https://vidstreams.net/embed/tvd174508/3/9/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server12\u0022,\u0022name\u0022:\u0022VidSrc To\u0022,\u0022url\u0022:\u0022https://vidsrc.to/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.to/embed/tv?tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server13\u0022,\u0022name\u0022:\u0022VidSrc Pro\u0022,\u0022url\u0022:\u0022https://vidsrc.pro/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.pro/embed/tv?tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server14\u0022,\u0022name\u0022:\u0022VidSrcMe RU\u0022,\u0022url\u0022:\u0022https://vidsrcme.ru/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.ru/embed/tv?tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server15\u0022,\u0022name\u0022:\u0022VidSrc\u002DMe RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dme.ru/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc\u002Dme.ru/embed/tv?tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server16\u0022,\u0022name\u0022:\u0022VidSrcMe SU\u0022,\u0022url\u0022:\u0022https://vidsrcme.su/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.su/embed/tv?tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server17\u0022,\u0022name\u0022:\u0022VidSrc Embed RU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?imdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server18\u0022,\u0022name\u0022:\u0022VidSrc Embed SU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server19\u0022,\u0022name\u0022:\u0022VSrc SU\u0022,\u0022url\u0022:\u0022https://vsrc.su/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vsrc.su/embed/tv?tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server20\u0022,\u0022name\u0022:\u00222Embed CC\u0022,\u0022url\u0022:\u0022https://2embed.cc/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.cc/embed/tmdb/tv?id\u003D174508\u0026s\u003D3\u0026e\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server21\u0022,\u0022name\u0022:\u0022SuperEmbed\u0022,\u0022url\u0022:\u0022https://superembed.stream/embed/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server22\u0022,\u0022name\u0022:\u0022VidSrc CC\u0022,\u0022url\u0022:\u0022https://vidsrc.cc/v2/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server23\u0022,\u0022name\u0022:\u0022Embed SU\u0022,\u0022url\u0022:\u0022https://embed.su/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server24\u0022,\u0022name\u0022:\u0022VidPlay Online\u0022,\u0022url\u0022:\u0022https://vidplay.online/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server25\u0022,\u0022name\u0022:\u0022VidSrc Dev\u0022,\u0022url\u0022:\u0022https://vidsrc.dev/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.dev/embed/tv?tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server26\u0022,\u0022name\u0022:\u0022VidSrc Win\u0022,\u0022url\u0022:\u0022https://vidsrc.win/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.win/embed/tv?tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server27\u0022,\u0022name\u0022:\u0022VidSrc VIP\u0022,\u0022url\u0022:\u0022https://vidsrc.wiki/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.wiki/embed/tv?tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server28\u0022,\u0022name\u0022:\u0022FSAPI\u0022,\u0022url\u0022:\u0022https://fsapi.xyz/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server29\u0022,\u0022name\u0022:\u00222Embed Skin\u0022,\u0022url\u0022:\u0022https://2embed.skin/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.skin/embed/tmdb/tv?id\u003D174508\u0026s\u003D3\u0026e\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server30\u0022,\u0022name\u0022:\u0022KimoStream\u0022,\u0022url\u0022:\u0022https://embed.kimostream.eu.org/embed/tv?imdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server31\u0022,\u0022name\u0022:\u0022CurtStream\u0022,\u0022url\u0022:\u0022https://curtstream.com/embed/tv?imdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://curtstream.com/series/tmdb/174508/3/9/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server32\u0022,\u0022name\u0022:\u0022MovieWP\u0022,\u0022url\u0022:\u0022https://moviewp.com/embed/tv?imdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://moviewp.com/se.php?video_id\u003D174508\u0026tmdb\u003D1\u0026s\u003D3\u0026e\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server33\u0022,\u0022name\u0022:\u0022VidPlay Pro\u0022,\u0022url\u0022:\u0022https://vidplay.pro/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server34\u0022,\u0022name\u0022:\u0022StreamWish\u0022,\u0022url\u0022:\u0022https://streamwish.com/embed/tv?imdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server35\u0022,\u0022name\u0022:\u0022MyCloudPlayer\u0022,\u0022url\u0022:\u0022https://mycloudplayer.com/embed/tv?imdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server36\u0022,\u0022name\u0022:\u0022VidSrc In\u0022,\u0022url\u0022:\u0022https://vidsrc.in/embed/tv/174508/3/9?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.in/embed/tv?tmdb\u003D174508\u0026season\u003D3\u0026episode\u003D9\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server37\u0022,\u0022name\u0022:\u0022MegaPlay\u0022,\u0022url\u0022:\u0022https://megaplay.buzz/stream/mal/174508/9/sub\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true}],\u0022active_server_key\u0022:\u0022server6\u0022},{\u0022id\u0022:\u0022anime:95897:1:3:overflow\u0022,\u0022title\u0022:\u0022Overflow\u0022,\u0022year\u0022:\u00222020\u0022,\u0022type\u0022:\u0022anime\u0022,\u0022season_number\u0022:1,\u0022episode_number\u0022:3,\u0022poster\u0022:\u0022https://image.tmdb.org/t/p/w342/8RtwL5gxUvh9YViqjhNlVRvJpum.jpg\u0022,\u0022backdrop\u0022:\u0022https://image.tmdb.org/t/p/w780/4NRBKA8qVzCvuD3WeLieiLGmIjm.jpg\u0022,\u0022rating\u0022:\u00227.5\u0022,\u0022plot\u0022:\u0022Kazushi Sudou is a university student who is visited by his two childhood friends, the sisters Ayane and Kotone Shirakawa. When Ayane discovers that Kazushi not only forgot to buy\u005Cu2026\u0022,\u0022detail_url\u0022:\u0022/title/anime/overflow/?title\u003DOverflow\u0026tmdb_id\u003D95897\u0026source\u003Dtmdb\u0022,\u0022servers\u0022:[{\u0022key\u0022:\u0022server1\u0022,\u0022name\u0022:\u0022VS Embed\u0022,\u0022url\u0022:\u0022https://vsembed.ru/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server2\u0022,\u0022name\u0022:\u0022VidSrc RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server3\u0022,\u0022name\u0022:\u0022VidSrc SU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server4\u0022,\u0022name\u0022:\u0022111Movies\u0022,\u0022url\u0022:\u0022https://111movies.net/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server5\u0022,\u0022name\u0022:\u00222Embed\u0022,\u0022url\u0022:\u0022https://2embed.online/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.online/embed/tmdb/tv?id\u003D95897\u0026s\u003D1\u0026e\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server6\u0022,\u0022name\u0022:\u0022VidFast\u0022,\u0022url\u0022:\u0022https://vidfast.pro/tv/95897/1/3?autoPlay\u003Dtrue\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:true,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server7\u0022,\u0022name\u0022:\u0022VidSrc Mov\u0022,\u0022url\u0022:\u0022https://vidsrc.mov/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.mov/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server8\u0022,\u0022name\u0022:\u0022VidLink\u0022,\u0022url\u0022:\u0022https://vidlink.pro/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true},{\u0022key\u0022:\u0022server9\u0022,\u0022name\u0022:\u0022GoDrive\u0022,\u0022url\u0022:\u0022https://godriveplayer.com/player.php?type\u003Dseries\u0026tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server10\u0022,\u0022name\u0022:\u0022MultiEmbed\u0022,\u0022url\u0022:\u0022https://multiembed.mov/?video_id\u003D95897\u0026s\u003D1\u0026e\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server11\u0022,\u0022name\u0022:\u0022VidStreams\u0022,\u0022url\u0022:\u0022https://vidstreams.net/embed/tvd95897/1/3/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server12\u0022,\u0022name\u0022:\u0022VidSrc To\u0022,\u0022url\u0022:\u0022https://vidsrc.to/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.to/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server13\u0022,\u0022name\u0022:\u0022VidSrc Pro\u0022,\u0022url\u0022:\u0022https://vidsrc.pro/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.pro/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server14\u0022,\u0022name\u0022:\u0022VidSrcMe RU\u0022,\u0022url\u0022:\u0022https://vidsrcme.ru/embed/anime/95897/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.ru/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022https://vidsrcme.ru/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server15\u0022,\u0022name\u0022:\u0022VidSrc\u002DMe RU\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dme.ru/embed/anime/95897/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc\u002Dme.ru/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022https://vidsrc\u002Dme.ru/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server16\u0022,\u0022name\u0022:\u0022VidSrcMe SU\u0022,\u0022url\u0022:\u0022https://vidsrcme.su/embed/anime/95897/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrcme.su/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022https://vidsrcme.su/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server17\u0022,\u0022name\u0022:\u0022VidSrc Embed RU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.ru/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server18\u0022,\u0022name\u0022:\u0022VidSrc Embed SU 2\u0022,\u0022url\u0022:\u0022https://vidsrc\u002Dembed.su/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server19\u0022,\u0022name\u0022:\u0022VSrc SU\u0022,\u0022url\u0022:\u0022https://vsrc.su/embed/anime/95897/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vsrc.su/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022https://vsrc.su/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server20\u0022,\u0022name\u0022:\u00222Embed CC\u0022,\u0022url\u0022:\u0022https://2embed.cc/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.cc/embed/tmdb/tv?id\u003D95897\u0026s\u003D1\u0026e\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server21\u0022,\u0022name\u0022:\u0022SuperEmbed\u0022,\u0022url\u0022:\u0022https://superembed.stream/embed/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server22\u0022,\u0022name\u0022:\u0022VidSrc CC\u0022,\u0022url\u0022:\u0022https://vidsrc.cc/v2/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server23\u0022,\u0022name\u0022:\u0022Embed SU\u0022,\u0022url\u0022:\u0022https://embed.su/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server24\u0022,\u0022name\u0022:\u0022VidPlay Online\u0022,\u0022url\u0022:\u0022https://vidplay.online/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server25\u0022,\u0022name\u0022:\u0022VidSrc Dev\u0022,\u0022url\u0022:\u0022https://vidsrc.dev/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.dev/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server26\u0022,\u0022name\u0022:\u0022VidSrc Win\u0022,\u0022url\u0022:\u0022https://vidsrc.win/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.win/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server27\u0022,\u0022name\u0022:\u0022VidSrc VIP\u0022,\u0022url\u0022:\u0022https://vidsrc.wiki/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.wiki/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server28\u0022,\u0022name\u0022:\u0022FSAPI\u0022,\u0022url\u0022:\u0022https://fsapi.xyz/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server29\u0022,\u0022name\u0022:\u00222Embed Skin\u0022,\u0022url\u0022:\u0022https://2embed.skin/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://2embed.skin/embed/tmdb/tv?id\u003D95897\u0026s\u003D1\u0026e\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server30\u0022,\u0022name\u0022:\u0022KimoStream\u0022,\u0022url\u0022:\u0022https://embed.kimostream.eu.org/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server31\u0022,\u0022name\u0022:\u0022CurtStream\u0022,\u0022url\u0022:\u0022https://curtstream.com/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://curtstream.com/series/tmdb/95897/1/3/?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server32\u0022,\u0022name\u0022:\u0022MovieWP\u0022,\u0022url\u0022:\u0022https://moviewp.com/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://moviewp.com/se.php?video_id\u003D95897\u0026tmdb\u003D1\u0026s\u003D1\u0026e\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server33\u0022,\u0022name\u0022:\u0022VidPlay Pro\u0022,\u0022url\u0022:\u0022https://vidplay.pro/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server34\u0022,\u0022name\u0022:\u0022StreamWish\u0022,\u0022url\u0022:\u0022https://streamwish.com/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server35\u0022,\u0022name\u0022:\u0022MyCloudPlayer\u0022,\u0022url\u0022:\u0022https://mycloudplayer.com/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server36\u0022,\u0022name\u0022:\u0022VidSrc In\u0022,\u0022url\u0022:\u0022https://vidsrc.in/embed/tv/95897/1/3?autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022,\u0022fallback_urls\u0022:[\u0022https://vidsrc.in/embed/tv?tmdb\u003D95897\u0026season\u003D1\u0026episode\u003D3\u0026autoplay\u003D1\u0026autoPlay\u003Dtrue\u0026autostart\u003Dtrue\u0026play\u003Dtrue\u0022],\u0022is_default\u0022:false,\u0022is_recommended\u0022:false},{\u0022key\u0022:\u0022server37\u0022,\u0022name\u0022:\u0022MegaPlay\u0022,\u0022url\u0022:\u0022https://megaplay.buzz/stream/mal/95897/3/sub\u0022,\u0022fallback_urls\u0022:[],\u0022is_default\u0022:false,\u0022is_recommended\u0022:true}],\u0022active_server_key\u0022:\u0022server6\u0022}]");
+        const feed = document.getElementById("shortsFeed");
+        const refreshFeedButton = document.getElementById("refreshFeed");
+        const shortsMenuToggle = document.getElementById("shortsMenuToggle");
+        const shortsSideNav = document.getElementById("shortsSideNav");
+        const likedStorageKey = "freemovie_shorts_liked_v1";
+        const preferredServerStorageKey = "freemovie_shorts_preferred_server_v1";
+        let items = applyPreferredServerToItems(Array.isArray(initialShorts) ? initialShorts : []);
+        let activeIndex = 0;
+        let activeFrameCard = null;
+        let observer = null;
+        let loadingMore = false;
+        const maxCardsBehind = 7;
+        const maxCardsAhead = 16;
+
+        function escapeHtml(value) {
+            return String(value || "").replace(/[&<>"']/g, (char) => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;",
+            }[char]));
+        }
+
+        function readLiked() {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(likedStorageKey) || "[]");
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function writeLiked(nextLiked) {
+            localStorage.setItem(likedStorageKey, JSON.stringify(nextLiked.slice(0, 200)));
+        }
+
+        function readPreferredServerKey() {
+            return localStorage.getItem(preferredServerStorageKey) || "";
+        }
+
+        function writePreferredServerKey(serverKey) {
+            if (!serverKey) return;
+            localStorage.setItem(preferredServerStorageKey, serverKey);
+        }
+
+        function applyPreferredServer(item) {
+            const preferredKey = readPreferredServerKey();
+            if (!preferredKey || !item?.servers?.some((server) => server.key === preferredKey)) {
+                return item;
+            }
+            item.active_server_key = preferredKey;
+            return item;
+        }
+
+        function applyPreferredServerToItems(nextItems) {
+            nextItems.forEach(applyPreferredServer);
+            return nextItems;
+        }
+
+        function selectedServer(item) {
+            applyPreferredServer(item);
+            const servers = item?.servers || [];
+            return servers.find((server) => server.key === item.active_server_key) || servers.find((server) => server.is_default) || servers[0] || null;
+        }
+
+        function buildServerSelect(item, index) {
+            const servers = item.servers || [];
+            if (servers.length < 2) return "";
+            const activeServer = selectedServer(item);
+            return `
+                <select class="server-select" data-server-select="${index}" aria-label="Change server">
+                    ${servers.map((server) => `
+                        <option value="${escapeHtml(server.key)}"${server.key === activeServer?.key ? " selected" : ""}>
+                            ${escapeHtml(server.name)}
+                        </option>
+                    `).join("")}
+                </select>
+                <div class="short-server-picker" data-server-picker="${index}">
+                    <button class="short-server-trigger" type="button" aria-expanded="false" aria-haspopup="listbox">
+                        <span class="short-server-copy">
+                            <span class="short-server-kicker">${activeServer?.is_recommended ? "Recommended server" : "Server"}</span>
+                            <span class="short-server-label">${escapeHtml(activeServer?.name || "Choose server")}</span>
+                        </span>
+                        <span class="short-server-chevron" aria-hidden="true"></span>
+                    </button>
+                    <div class="short-server-menu" role="listbox" aria-label="Shorts server selector">
+                        ${servers.map((server) => `
+                            <button class="short-server-option${server.key === activeServer?.key ? " active" : ""}" type="button" role="option" aria-selected="${server.key === activeServer?.key ? "true" : "false"}" data-server-option="${escapeHtml(server.key)}">
+                                <span class="short-server-option-topline">
+                                    <span class="short-server-option-label">${escapeHtml(server.name)}</span>
+                                    ${server.is_recommended ? '<span class="short-server-badge">Likely</span>' : ""}
+                                </span>
+                                <span class="short-server-option-meta">${server.key === activeServer?.key ? "Currently selected for Shorts" : "Use this server for every Short"}</span>
+                            </button>
+                        `).join("")}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCard(item, index) {
+            const liked = readLiked().includes(item.id);
+            const episodeLabel = item.episode_number ? `S${item.season_number || 1} E${item.episode_number}` : "";
+            const meta = [item.year, item.type, episodeLabel, item.rating ? `Rating ${item.rating}` : ""].filter(Boolean).join(" | ");
+            return `
+                <article class="short-card" data-index="${index}">
+                    <img class="short-backdrop" src="${escapeHtml(item.backdrop || item.poster || "")}" alt="" loading="lazy" decoding="async">
+                    <div class="portrait-stage">
+                        <img class="poster-layer" src="${escapeHtml(item.poster || item.backdrop || "")}" alt="${escapeHtml(item.title)} poster" loading="${index < 2 ? "eager" : "lazy"}" decoding="async">
+                        <div class="frame-mount" data-frame-mount></div>
+                        <div class="frame-placeholder" data-placeholder>${index === 0 ? "Loading..." : "Swipe to play"}</div>
+                        <div class="short-gradient"></div>
+                    </div>
+                    <div class="short-copy">
+                        <h1 class="short-title">${escapeHtml(item.title)}</h1>
+                        <div class="short-meta">${escapeHtml(meta)}</div>
+                        ${item.plot ? `<div class="short-plot">${escapeHtml(item.plot)}</div>` : ""}
+                        <div class="short-server-host">
+                            ${buildServerSelect(item, index)}
+                        </div>
+                    </div>
+                    <div class="short-actions">
+                        <div>
+                            <button class="action-button${liked ? " is-liked" : ""}" type="button" data-like="${index}" aria-label="Like">
+                                <i class="fa fa-heart" aria-hidden="true"></i>
+                            </button>
+                            <div class="action-label">Like</div>
+                        </div>
+                        <div>
+                            <button class="action-button" type="button" data-share="${index}" aria-label="Share">
+                                <i class="fa fa-share" aria-hidden="true"></i>
+                            </button>
+                            <div class="action-label">Share</div>
+                        </div>
+                        <div>
+                            <a class="action-button" href="${escapeHtml(item.detail_url || "#")}" aria-label="Details">
+                                <i class="fa fa-info" aria-hidden="true"></i>
+                            </a>
+                            <div class="action-label">Info</div>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        function mountActiveFrame() {
+            const card = feed.querySelector(`.short-card[data-index="${activeIndex}"]`);
+            const item = items[activeIndex];
+            if (!card || !item) return;
+
+            if (activeFrameCard && activeFrameCard !== card) {
+                activeFrameCard.querySelector("[data-frame-mount]").innerHTML = "";
+                activeFrameCard.querySelector("[data-placeholder]").textContent = "Swipe to play";
+            }
+
+            const mount = card.querySelector("[data-frame-mount]");
+            const placeholder = card.querySelector("[data-placeholder]");
+            const server = selectedServer(item);
+            if (!server?.url) {
+                placeholder.textContent = "No server available";
+                return;
+            }
+
+            if (!mount.querySelector("iframe")) {
+                placeholder.textContent = "Loading...";
+                const iframe = document.createElement("iframe");
+                iframe.src = server.url;
+                iframe.loading = "eager";
+                iframe.referrerPolicy = "no-referrer";
+                iframe.allow = "autoplay; fullscreen; accelerometer; encrypted-media; gyroscope; picture-in-picture";
+                iframe.allowFullscreen = true;
+                iframe.addEventListener("load", () => {
+                    placeholder.textContent = "";
+                    placeholder.style.pointerEvents = "none";
+                }, { once: true });
+                mount.appendChild(iframe);
+            }
+            activeFrameCard = card;
+        }
+
+        function closeServerPickers(exceptPicker = null) {
+            document.querySelectorAll(".short-server-picker.is-open").forEach((picker) => {
+                if (picker === exceptPicker) return;
+                picker.classList.remove("is-open");
+                picker.querySelector(".short-server-trigger")?.setAttribute("aria-expanded", "false");
+            });
+        }
+
+        function switchServerForShort(index, serverKey) {
+            const item = items[index];
+            if (!item?.servers?.some((server) => server.key === serverKey)) return;
+            writePreferredServerKey(serverKey);
+            items.forEach((entry) => {
+                if (entry?.servers?.some((server) => server.key === serverKey)) {
+                    entry.active_server_key = serverKey;
+                }
+            });
+            closeServerPickers();
+            const currentScrollTop = feed.scrollTop;
+            feed.querySelectorAll(".short-card").forEach((card) => {
+                const cardIndex = Number(card.dataset.index || "0");
+                const cardItem = items[cardIndex];
+                if (!cardItem?.servers?.some((server) => server.key === serverKey)) return;
+                const pickerHost = card.querySelector(".short-server-host");
+                if (pickerHost) {
+                    pickerHost.innerHTML = buildServerSelect(cardItem, cardIndex);
+                }
+            });
+            bindCardEvents();
+            feed.scrollTop = currentScrollTop;
+            if (index === activeIndex && activeFrameCard) {
+                activeFrameCard.querySelector("[data-frame-mount]")?.replaceChildren();
+                const placeholder = activeFrameCard.querySelector("[data-placeholder]");
+                if (placeholder) {
+                    placeholder.textContent = "Loading...";
+                    placeholder.style.pointerEvents = "";
+                }
+                mountActiveFrame();
+            }
+        }
+
+        function bindCardEvents(root = feed) {
+            root.querySelectorAll("[data-like]").forEach((button) => {
+                if (button.dataset.bound) return;
+                button.dataset.bound = "true";
+                button.addEventListener("click", () => {
+                    const item = items[Number(button.dataset.like)];
+                    if (!item) return;
+                    const liked = readLiked();
+                    const nextLiked = liked.includes(item.id)
+                        ? liked.filter((id) => id !== item.id)
+                        : [item.id, ...liked.filter((id) => id !== item.id)];
+                    writeLiked(nextLiked);
+                    button.classList.toggle("is-liked", nextLiked.includes(item.id));
+                });
+            });
+
+            root.querySelectorAll("[data-share]").forEach((button) => {
+                if (button.dataset.bound) return;
+                button.dataset.bound = "true";
+                button.addEventListener("click", async () => {
+                    const item = items[Number(button.dataset.share)];
+                    const shareUrl = new URL(item?.detail_url || window.location.href, window.location.origin).href;
+                    try {
+                        if (navigator.share) {
+                            await navigator.share({ title: item.title, url: shareUrl });
+                        } else {
+                            await navigator.clipboard.writeText(shareUrl);
+                        }
+                    } catch (error) {
+                    }
+                });
+            });
+
+            root.querySelectorAll("[data-server-select]").forEach((select) => {
+                if (select.dataset.bound) return;
+                select.dataset.bound = "true";
+                select.addEventListener("change", () => {
+                    const index = Number(select.dataset.serverSelect);
+                    switchServerForShort(index, select.value);
+                });
+            });
+
+            root.querySelectorAll("[data-server-picker]").forEach((picker) => {
+                if (picker.dataset.bound) return;
+                picker.dataset.bound = "true";
+                const trigger = picker.querySelector(".short-server-trigger");
+                trigger?.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                    const willOpen = !picker.classList.contains("is-open");
+                    closeServerPickers(willOpen ? picker : null);
+                    picker.classList.toggle("is-open", willOpen);
+                    trigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+                });
+                picker.querySelectorAll("[data-server-option]").forEach((button) => {
+                    button.addEventListener("click", (event) => {
+                        event.stopPropagation();
+                        switchServerForShort(Number(picker.dataset.serverPicker || "0"), button.dataset.serverOption || "");
+                    });
+                });
+            });
+        }
+
+        function observeCards() {
+            observer?.disconnect();
+            observer = new IntersectionObserver((entries) => {
+                let bestEntry = null;
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    if (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio) {
+                        bestEntry = entry;
+                    }
+                });
+                if (!bestEntry || bestEntry.intersectionRatio < 0.62) return;
+                activeIndex = Number(bestEntry.target.dataset.index || "0");
+                mountActiveFrame();
+                pruneRenderedCards();
+                if (activeIndex >= items.length - 3) {
+                    loadMoreShorts();
+                }
+            }, { threshold: [0.62, 0.74, 0.9] });
+            feed.querySelectorAll(".short-card").forEach((card) => observer.observe(card));
+        }
+
+        function pruneRenderedCards() {
+            const minIndex = Math.max(0, activeIndex - maxCardsBehind);
+            const maxIndex = activeIndex + maxCardsAhead;
+            let removedBeforeHeight = 0;
+            feed.querySelectorAll(".short-card").forEach((card) => {
+                const index = Number(card.dataset.index || "0");
+                if (index >= minIndex && index <= maxIndex) return;
+                if (card === activeFrameCard) return;
+                if (index < activeIndex) {
+                    removedBeforeHeight += card.getBoundingClientRect().height;
+                }
+                observer?.unobserve(card);
+                card.querySelector("[data-frame-mount]")?.replaceChildren();
+                card.remove();
+            });
+            if (removedBeforeHeight > 0) {
+                feed.scrollTop = Math.max(0, feed.scrollTop - removedBeforeHeight);
+            }
+        }
+
+        function appendFeedCards(newItems, startIndex) {
+            if (!newItems.length) return;
+            feed.insertAdjacentHTML("beforeend", newItems.map((item, offset) => renderCard(item, startIndex + offset)).join(""));
+            bindCardEvents();
+            observeCards();
+            pruneRenderedCards();
+        }
+
+        function renderFeed() {
+            applyPreferredServerToItems(items);
+            if (!items.length) {
+                feed.innerHTML = `<div class="empty-feed">Shorts could not load right now. Try refresh in a moment.</div>`;
+                return;
+            }
+            const html = items.map(renderCard).join("");
+            feed.innerHTML = html;
+            bindCardEvents();
+            observeCards();
+            activeIndex = 0;
+            feed.scrollTo({ top: 0, behavior: "auto" });
+            mountActiveFrame();
+        }
+
+        async function fetchShorts(seed) {
+            const response = await fetch(`${shortsApiUrl}?seed=${encodeURIComponent(seed)}`, {
+                credentials: "same-origin",
+                cache: "no-store",
+            });
+            const payload = await response.json();
+            return applyPreferredServerToItems(Array.isArray(payload.items) ? payload.items : []);
+        }
+
+        async function loadMoreShorts() {
+            if (loadingMore) return;
+            loadingMore = true;
+            try {
+                const moreItems = await fetchShorts(`${Date.now()}-${items.length}`);
+                const existingIds = new Set(items.map((item) => item.id));
+                const freshItems = moreItems.filter((item) => !existingIds.has(item.id));
+                const startIndex = items.length;
+                items = items.concat(freshItems);
+                appendFeedCards(freshItems, startIndex);
+            } catch (error) {
+            } finally {
+                loadingMore = false;
+            }
+        }
+
+        refreshFeedButton?.addEventListener("click", async () => {
+            refreshFeedButton.disabled = true;
+            try {
+                items = await fetchShorts(`${Date.now()}-refresh`);
+                activeFrameCard = null;
+                renderFeed();
+            } catch (error) {
+            } finally {
+                refreshFeedButton.disabled = false;
+            }
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!event.target.closest(".short-server-picker")) {
+                closeServerPickers();
+            }
+            if (!event.target.closest(".shorts-side-nav") && !event.target.closest(".shorts-menu-toggle")) {
+                shortsSideNav?.classList.remove("is-open");
+                shortsMenuToggle?.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                closeServerPickers();
+                shortsSideNav?.classList.remove("is-open");
+                shortsMenuToggle?.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        shortsMenuToggle?.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const isOpen = shortsSideNav?.classList.toggle("is-open");
+            shortsMenuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        renderFeed();
+    </script>
+</body>
+</html>

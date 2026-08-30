@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="160" viewBox="0 0 720 160" role="img" aria-labelledby="title desc">
+  <title id="title">Free Movies</title>
+  <desc id="desc">Free Movies logo with play button icon and gradient wordmark.</desc>
+  <defs>
+    <linearGradient id="playGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffb11d" />
+      <stop offset="55%" stop-color="#ff4b55" />
+      <stop offset="100%" stop-color="#ff0f78" />
+    </linearGradient>
+    <linearGradient id="moviesGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff275a" />
+      <stop offset="100%" stop-color="#ff0f78" />
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-20%" width="120%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.18" />
+    </filter>
+  </defs>
+  <rect x="2" y="2" width="716" height="156" rx="30" fill="#ffffff" fill-opacity="0.96" />
+  <g filter="url(#softShadow)">
+    <path d="M38 20C25 20 14 31 14 44v72c0 13 11 24 24 24 5 0 9-1 13-4l100-68c7-5 12-13 12-22s-5-17-12-22L51 24c-4-3-8-4-13-4Z" fill="url(#playGradient)" />
+    <path d="M35 39v82l44-30V69L35 39Z" fill="#ffffff" />
+  </g>
+  <text x="195" y="104" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="800" letter-spacing="2" fill="#090909">FREE</text>
+  <text x="417" y="104" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="800" letter-spacing="1" fill="url(#moviesGradient)">MOVIES</text>
+</svg>

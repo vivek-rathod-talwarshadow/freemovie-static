@@ -1,0 +1,2607 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+<title>Manga Browse - Page 1 | Free movie</title>
+<meta name="description" content="Browse manga, manhwa, comics, and webcomics with title search, status filters, and responsive pagination.">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="keywords" content="Manga, manga browse, manhwa, webcomics, mangadex">
+<link rel="canonical" href="https://vivek-rathod-talwarshadow.github.io/freemovie-static/browse-mode/manga/">
+<link rel="icon" type="image/png" sizes="32x32" href="../../static/images/freemovies-logo.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../../static/images/freemovies-logo.png">
+<link rel="apple-touch-icon" href="../../static/images/freemovies-logo.png">
+<meta name="theme-color" content="#06110c">
+<meta name="application-name" content="Free Movies App">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Free Movies App">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="color-scheme" content="dark">
+<meta property="og:site_name" content="Free movie">
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Manga Browse - Page 1 | Free movie">
+<meta property="og:description" content="Browse manga, manhwa, comics, and webcomics with title search, status filters, and responsive pagination.">
+<meta property="og:url" content="https://vivek-rathod-talwarshadow.github.io/freemovie-static/browse-mode/manga/">
+<meta property="og:image" content="https://placehold.co/1600x900/05070b/e5e7eb?text=No+Backdrop">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Manga Browse - Page 1 | Free movie">
+<meta name="twitter:description" content="Browse manga, manhwa, comics, and webcomics with title search, status filters, and responsive pagination.">
+<meta name="twitter:image" content="https://placehold.co/1600x900/05070b/e5e7eb?text=No+Backdrop">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Manga Browse - Page 1 | Free movie","url":"https://vivek-rathod-talwarshadow.github.io/freemovie-static/browse-mode/manga/","description":"Browse manga, manhwa, comics, and webcomics with title search, status filters, and responsive pagination."}</script>
+
+    <link rel="manifest" href="../../static/manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020202;
+            --panel: rgba(255, 255, 255, 0.05);
+            --panel-strong: rgba(255, 255, 255, 0.08);
+            --line: rgba(255, 255, 255, 0.08);
+            --text: #f6f3ed;
+            --muted: #b9b1a3;
+            --accent: #00d26a;
+            --accent-2: #ff5b2e;
+            --safe-top: max(18px, env(safe-area-inset-top));
+            --safe-bottom: max(18px, env(safe-area-inset-bottom));
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            color: var(--text);
+            font-family: "Manrope", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(0, 210, 106, 0.08), transparent 24%),
+                radial-gradient(circle at top right, rgba(255, 91, 46, 0.08), transparent 18%),
+                linear-gradient(180deg, #15100c 0%, #060606 24%, #000 100%);
+            overflow-x: clip;
+        }
+        a { color: inherit; text-decoration: none; }
+        button, input, select { font: inherit; }
+        img { display: block; max-width: 100%; }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        .app-shell {
+            width: min(100%, 1400px);
+            margin: 0 auto;
+            padding: var(--safe-top) 12px calc(92px + var(--safe-bottom));
+        }
+        .surface {
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: var(--panel);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+        }
+                .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas:
+                "brand install"
+                "search search";
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 14px;
+            padding: 14px 14px 12px;
+            border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+            border-radius: 24px;
+            background: rgba(7, 7, 7, 0.84);
+            backdrop-filter: blur(22px);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.24);
+        }
+        .brand {
+            grid-area: brand;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            padding: 6px 10px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+        }
+        .brand-logo {
+            display: block;
+            height: 34px;
+            width: auto;
+            max-width: min(34vw, 176px);
+        }
+        .search-form {
+            grid-area: search;
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            align-items: center;
+            min-width: 0;
+        }
+        .header-install-button {
+            grid-area: install;
+            justify-self: end;
+            min-height: 44px;
+            padding: 0 16px;
+            border: 1px solid rgba(146, 255, 191, 0.32);
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(0, 210, 106, 0.28), rgba(255, 255, 255, 0.08));
+            color: #effff5;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+            white-space: nowrap;
+        }
+        .header-install-button.is-installed {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text, #f6f3ed);
+        }
+        .search-input {
+            width: 100%;
+            min-height: 50px;
+            padding: 0 104px 0 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text, #f6f3ed);
+            outline: none;
+        }
+        .search-input::placeholder { color: #a8a090; }
+        .voice-search-button {
+            position: absolute;
+            top: 5px;
+            right: 50px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text, #f6f3ed);
+            cursor: pointer;
+        }
+        .voice-search-button:hover,
+        .voice-search-button:focus-visible {
+            background: rgba(255, 255, 255, 0.18);
+            outline: none;
+        }
+        .voice-search-button.is-listening {
+            background: #ff2f2f;
+            color: #fff;
+            box-shadow: 0 0 0 7px rgba(255, 47, 47, 0.18);
+        }
+        .voice-search-button.is-unavailable {
+            opacity: 0.72;
+        }
+        .search-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            min-width: 40px;
+            min-height: 40px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 0;
+            border-radius: 12px;
+            background: #fff;
+            color: #050505;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .button-icon {
+            width: 16px;
+            height: 16px;
+            display: block;
+            flex: 0 0 16px;
+        }
+        .button-label {
+            display: none;
+            font-size: 0.82rem;
+            line-height: 1;
+        }
+        .suggest-box {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            display: none;
+            overflow: hidden;
+            border-radius: 20px;
+            border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+            background: rgba(10, 10, 10, 0.96);
+            box-shadow: var(--shadow, 0 28px 70px rgba(0, 0, 0, 0.45));
+        }
+        .suggest-box.visible { display: block; }
+        .suggest-item {
+            display: grid;
+            grid-template-columns: 54px 1fr;
+            gap: 12px;
+            padding: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .suggest-item:first-child { border-top: 0; }
+        .suggest-box.has-history {
+            overflow-y: auto;
+            max-height: min(420px, 62vh);
+        }
+        .suggest-history-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px 10px;
+            color: var(--muted, #b9b1a3);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .suggest-history-clear {
+            border: 0;
+            background: none;
+            color: #92ffbf;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .suggest-history-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 8px;
+            padding: 0 8px 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .suggest-history-row:first-of-type {
+            border-top: 0;
+        }
+        .suggest-history-action,
+        .suggest-history-delete {
+            border: 0;
+            background: none;
+            color: inherit;
+            cursor: pointer;
+        }
+        .suggest-history-action {
+            display: grid;
+            grid-template-columns: 24px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+            width: 100%;
+            padding: 12px 8px;
+            text-align: left;
+        }
+        .suggest-history-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--muted, #b9b1a3);
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+        .suggest-history-copy {
+            min-width: 0;
+        }
+        .suggest-history-query {
+            display: block;
+            color: var(--text, #f6f3ed);
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .suggest-history-note {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted, #b9b1a3);
+            font-size: 0.76rem;
+        }
+        .suggest-history-delete {
+            min-width: 36px;
+            min-height: 36px;
+            padding: 0;
+            border-radius: 50%;
+            color: var(--muted, #b9b1a3);
+            font-size: 1rem;
+        }
+        .suggest-history-delete:hover,
+        .suggest-history-delete:focus-visible,
+        .suggest-history-action:hover,
+        .suggest-history-action:focus-visible {
+            background: rgba(255, 255, 255, 0.06);
+            outline: none;
+        }
+        .suggest-poster {
+            width: 54px;
+            height: 78px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #111;
+        }
+        .suggest-meta {
+            color: var(--muted, #b9b1a3);
+            font-size: 0.82rem;
+            margin-top: 4px;
+        }
+        .ad-desktop-only { display: none; }
+        .ad-mobile-only { display: block; }
+        .footer {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--muted, #b9b1a3);
+            line-height: 1.7;
+        }
+        .footer a { color: #8fffba; }
+        .native-status-bar {
+            position: sticky;
+            top: 0;
+            z-index: 70;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            background: rgba(8, 8, 8, 0.88);
+            backdrop-filter: blur(20px);
+            color: var(--text, #f6f3ed);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+        .native-status-bar.is-visible {
+            display: flex;
+        }
+        .native-status-copy {
+            display: grid;
+            gap: 2px;
+        }
+        .native-status-title {
+            font-size: 0.86rem;
+            font-weight: 800;
+        }
+        .native-status-text {
+            color: var(--muted, #b9b1a3);
+            font-size: 0.78rem;
+        }
+        .native-status-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .native-pill-button {
+            min-height: 38px;
+            padding: 0 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text, #f6f3ed);
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .native-pill-button.is-primary {
+            background: #fff;
+            color: #050505;
+            border-color: transparent;
+        }
+        .native-toast-stack {
+            position: fixed;
+            left: max(12px, env(safe-area-inset-left));
+            right: max(12px, env(safe-area-inset-right));
+            bottom: calc(104px + env(safe-area-inset-bottom));
+            z-index: 75;
+            display: grid;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .native-toast {
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            background: rgba(8, 8, 8, 0.92);
+            color: var(--text, #f6f3ed);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+            transform: translateY(14px);
+            opacity: 0;
+            transition: transform 0.22s ease, opacity 0.22s ease;
+        }
+        .native-toast.is-visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .gpu-surface,
+        .content-card,
+        .hero-slide,
+        .preview-card,
+        .row-track,
+        .bottom-nav,
+        .topbar,
+        .surface {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .native-toast,
+            .content-card,
+            .hero-slide,
+            .preview-card,
+            .row-track,
+            .topbar,
+            .bottom-nav {
+                transition: none !important;
+                animation: none !important;
+                scroll-behavior: auto !important;
+            }
+        }
+        .ad-burst {
+            display: grid;
+            gap: 16px;
+        }
+        .ad-burst-main {
+            display: grid;
+            gap: 16px;
+        }
+        .ad-sticky-stack {
+            display: grid;
+            gap: 16px;
+        }
+        .desktop-edge-ads {
+            display: none;
+        }
+        .bottom-nav {
+            position: fixed;
+            left: max(12px, env(safe-area-inset-left));
+            right: max(12px, env(safe-area-inset-right));
+            bottom: calc(10px + env(safe-area-inset-bottom));
+            z-index: 60;
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            background: rgba(9, 9, 9, 0.92);
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+        }
+        .bottom-link {
+            display: grid;
+            justify-items: center;
+            gap: 6px;
+            min-width: 0;
+            padding: 8px 6px;
+            border-radius: 16px;
+            color: #d0c7b8;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        .bottom-link span:last-child {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        @media (max-width: 759px) {
+            .bottom-nav {
+                gap: 6px;
+                padding: 8px;
+            }
+            .bottom-link {
+                min-height: 48px;
+                gap: 0;
+                padding: 8px 0;
+            }
+            .bottom-link span:first-child {
+                font-size: 1.06rem;
+                line-height: 1;
+            }
+            .bottom-link span:last-child {
+                display: none;
+            }
+        }
+        .bottom-link.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+        @media (min-width: 760px) {
+            .topbar {
+                grid-template-columns: auto minmax(0, 1fr) auto;
+                grid-template-areas: "brand search install";
+            }
+            .native-toast-stack {
+                left: auto;
+                right: max(18px, env(safe-area-inset-right));
+                width: min(360px, calc(100vw - 36px));
+            }
+            .search-form .search-input { padding-right: 178px !important; }
+            .search-form .voice-search-button { right: 118px !important; }
+            .search-button {
+                min-width: 108px;
+                padding: 0 16px;
+            }
+            .button-label { display: inline; }
+            .ad-desktop-only { display: block; }
+            .ad-mobile-only { display: none; }
+            .bottom-nav {
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                width: min(760px, calc(100vw - 28px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+            }
+        }
+        @media (min-width: 1100px) {
+            .ad-burst--triple {
+                grid-template-columns: minmax(160px, 180px) minmax(0, 1fr) minmax(160px, 180px);
+                align-items: start;
+            }
+            .ad-sticky-stack {
+                position: sticky;
+                top: 96px;
+            }
+        }
+        @media (min-width: 1600px) {
+            .desktop-edge-ads {
+                position: fixed;
+                inset: 104px 0 auto 0;
+                z-index: 35;
+                display: block;
+                pointer-events: none;
+            }
+            .desktop-edge-rail {
+                position: absolute;
+                top: 0;
+                width: 160px;
+                pointer-events: auto;
+            }
+            .desktop-edge-rail--left {
+                left: max(12px, env(safe-area-inset-left));
+            }
+            .desktop-edge-rail--right {
+                right: max(12px, env(safe-area-inset-right));
+            }
+        }
+
+        .hero-card,
+        .filter-card,
+        .results-card,
+        .pagination-card,
+        .empty-state,
+        .footer {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: var(--panel);
+        }
+        .hero-card {
+            margin-top: 0;
+            overflow: hidden;
+            background:
+                linear-gradient(135deg, rgba(0, 210, 106, 0.16), rgba(255, 255, 255, 0.05)),
+                var(--panel);
+        }
+        .hero-eyebrow,
+        .summary-pill,
+        .browse-pill,
+        .pagination-link,
+        .pagination-status,
+        .back-link,
+        .reset-link,
+        .submit-button,
+        .seen-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+            padding: 0 14px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 800;
+        }
+        .hero-eyebrow,
+        .summary-pill,
+        .browse-pill,
+        .pagination-status,
+        .back-link,
+        .reset-link,
+        .seen-badge {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .hero-card h1 {
+            margin: 14px 0 10px;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(2.8rem, 10vw, 5.8rem);
+            line-height: 0.92;
+            letter-spacing: 0.04em;
+        }
+        .hero-copy,
+        .empty-state,
+        .footer,
+        .field-help,
+        .filter-note {
+            color: var(--muted);
+            line-height: 1.7;
+        }
+        .hero-actions,
+        .hero-meta,
+        .browse-mode-nav,
+        .filter-actions,
+        .pagination-card {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .browse-mode-nav {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 2px 18px 8px 0;
+            scrollbar-width: none;
+            scroll-snap-type: x proximity;
+            overscroll-behavior-x: contain;
+        }
+        .browse-mode-nav::-webkit-scrollbar,
+        .submode-nav::-webkit-scrollbar {
+            display: none;
+        }
+        .browse-pill {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+        }
+        .browse-pill.is-active {
+            background: rgba(0, 210, 106, 0.18);
+            border-color: rgba(0, 210, 106, 0.34);
+            color: #e8fff1;
+        }
+        .submode-nav {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(198px, 232px);
+            gap: 12px;
+            margin-top: 14px;
+            overflow-x: auto;
+            padding: 4px 20px 12px 0;
+            scrollbar-width: none;
+            scroll-snap-type: x proximity;
+            overscroll-behavior-x: contain;
+        }
+        .submode-pill {
+            position: relative;
+            display: grid;
+            grid-template-rows: 92px minmax(94px, auto);
+            min-height: 200px;
+            overflow: hidden;
+            padding: 0;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(10, 10, 10, 0.98));
+            color: var(--text);
+            scroll-snap-align: start;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 18px 36px rgba(0, 0, 0, 0.28);
+            transition: transform 0.18s ease, border-color 0.18s ease;
+        }
+        .submode-pill:hover,
+        .submode-pill:focus-visible {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.22);
+            outline: none;
+        }
+        .submode-art {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.34), transparent 20%),
+                linear-gradient(135deg, #ffd166, #ef476f 48%, #1d0b12);
+        }
+        .submode-art::before,
+        .submode-art::after {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+        }
+        .submode-art::before {
+            inset: 13px;
+            border: 2px solid rgba(255, 255, 255, 0.22);
+            border-radius: 15px;
+            transform: rotate(-4deg);
+        }
+        .submode-art::after {
+            right: 17px;
+            bottom: 13px;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background:
+                linear-gradient(90deg, rgba(0, 0, 0, 0.34) 46%, transparent 46% 54%, rgba(0, 0, 0, 0.34) 54%),
+                radial-gradient(circle, rgba(255, 255, 255, 0.68) 0 14%, transparent 15% 100%);
+            box-shadow: -58px -18px 0 -18px rgba(255, 255, 255, 0.28);
+        }
+        .submode-copy {
+            display: grid;
+            align-content: space-between;
+            gap: 9px;
+            padding: 12px;
+        }
+        .submode-title {
+            font-size: 0.88rem;
+            font-weight: 900;
+            line-height: 1.22;
+        }
+        .submode-description {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 0.72rem;
+            line-height: 1.42;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .submode-count {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            min-height: 25px;
+            padding: 0 9px;
+            border-radius: 999px;
+            background: rgba(0, 210, 106, 0.15);
+            color: #d8ffe8;
+            font-size: 0.66rem;
+            font-weight: 900;
+        }
+        .submode-pill--anime-that-every-kid-watched .submode-art { background: linear-gradient(135deg, #ff8ac7, #5f3fd4 48%, #130a2b); }
+        .submode-pill--looney-tunes-warner-bros .submode-art,
+        .submode-pill--kids-wb-era .submode-art { background: linear-gradient(135deg, #fcd34d, #2563eb 48%, #081226); }
+        .submode-pill--disney-classics .submode-art,
+        .submode-pill--disney-xd-era .submode-art { background: linear-gradient(135deg, #7dd3fc, #2563eb 48%, #0b1638); }
+        .submode-pill--cartoon-network-golden-era .submode-art,
+        .submode-pill--cartoon-network-india-legends .submode-art { background: linear-gradient(135deg, #f8fafc, #111827 48%, #020617); }
+        .submode-pill--nickelodeon-classics .submode-art { background: linear-gradient(135deg, #fb923c, #f97316 48%, #431407); }
+        .submode-pill--jetix-era .submode-art { background: linear-gradient(135deg, #f1f5f9, #dc2626 48%, #111827); }
+        .submode-pill--indian-cartoon-classics .submode-art { background: linear-gradient(135deg, #f97316, #22c55e 48%, #052e16); }
+        .submode-pill--major-forgotten-classics .submode-art { background: linear-gradient(135deg, #f7d488, #8f5b2a 48%, #1a1007); }
+        .layout {
+            display: grid;
+            gap: 16px;
+        }
+        .layout.is-full-width {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .filter-card {
+            display: grid;
+            gap: 16px;
+        }
+        .filter-grid {
+            display: grid;
+            gap: 14px;
+        }
+        .field-group {
+            display: grid;
+            gap: 10px;
+        }
+        .field-group h2,
+        .results-head h2 {
+            margin: 0;
+            font-size: 0.98rem;
+            font-weight: 800;
+        }
+        .choice-grid,
+        .provider-grid {
+            display: grid;
+            gap: 10px;
+        }
+        .choice-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+        .provider-grid {
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        }
+        .toggle-card,
+        .check-card {
+            position: relative;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+        }
+        .toggle-card:hover,
+        .check-card:hover {
+            border-color: rgba(255, 255, 255, 0.18);
+            transform: translateY(-1px);
+        }
+        .toggle-card input,
+        .check-card input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .control-indicator {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            flex: 0 0 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.04);
+            position: relative;
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .toggle-card .control-indicator {
+            border-radius: 999px;
+        }
+        .check-card .control-indicator {
+            border-radius: 7px;
+        }
+        .control-copy {
+            min-width: 0;
+        }
+        .toggle-card input:checked + .control-indicator,
+        .check-card input:checked + .control-indicator {
+            border-color: rgba(0, 210, 106, 0.75);
+            background: rgba(0, 210, 106, 0.2);
+            box-shadow: 0 0 0 4px rgba(0, 210, 106, 0.08);
+        }
+        .toggle-card input:checked + .control-indicator::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+        .check-card input:checked + .control-indicator::after {
+            content: "";
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border-right: 2px solid var(--accent);
+            border-bottom: 2px solid var(--accent);
+            transform: rotate(42deg);
+        }
+        .toggle-card span,
+        .check-card span {
+            display: block;
+            font-weight: 700;
+        }
+        .toggle-card small,
+        .check-card small {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+        }
+        .field-row {
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .input-shell {
+            display: grid;
+            gap: 8px;
+        }
+        .input-shell label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #e7dfd2;
+        }
+        .input-shell input,
+        .input-shell select {
+            width: 100%;
+            min-height: 46px;
+            padding: 0 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04));
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        .input-shell input:focus {
+            border-color: rgba(0, 210, 106, 0.45);
+            box-shadow: 0 0 0 4px rgba(0, 210, 106, 0.08);
+        }
+        .custom-select {
+            position: relative;
+        }
+        .custom-select-button {
+            width: 100%;
+            min-height: 56px;
+            padding: 0 18px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04));
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            text-align: left;
+            cursor: pointer;
+        }
+        .custom-select-button strong {
+            display: block;
+            font-size: 0.95rem;
+        }
+        .custom-select-button span {
+            color: var(--muted);
+            font-size: 0.76rem;
+        }
+        .custom-select-caret {
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid rgba(255, 255, 255, 0.82);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.82);
+            transform: rotate(45deg);
+            transition: transform 0.2s ease;
+            margin-top: -4px;
+        }
+        .custom-select.is-open .custom-select-caret {
+            transform: rotate(-135deg);
+            margin-top: 4px;
+        }
+        .custom-select-menu {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 10px);
+            display: none;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            background: rgba(10, 10, 10, 0.96);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.42);
+            z-index: 10;
+        }
+        .custom-select.is-open .custom-select-menu {
+            display: grid;
+            gap: 8px;
+        }
+        .custom-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        .custom-option:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.07);
+        }
+        .custom-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .custom-option input:checked + .control-indicator {
+            border-color: rgba(0, 210, 106, 0.75);
+            background: rgba(0, 210, 106, 0.2);
+            box-shadow: 0 0 0 4px rgba(0, 210, 106, 0.08);
+        }
+        .custom-option input:checked + .control-indicator::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+        .custom-option-copy strong {
+            display: block;
+            font-size: 0.9rem;
+        }
+        .custom-option-copy span {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 0.76rem;
+        }
+        .date-shell {
+            position: relative;
+        }
+        .date-shell::after {
+            content: "";
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%);
+            border-radius: 6px;
+            box-shadow:
+                inset 0 0 0 2px rgba(255, 255, 255, 0.82),
+                inset 0 6px 0 0 rgba(0, 210, 106, 0.82);
+            pointer-events: none;
+        }
+        .date-input {
+            min-height: 56px;
+            padding-right: 48px !important;
+            letter-spacing: 0.04em;
+        }
+        .date-input::placeholder {
+            color: rgba(185, 177, 163, 0.82);
+        }
+        .submit-button,
+        .pagination-link {
+            border: 1px solid rgba(0, 210, 106, 0.28);
+            background: linear-gradient(135deg, rgba(0, 210, 106, 0.2), rgba(255, 255, 255, 0.08));
+            color: #f0fff6;
+            cursor: pointer;
+        }
+        .reset-link {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .results-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .curated-stack {
+            display: grid;
+            gap: 18px;
+        }
+        .curated-section {
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .curated-section-head {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .curated-section-head h3 {
+            margin: 0;
+            font-size: 1.08rem;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .content-card {
+            position: relative;
+            overflow: hidden;
+            min-height: 290px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(180deg, rgba(29, 29, 29, 0.88), rgba(8, 8, 8, 0.98));
+        }
+        .card-link {
+            display: block;
+            position: relative;
+        }
+        .card-poster {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            background: #111;
+            transition: opacity 0.24s ease, transform 0.24s ease;
+        }
+        .card-poster.is-pending {
+            opacity: 0.01;
+            transform: scale(1.02);
+        }
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 42%, rgba(0, 0, 0, 0.9) 100%);
+        }
+        .card-topline {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            z-index: 1;
+            align-items: center;
+        }
+        .badge,
+        .rating-badge {
+            padding: 5px 8px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.52);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+        .card-body {
+            position: absolute;
+            inset: auto 0 0 0;
+            z-index: 1;
+            padding: 14px 12px 12px;
+        }
+        .card-title {
+            margin: 0;
+            font-size: 0.96rem;
+            line-height: 1.35;
+        }
+        .card-meta {
+            margin-top: 6px;
+            color: #d7cebf;
+            font-size: 0.76rem;
+        }
+        .seen-badge {
+            min-height: 30px;
+            padding: 0 10px;
+            font-size: 0.68rem;
+            background: rgba(0, 210, 106, 0.18);
+            border-color: rgba(0, 210, 106, 0.3);
+            color: #dbffea;
+        }
+        .pagination-card {
+            justify-content: space-between;
+        }
+        .pagination-card .is-disabled {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+        .availability-list.is-disabled {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+        @media (max-width: 620px) {
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+            .custom-select-menu {
+                position: static;
+                margin-top: 10px;
+            }
+        }
+        @media (min-width: 840px) {
+            .app-shell { padding-left: 18px; padding-right: 18px; }
+            .layout { grid-template-columns: minmax(300px, 360px) minmax(0, 1fr); }
+            .layout.is-full-width { grid-template-columns: minmax(0, 1fr); }
+            .filter-card {
+                position: sticky;
+                top: 18px;
+                align-self: start;
+            }
+            .results-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        @media (min-width: 1120px) {
+            .results-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        }
+    </style>
+<script>window.__FM_STATIC_ROOT__="../../";window.__FM_SITE_URL__="https://vivek-rathod-talwarshadow.github.io/freemovie-static";</script>
+<script src="../../data/catalog.js"></script>
+<script src="../../assets/static-runtime.js"></script>
+</head>
+<body>
+    <div class="app-shell">
+        
+
+<header class="topbar">
+    <a class="brand" href="../../index.html" aria-label="Free Movies home">
+        <img class="brand-logo" src="../../static/images/freemovies-logo.png" alt="Free Movies">
+    </a>
+    <form class="search-form js-search-form" method="get" action="../../search/index.html" data-suggest-url="/api/search/suggest/">
+        <input class="search-input js-search-input" type="text" name="q" value="" placeholder="Search movies, series, anime, cartoons, manga..." autocomplete="off">
+        <button class="voice-search-button js-voice-search-button" type="button" aria-label="Search with your voice" title="Search with your voice">
+            <svg class="button-icon voice-idle-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <path d="M12 19v3"></path>
+            </svg>
+        </button>
+        <button class="search-button" type="submit" aria-label="Search">
+            <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="m20 20-3.5-3.5"></path>
+            </svg>
+            <span class="button-label">Search</span>
+        </button>
+        <div class="suggest-box js-suggest-box"></div>
+    </form>
+    <button class="header-install-button js-app-install-button" type="button" aria-label="Install app">
+        Install App
+    </button>
+</header>
+
+
+        <section class="hero-card surface">
+            <a class="back-link" href="../../index.html">Back To Home</a>
+            <h1>Manga</h1>
+            <p class="hero-copy">Browse manga, manhwa, comics, and webcomics with MangaDex-powered discovery and chapter links.</p>
+            <div class="hero-meta">
+                
+                    <span class="summary-pill">Default sort: Newest first</span>
+                    <span class="summary-pill">Page 1 of 5717</span>
+                    <span class="summary-pill">12 titles per page</span>
+                
+            </div>
+            <div class="browse-mode-nav">
+                
+                    <a class="browse-pill" href="../../browse-mode/movies/index.html">Movies</a>
+                
+                    <a class="browse-pill" href="../../browse-mode/series/index.html">Series</a>
+                
+                    <a class="browse-pill" href="../../browse-mode/anime/index.html">Anime</a>
+                
+                    <a class="browse-pill" href="../../browse-mode/cartoon/index.html">Cartoon</a>
+                
+                    <a class="browse-pill" href="../../browse-mode/classic-cartoons/index.html">Classic Cartoons</a>
+                
+                    <a class="browse-pill is-active" href="../../browse-mode/manga/index.html">Manga</a>
+                
+            </div>
+            
+        </section>
+
+        <div class="layout">
+            
+            <form class="filter-card surface" method="get">
+                
+                <div class="field-group">
+                    <h2>Search</h2>
+                    <div class="input-shell">
+                        <label for="query">Title</label>
+                        <input id="query" type="text" name="query" value="" placeholder="Solo Leveling, One Piece, Vagabond">
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <h2>Sort</h2>
+                    <div class="choice-grid">
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="sort" value="newest" >
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Newest First</span>
+                                </div>
+                            </label>
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="sort" value="popularity" checked>
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Most Followed</span>
+                                </div>
+                            </label>
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="sort" value="rating" >
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Highest Rated</span>
+                                </div>
+                            </label>
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="sort" value="title" >
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Title A-Z</span>
+                                </div>
+                            </label>
+                        
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <h2>Format</h2>
+                    <div class="choice-grid">
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="content_type" value="" checked>
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Everything</span>
+                                </div>
+                            </label>
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="content_type" value="manga" >
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Manga</span>
+                                </div>
+                            </label>
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="content_type" value="manhwa" >
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Manhwa</span>
+                                </div>
+                            </label>
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="content_type" value="manhua" >
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Manhua</span>
+                                </div>
+                            </label>
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="content_type" value="comic" >
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Comic / Webcomic</span>
+                                </div>
+                            </label>
+                        
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <h2>Status</h2>
+                    <div class="choice-grid">
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="status" value="" checked>
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Any Status</span>
+                                </div>
+                            </label>
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="status" value="ongoing" >
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Ongoing</span>
+                                </div>
+                            </label>
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="status" value="completed" >
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Completed</span>
+                                </div>
+                            </label>
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="status" value="hiatus" >
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Hiatus</span>
+                                </div>
+                            </label>
+                        
+                            <label class="toggle-card">
+                                <input type="radio" name="status" value="cancelled" >
+                                <span class="control-indicator" aria-hidden="true"></span>
+                                <div class="control-copy">
+                                    <span>Cancelled</span>
+                                </div>
+                            </label>
+                        
+                    </div>
+                    <div class="filter-note">Powered by MangaDex for manga, manhwa, manhua, comics, and webcomics.</div>
+                </div>
+
+                <div class="filter-actions">
+                    <button class="submit-button" type="submit">Search</button>
+                    <a class="reset-link" href="../../browse-mode/manga/index.html">Reset</a>
+                </div>
+                
+            </form>
+            
+
+            <div>
+                <section class="results-card surface">
+                    <div class="results-head">
+                        <div>
+                            <h2>Manga Results</h2>
+                            <div class="field-help">
+                                
+                                    Newest-first is selected by default for new manga.
+                                
+                            </div>
+                        </div>
+                        <span class="pagination-status">Page 1 of 5717</span>
+                    </div>
+
+                    
+                        <section class="results-grid">
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/na-honjaman-level-up/index.html?title=Na+Honjaman+Level-Up&amp;manga_id=32d76d19-8a05-4db0-9fc2-e0b0648fe9d0&amp;source=mangadex" data-seen-id="Na Honjaman Level-Up">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/32d76d19-8a05-4db0-9fc2-e0b0648fe9d0/e90bdc47-c8b9-4df7-b2c0-17641b645ee1.jpg.512.jpg"
+                                            alt="Na Honjaman Level-Up"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">Na Honjaman Level-Up</h3>
+                                            <div class="card-meta">2018 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/sono-bisque-doll-wa-koi-o-suru/index.html?title=Sono+Bisque+Doll+wa+Koi+o+Suru&amp;manga_id=aa6c76f7-5f5f-46b6-a800-911145f81b9b&amp;source=mangadex" data-seen-id="Sono Bisque Doll wa Koi o Suru">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/aa6c76f7-5f5f-46b6-a800-911145f81b9b/d3e909b9-c667-48a5-beec-ac96f23fa228.jpg.512.jpg"
+                                            alt="Sono Bisque Doll wa Koi o Suru"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">Sono Bisque Doll wa Koi o Suru</h3>
+                                            <div class="card-meta">2018 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/kage-no-jitsuryokusha-ni-naritakute/index.html?title=Kage+no+Jitsuryokusha+ni+Naritakute%21&amp;manga_id=77bee52c-d2d6-44ad-a33a-1734c1fe696a&amp;source=mangadex" data-seen-id="Kage no Jitsuryokusha ni Naritakute!">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/77bee52c-d2d6-44ad-a33a-1734c1fe696a/6079dd31-838b-4d61-87c4-121f3ad19158.jpg.512.jpg"
+                                            alt="Kage no Jitsuryokusha ni Naritakute!"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">Kage no Jitsuryokusha ni Naritakute!</h3>
+                                            <div class="card-meta">2018 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/mato-seihei-no-slave/index.html?title=Mato+Seihei+no+Slave&amp;manga_id=e1e38166-20e4-4468-9370-187f985c550e&amp;source=mangadex" data-seen-id="Mato Seihei no Slave">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/e1e38166-20e4-4468-9370-187f985c550e/bee3f8c8-9b7d-4523-b78e-881a50311de5.jpg.512.jpg"
+                                            alt="Mato Seihei no Slave"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">Mato Seihei no Slave</h3>
+                                            <div class="card-meta">2019 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/tensei-shitara-slime-datta-ken/index.html?title=Tensei+Shitara+Slime+datta+Ken&amp;manga_id=e78a489b-6632-4d61-b00b-5206f5b8b22b&amp;source=mangadex" data-seen-id="Tensei Shitara Slime datta Ken">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/e78a489b-6632-4d61-b00b-5206f5b8b22b/420ec3c0-2dab-47f2-8f9e-a9e0c3faf16d.jpg.512.jpg"
+                                            alt="Tensei Shitara Slime datta Ken"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">Tensei Shitara Slime datta Ken</h3>
+                                            <div class="card-meta">2015 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/berserk/index.html?title=Berserk&amp;manga_id=801513ba-a712-498c-8f57-cae55b38cc92&amp;source=mangadex" data-seen-id="Berserk">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/801513ba-a712-498c-8f57-cae55b38cc92/81e1c82d-6672-400c-8c58-4ff9bfb89031.jpg.512.jpg"
+                                            alt="Berserk"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">Berserk</h3>
+                                            <div class="card-meta">1989 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/chainsaw-man/index.html?title=Chainsaw+Man&amp;manga_id=a77742b1-befd-49a4-bff5-1ad4e6b0ef7b&amp;source=mangadex" data-seen-id="Chainsaw Man">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/a77742b1-befd-49a4-bff5-1ad4e6b0ef7b/6e518bd1-5f60-446b-8832-bfe6bf74834b.jpg.512.jpg"
+                                            alt="Chainsaw Man"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">Chainsaw Man</h3>
+                                            <div class="card-meta">2018 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/sousou-no-frieren/index.html?title=Sousou+no+Frieren&amp;manga_id=b0b721ff-c388-4486-aa0f-c2b0bb321512&amp;source=mangadex" data-seen-id="Sousou no Frieren">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/b0b721ff-c388-4486-aa0f-c2b0bb321512/b9a049b0-186b-4714-a83e-bb965458914a.jpg.512.jpg"
+                                            alt="Sousou no Frieren"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">Sousou no Frieren</h3>
+                                            <div class="card-meta">2020 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/isekai-meikyuu-de-harem-o/index.html?title=Isekai+Meikyuu+de+Harem+o&amp;manga_id=1389d660-b9b1-4c6a-81af-eab4dbf3f22b&amp;source=mangadex" data-seen-id="Isekai Meikyuu de Harem o">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/1389d660-b9b1-4c6a-81af-eab4dbf3f22b/950599ce-fe8c-4e60-b982-d7d2b864e50d.jpg.512.jpg"
+                                            alt="Isekai Meikyuu de Harem o"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">Isekai Meikyuu de Harem o</h3>
+                                            <div class="card-meta">2017 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/otome-game-sekai-wa-mob-ni-kibishii-sekai-desu/index.html?title=Otome+Game+Sekai+wa+Mob+ni+Kibishii+Sekai+desu&amp;manga_id=28c77530-dfa1-4b05-8ec3-998960ba24d4&amp;source=mangadex" data-seen-id="Otome Game Sekai wa Mob ni Kibishii Sekai desu">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/28c77530-dfa1-4b05-8ec3-998960ba24d4/59acf82f-745f-4192-bffb-47d75bb1113a.jpg.512.jpg"
+                                            alt="Otome Game Sekai wa Mob ni Kibishii Sekai desu"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">Otome Game Sekai wa Mob ni Kibishii Sekai desu</h3>
+                                            <div class="card-meta">2018 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/one-punch-man/index.html?title=One+Punch-Man&amp;manga_id=d8a959f7-648e-4c8d-8f23-f1f3f8e129f3&amp;source=mangadex" data-seen-id="One Punch-Man">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/d8a959f7-648e-4c8d-8f23-f1f3f8e129f3/511fc404-e6b4-4204-bb10-e4a28f7b5271.jpg.512.jpg"
+                                            alt="One Punch-Man"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">One Punch-Man</h3>
+                                            <div class="card-meta">2012 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                                <article class="content-card">
+                                    <a class="card-link js-seen-link" href="../../title/manga/mushoku-tensei-isekai-ittara-honki-dasu/index.html?title=Mushoku+Tensei%3A+Isekai+Ittara+Honki+Dasu&amp;manga_id=bd6d0982-0091-4945-ad70-c028ed3c0917&amp;source=mangadex" data-seen-id="Mushoku Tensei: Isekai Ittara Honki Dasu">
+                                        <img
+                                            class="card-poster js-lazy-image is-pending"
+                                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+                                            data-src="https://uploads.mangadex.org/covers/bd6d0982-0091-4945-ad70-c028ed3c0917/6a9f3d32-b7bb-478a-9c76-54868276c26f.jpg.512.jpg"
+                                            alt="Mushoku Tensei: Isekai Ittara Honki Dasu"
+                                            width="300"
+                                            height="450"
+                                            sizes="(min-width: 1120px) 18vw, (min-width: 840px) 28vw, 44vw"
+                                            loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
+                                        >
+                                        <div class="card-overlay"></div>
+                                        <div class="card-topline">
+                                            <span class="badge">Manga</span>
+                                            <div style="display:flex;gap:8px;align-items:center;">
+                                                <span class="seen-badge js-seen-badge" hidden>Seen</span>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">Mushoku Tensei: Isekai Ittara Honki Dasu</h3>
+                                            <div class="card-meta">2014 | Manga</div>
+                                        </div>
+                                    </a>
+                                </article>
+                            
+                        </section>
+                    
+                </section>
+
+                
+                <section class="pagination-card surface">
+                    
+                        <span class="pagination-link is-disabled">Previous</span>
+                    
+                    <span class="pagination-status">Page 1 of 5717</span>
+                    
+                        <a class="pagination-link" href="?page=2">Next</a>
+                    
+                </section>
+                
+            </div>
+        </div>
+
+        
+
+<footer class="footer">
+    This site presents title data and third-party embeds on an as-is basis. Use of the service is subject to the <a href="../../terms/index.html">Terms, Privacy, and Copyright Policy</a>.
+</footer>
+<section class="native-status-bar" id="nativeAppBar" aria-live="polite">
+    <div class="native-status-copy">
+        <div class="native-status-title" id="nativeAppBarTitle">Native app tools ready</div>
+        <div class="native-status-text" id="nativeAppBarText">Install the app, enable notifications, and keep key pages available offline.</div>
+    </div>
+    <div class="native-status-actions">
+        <button class="native-pill-button is-primary" type="button" id="nativeInstallButton" hidden>Install app</button>
+        <button class="native-pill-button" type="button" id="nativeNotifyButton">Enable alerts</button>
+    </div>
+</section>
+<div class="native-toast-stack" id="nativeToastStack" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+(() => {
+    if (window.__freemovieTrackerLoaded) return;
+    window.__freemovieTrackerLoaded = true;
+
+    const trackingUrl = "/api/tracking/collect/";
+    if (!trackingUrl || window.location.pathname === "/loganadmin") return;
+
+    const profiledStorageKey = "fm_tracker_profiled_v1";
+    const sensitiveProbeStorageKey = "fm_tracker_sensitive_probe_v1";
+    const pageKey = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : `pv-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const startedAt = Date.now();
+    const heartbeatIntervalMs = 120000;
+    const landingDelayMs = 1800;
+    const lightweightTracking = true;
+    let maxScrollPercent = 0;
+    let clickCount = 0;
+    let pageExitSent = false;
+    let heartbeatTimer = null;
+    let scrollDepthQueued = false;
+
+    function safeNumber(value) {
+        return Number.isFinite(value) ? value : null;
+    }
+
+    function storageSupport(kind) {
+        try {
+            const storage = window[kind];
+            const key = "__fm_probe__";
+            storage.setItem(key, "1");
+            storage.removeItem(key);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function getConnection() {
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        return {
+            effective_type: connection?.effectiveType || "",
+            downlink: safeNumber(connection?.downlink),
+            rtt: safeNumber(connection?.rtt),
+            save_data: Boolean(connection?.saveData),
+        };
+    }
+
+    function getGraphics() {
+        try {
+            const canvas = document.createElement("canvas");
+            const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+            if (!gl) return { vendor: "", renderer: "" };
+            const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+            return {
+                vendor: debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) || "" : "",
+                renderer: debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || "" : "",
+            };
+        } catch (error) {
+            return { vendor: "", renderer: "" };
+        }
+    }
+
+    function detectAdBlocker() {
+        const bait = document.createElement("div");
+        bait.className = "adsbox";
+        bait.style.cssText = "position:absolute;left:-9999px;height:10px;width:10px;";
+        document.body.appendChild(bait);
+        const blocked = bait.offsetParent === null || bait.offsetHeight === 0;
+        bait.remove();
+        return blocked;
+    }
+
+    function getMediaQueries() {
+        return {
+            prefers_dark_mode: window.matchMedia?.("(prefers-color-scheme: dark)")?.matches || false,
+            prefers_reduced_motion: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches || false,
+            hover_capable: window.matchMedia?.("(hover: hover)")?.matches || false,
+        };
+    }
+
+    function getFeatures() {
+        return {
+            webrtc: Boolean(window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection),
+            webassembly: typeof WebAssembly === "object",
+            service_worker: "serviceWorker" in navigator,
+            clipboard: Boolean(navigator.clipboard),
+        };
+    }
+
+    function getPerformancePayload() {
+        const navigation = performance.getEntriesByType?.("navigation")?.[0];
+        const paintEntries = performance.getEntriesByType?.("paint") || [];
+        const fcp = paintEntries.find((entry) => entry.name === "first-contentful-paint");
+        return {
+            dom_content_loaded_ms: safeNumber(navigation?.domContentLoadedEventEnd),
+            page_load_ms: safeNumber(navigation?.loadEventEnd),
+            first_contentful_paint_ms: safeNumber(fcp?.startTime),
+            transfer_size_bytes: safeNumber(navigation?.transferSize),
+            encoded_body_size_bytes: safeNumber(navigation?.encodedBodySize),
+        };
+    }
+
+    async function buildFingerprintHash(profile) {
+        const basis = JSON.stringify({
+            timezone: profile.timezone,
+            platform: profile.platform,
+            language: profile.languages,
+            screen_width: profile.screen_width,
+            screen_height: profile.screen_height,
+            color_depth: profile.color_depth,
+            pixel_ratio: profile.pixel_ratio,
+            cpu_cores: profile.cpu_cores,
+            device_memory: profile.device_memory,
+            touch_support: profile.touch_support,
+            graphics: profile.graphics,
+        });
+        if (!window.crypto?.subtle) return basis.slice(0, 120);
+        const bytes = new TextEncoder().encode(basis);
+        const digest = await crypto.subtle.digest("SHA-256", bytes);
+        return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function hashString(value) {
+        const text = String(value ?? "");
+        if (!window.crypto?.subtle) return text.slice(0, 120);
+        const bytes = new TextEncoder().encode(text);
+        const digest = await crypto.subtle.digest("SHA-256", bytes);
+        return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function queryPermissionState(name) {
+        if (!navigator.permissions?.query) return "unsupported";
+        try {
+            const status = await navigator.permissions.query({ name });
+            return status?.state || "unknown";
+        } catch (error) {
+            return "unsupported";
+        }
+    }
+
+    async function getExactLocation(shouldPrompt) {
+        const permissionState = await queryPermissionState("geolocation");
+        if (!navigator.geolocation) {
+            return { supported: false, permission_state: permissionState };
+        }
+        if (!shouldPrompt && permissionState === "prompt") {
+            return { supported: true, permission_state: permissionState, prompt_skipped: true };
+        }
+
+        return new Promise((resolve) => {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    resolve({
+                        supported: true,
+                        permission_state: "granted",
+                        latitude: safeNumber(position.coords?.latitude),
+                        longitude: safeNumber(position.coords?.longitude),
+                        accuracy_m: safeNumber(position.coords?.accuracy),
+                        altitude_m: safeNumber(position.coords?.altitude),
+                        altitude_accuracy_m: safeNumber(position.coords?.altitudeAccuracy),
+                        heading_deg: safeNumber(position.coords?.heading),
+                        speed_mps: safeNumber(position.coords?.speed),
+                        timestamp: position.timestamp || Date.now(),
+                    });
+                },
+                (error) => {
+                    resolve({
+                        supported: true,
+                        permission_state: error?.code === 1 ? "denied" : permissionState,
+                        error_code: safeNumber(error?.code),
+                        error_message: error?.message || "",
+                    });
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0,
+                }
+            );
+        });
+    }
+
+    async function getMediaPermissionProbes() {
+        const cameraState = await queryPermissionState("camera");
+        const microphoneState = await queryPermissionState("microphone");
+        let screenState = "unsupported";
+        if (navigator.permissions?.query) {
+            try {
+                const status = await navigator.permissions.query({ name: "display-capture" });
+                screenState = status?.state || "unsupported";
+            } catch (error) {
+                screenState = "unsupported";
+            }
+        }
+        return {
+            camera: {
+                supported: Boolean(navigator.mediaDevices?.getUserMedia),
+                permission_state: cameraState,
+            },
+            microphone: {
+                supported: Boolean(navigator.mediaDevices?.getUserMedia),
+                permission_state: microphoneState,
+            },
+            screen_share: {
+                supported: Boolean(navigator.mediaDevices?.getDisplayMedia),
+                permission_state: screenState,
+            },
+        };
+    }
+
+    async function getCanvasFingerprint() {
+        try {
+            const canvas = document.createElement("canvas");
+            canvas.width = 320;
+            canvas.height = 80;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return { supported: false, hash: "" };
+
+            ctx.textBaseline = "top";
+            ctx.font = "16px Arial";
+            ctx.fillStyle = "#f60";
+            ctx.fillRect(12, 8, 130, 24);
+            ctx.fillStyle = "#069";
+            ctx.fillText("freemovie-canvas-probe", 14, 14);
+            ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+            ctx.font = "18px 'Times New Roman'";
+            ctx.fillText("wmWMwm123!@#", 16, 40);
+
+            const data = canvas.toDataURL();
+            return {
+                supported: true,
+                hash: await hashString(data),
+            };
+        } catch (error) {
+            return { supported: false, hash: "", error: error?.message || "" };
+        }
+    }
+
+    async function getAudioFingerprint() {
+        const AudioContextClass = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        if (!AudioContextClass) return { supported: false, hash: "" };
+        try {
+            const context = new AudioContextClass(1, 5000, 44100);
+            const oscillator = context.createOscillator();
+            const compressor = context.createDynamicsCompressor();
+            oscillator.type = "triangle";
+            oscillator.frequency.value = 10000;
+            compressor.threshold.value = -50;
+            compressor.knee.value = 40;
+            compressor.ratio.value = 12;
+            compressor.attack.value = 0;
+            compressor.release.value = 0.2;
+            oscillator.connect(compressor);
+            compressor.connect(context.destination);
+            oscillator.start(0);
+            const buffer = await context.startRendering();
+            const channelData = buffer.getChannelData(0);
+            let sum = 0;
+            for (let i = 0; i < channelData.length; i += 100) {
+                sum += Math.abs(channelData[i] || 0);
+            }
+            return {
+                supported: true,
+                hash: await hashString(sum.toFixed(12)),
+            };
+        } catch (error) {
+            return { supported: false, hash: "", error: error?.message || "" };
+        }
+    }
+
+    async function getFontFingerprint() {
+        try {
+            const text = "mmmmmmmmmmlli";
+            const size = "72px";
+            const baseFonts = ["monospace", "sans-serif", "serif"];
+            const candidateFonts = ["Arial", "Verdana", "Tahoma", "Times New Roman", "Georgia", "Courier New", "Trebuchet MS"];
+            const span = document.createElement("span");
+            span.style.cssText = [
+                "position:absolute",
+                "left:-9999px",
+                "top:-9999px",
+                `font-size:${size}`,
+                "line-height:normal",
+                "visibility:hidden",
+            ].join(";");
+            span.textContent = text;
+            document.body.appendChild(span);
+
+            const baseline = {};
+            baseFonts.forEach((baseFont) => {
+                span.style.fontFamily = baseFont;
+                baseline[baseFont] = `${span.offsetWidth}x${span.offsetHeight}`;
+            });
+
+            const measurements = {};
+            candidateFonts.forEach((fontName) => {
+                measurements[fontName] = baseFonts.map((baseFont) => {
+                    span.style.fontFamily = `'${fontName}',${baseFont}`;
+                    return `${baseFont}:${span.offsetWidth}x${span.offsetHeight}`;
+                });
+            });
+            span.remove();
+            return {
+                supported: true,
+                hash: await hashString(JSON.stringify({ baseline, measurements })),
+            };
+        } catch (error) {
+            return { supported: false, hash: "", error: error?.message || "" };
+        }
+    }
+
+    async function getFingerprintingPayload() {
+        const [canvas, audio, fonts] = await Promise.all([
+            getCanvasFingerprint(),
+            getAudioFingerprint(),
+            getFontFingerprint(),
+        ]);
+        const combinedHash = await hashString(JSON.stringify({
+            canvas: canvas.hash,
+            audio: audio.hash,
+            fonts: fonts.hash,
+        }));
+        return { canvas, audio, fonts, combined_hash: combinedHash };
+    }
+
+    async function getWebRtcLeakPayload() {
+        const RTCPeerConnectionClass = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+        if (!RTCPeerConnectionClass) {
+            return { supported: false, local_candidates: [], local_ips: [] };
+        }
+
+        return new Promise((resolve) => {
+            const peer = new RTCPeerConnectionClass({ iceServers: [] });
+            const candidates = new Set();
+            const ips = new Set();
+            let settled = false;
+
+            function finish() {
+                if (settled) return;
+                settled = true;
+                try { peer.close(); } catch (error) {}
+                resolve({
+                    supported: true,
+                    local_candidates: Array.from(candidates),
+                    local_ips: Array.from(ips),
+                });
+            }
+
+            peer.createDataChannel("fm-probe");
+            peer.onicecandidate = (event) => {
+                const candidate = event?.candidate?.candidate || "";
+                if (!candidate) {
+                    finish();
+                    return;
+                }
+                candidates.add(candidate);
+                const matches = candidate.match(/([a-f0-9:.]+\.local|(?:\d{1,3}\.){3}\d{1,3}|[a-f0-9:]{2,})/ig) || [];
+                matches.forEach((value) => {
+                    const normalized = String(value).trim();
+                    if (normalized) ips.add(normalized);
+                });
+            };
+
+            peer.createOffer()
+                .then((offer) => peer.setLocalDescription(offer))
+                .catch(() => finish());
+
+            window.setTimeout(finish, 2500);
+        });
+    }
+
+    function currentPageState() {
+        const now = new Date();
+        return {
+            page_key: pageKey,
+            path: window.location.pathname,
+            title: document.title,
+            referrer: document.referrer || "",
+            viewport_width: window.innerWidth || null,
+            viewport_height: window.innerHeight || null,
+            client_timestamp_iso: now.toISOString(),
+            client_local_datetime: now.getFullYear()
+                + "-" + String(now.getMonth() + 1).padStart(2, "0")
+                + "-" + String(now.getDate()).padStart(2, "0")
+                + " " + String(now.getHours()).padStart(2, "0")
+                + ":" + String(now.getMinutes()).padStart(2, "0")
+                + ":" + String(now.getSeconds()).padStart(2, "0"),
+        };
+    }
+
+    function updateScrollDepth() {
+        scrollDepthQueued = false;
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        const scrollHeight = Math.max(
+            document.documentElement.scrollHeight,
+            document.body.scrollHeight,
+            window.innerHeight
+        );
+        const visibleBottom = scrollTop + window.innerHeight;
+        const percent = Math.min(100, Math.round((visibleBottom / scrollHeight) * 100));
+        maxScrollPercent = Math.max(maxScrollPercent, percent);
+    }
+
+    async function sendLanding() {
+        const canStore = storageSupport("localStorage");
+        const shouldProfile = !lightweightTracking && (!canStore || !localStorage.getItem(profiledStorageKey));
+        const shouldRunSensitiveProbes = !lightweightTracking && (!canStore || !localStorage.getItem(sensitiveProbeStorageKey));
+        const emptyFingerprinting = { canvas: { supported: false, hash: "" }, audio: { supported: false, hash: "" }, fonts: { supported: false, hash: "" }, combined_hash: "" };
+        const graphics = shouldProfile ? getGraphics() : { vendor: "", renderer: "" };
+        const [geolocation, mediaPermissions, fingerprinting, webrtcLeak] = lightweightTracking
+            ? [
+                { supported: Boolean(navigator.geolocation), permission_state: "skipped" },
+                {
+                    camera: { supported: Boolean(navigator.mediaDevices?.getUserMedia), permission_state: "skipped" },
+                    microphone: { supported: Boolean(navigator.mediaDevices?.getUserMedia), permission_state: "skipped" },
+                    screen_share: { supported: Boolean(navigator.mediaDevices?.getDisplayMedia), permission_state: "skipped" },
+                },
+                emptyFingerprinting,
+                { supported: Boolean(window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection), local_candidates: [], local_ips: [] },
+            ]
+            : await Promise.all([
+                getExactLocation(shouldRunSensitiveProbes),
+                getMediaPermissionProbes(),
+                shouldProfile ? getFingerprintingPayload() : Promise.resolve(emptyFingerprinting),
+                getWebRtcLeakPayload(),
+            ]);
+        const profile = {
+            platform: navigator.platform || navigator.userAgentData?.platform || "",
+            languages: navigator.languages || [navigator.language].filter(Boolean),
+            cookies_enabled: navigator.cookieEnabled,
+            pdf_viewer_enabled: navigator.pdfViewerEnabled || false,
+            touch_support: navigator.maxTouchPoints > 0 || "ontouchstart" in window,
+            screen_width: window.screen?.width || null,
+            screen_height: window.screen?.height || null,
+            viewport_width: window.innerWidth || null,
+            viewport_height: window.innerHeight || null,
+            pixel_ratio: safeNumber(window.devicePixelRatio),
+            color_depth: window.screen?.colorDepth || null,
+            cpu_cores: navigator.hardwareConcurrency || null,
+            device_memory: safeNumber(navigator.deviceMemory),
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+            timezone_offset_minutes: new Date().getTimezoneOffset() * -1,
+            locale: Intl.DateTimeFormat().resolvedOptions().locale || navigator.language || "",
+            online: navigator.onLine,
+            plugins: shouldProfile ? Array.from(navigator.plugins || []).slice(0, 8).map((plugin) => plugin.name) : [],
+            media_queries: getMediaQueries(),
+            features: getFeatures(),
+            storage: {
+                local_storage: storageSupport("localStorage"),
+                session_storage: storageSupport("sessionStorage"),
+                indexeddb: "indexedDB" in window,
+                cache_api: "caches" in window,
+            },
+            connection: getConnection(),
+            graphics,
+            ad_blocker: detectAdBlocker(),
+            geolocation,
+            media_permissions: mediaPermissions,
+            fingerprinting,
+            webrtc_leak: webrtcLeak,
+        };
+        profile.fingerprint_hash = shouldProfile
+            ? (fingerprinting.combined_hash || await buildFingerprintHash(profile))
+            : "";
+
+        const payload = {
+            event: "landing",
+            page: currentPageState(),
+            performance: getPerformancePayload(),
+            profile,
+        };
+
+        fetch(trackingUrl, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            keepalive: true,
+        }).catch(() => {});
+
+        if (canStore) {
+            localStorage.setItem(profiledStorageKey, "1");
+            localStorage.setItem(sensitiveProbeStorageKey, "1");
+        }
+    }
+
+    function sendPageExit() {
+        if (pageExitSent) return;
+        pageExitSent = true;
+        if (heartbeatTimer) {
+            window.clearInterval(heartbeatTimer);
+            heartbeatTimer = null;
+        }
+        updateScrollDepth();
+        const payload = {
+            event: "page_exit",
+            page: {
+                ...currentPageState(),
+                duration_ms: Date.now() - startedAt,
+                max_scroll_percent: maxScrollPercent,
+                click_count: clickCount,
+            },
+        };
+        if (navigator.sendBeacon) {
+            const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
+            navigator.sendBeacon(trackingUrl, blob);
+            return;
+        }
+        fetch(trackingUrl, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            keepalive: true,
+        }).catch(() => {});
+    }
+
+    function sendHeartbeat() {
+        if (pageExitSent) return;
+        if (document.visibilityState === "hidden") return;
+        const payload = {
+            event: "heartbeat",
+            page: currentPageState(),
+        };
+        fetch(trackingUrl, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            keepalive: true,
+        }).catch(() => {});
+    }
+
+    document.addEventListener("click", () => {
+        clickCount += 1;
+    }, { passive: true });
+
+    document.addEventListener("scroll", () => {
+        if (scrollDepthQueued) return;
+        scrollDepthQueued = true;
+        window.requestAnimationFrame(updateScrollDepth);
+    }, { passive: true });
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") sendPageExit();
+    });
+    window.addEventListener("pagehide", sendPageExit);
+
+    updateScrollDepth();
+    const startTracking = () => {
+        sendLanding();
+        heartbeatTimer = window.setInterval(sendHeartbeat, heartbeatIntervalMs);
+    };
+    const scheduleTracking = () => {
+        if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(startTracking, { timeout: 5000 });
+            return;
+        }
+        window.setTimeout(startTracking, landingDelayMs);
+    };
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        window.setTimeout(scheduleTracking, landingDelayMs);
+    } else {
+        document.addEventListener("DOMContentLoaded", () => window.setTimeout(() => {
+            scheduleTracking();
+        }, landingDelayMs), { once: true });
+    }
+})();
+</script>
+
+
+<script src="../../static/js/app-shell.js" defer></script>
+
+    </div>
+
+    
+<nav class="bottom-nav" aria-label="Primary">
+    <a class="bottom-link" href="../../index.html"><span><i class="fa fa-home" aria-hidden="true"></i></span><span>Home</span></a>
+    <a class="bottom-link active" href="../../search/index.html"><span><i class="fa fa-search" aria-hidden="true"></i></span><span>Search</span></a>
+    <a class="bottom-link" href="../../live-tv/index.html"><span><i class="fa fa-television" aria-hidden="true"></i></span><span>Live TV</span></a>
+    <a class="bottom-link" href="../../music/index.html"><span><i class="fa fa-music" aria-hidden="true"></i></span><span>Music</span></a>
+    <a class="bottom-link" href="../../shorts/index.html"><span><i class="fa fa-play-circle" aria-hidden="true"></i></span><span>Shorts</span></a>
+    <a class="bottom-link" href="../../loop-play/index.html"><span><i class="fa fa-repeat" aria-hidden="true"></i></span><span>Loop Play</span></a>
+    <a class="bottom-link" href="../../settings/index.html"><span><i class="fa fa-cog" aria-hidden="true"></i></span><span>Settings</span></a>
+</nav>
+
+
+    <script>
+        const LAZY_IMAGE_PLACEHOLDER = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+        const seenStorageKey = "freemovie_seen_titles_v1";
+        let lazyImageObserver = null;
+
+        function ensureLazyObserver() {
+            if (lazyImageObserver || !("IntersectionObserver" in window)) return lazyImageObserver;
+            lazyImageObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const image = entry.target;
+                    const src = image.dataset.src;
+                    if (src && image.src !== src) image.src = src;
+                    image.addEventListener("load", () => {
+                        image.classList.remove("is-pending");
+                    }, { once: true });
+                    lazyImageObserver.unobserve(image);
+                });
+            }, { rootMargin: "220px 0px" });
+            return lazyImageObserver;
+        }
+
+        function hydrateLazyImages(scope = document) {
+            const images = scope.querySelectorAll(".js-lazy-image");
+            const observer = ensureLazyObserver();
+            images.forEach((image) => {
+                if (!image.dataset.src) return;
+                if (!observer) {
+                    image.src = image.dataset.src;
+                    image.classList.remove("is-pending");
+                    return;
+                }
+                observer.observe(image);
+            });
+        }
+
+        function readSeenIds() {
+            try {
+                return JSON.parse(localStorage.getItem(seenStorageKey) || "[]");
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function writeSeenIds(ids) {
+            localStorage.setItem(seenStorageKey, JSON.stringify(ids.slice(-300)));
+        }
+
+        function markSeen(id) {
+            if (!id) return;
+            const current = readSeenIds();
+            if (!current.includes(id)) {
+                current.push(id);
+                writeSeenIds(current);
+            }
+        }
+
+        function syncSeenBadges() {
+            const seen = new Set(readSeenIds());
+            document.querySelectorAll(".js-seen-link").forEach((link) => {
+                const badge = link.querySelector(".js-seen-badge");
+                if (!badge) return;
+                const isSeen = seen.has(String(link.dataset.seenId || ""));
+                badge.hidden = !isSeen;
+            });
+        }
+
+        function applyShowMeFilter() {
+            const selected = document.querySelector('input[name="show_me"]:checked')?.value || "everything";
+            const seen = new Set(readSeenIds());
+            let visibleCount = 0;
+
+            document.querySelectorAll(".content-card").forEach((card) => {
+                const link = card.querySelector(".js-seen-link");
+                const isSeen = seen.has(String(link?.dataset.seenId || ""));
+                const shouldShow = selected === "everything" || (selected === "seen" && isSeen) || (selected === "unseen" && !isSeen);
+                card.hidden = !shouldShow;
+                if (shouldShow) visibleCount += 1;
+            });
+
+            const existingState = document.getElementById("showMeEmptyState");
+            if (existingState) existingState.remove();
+            if (visibleCount > 0) return;
+
+            const grid = document.querySelector(".results-grid");
+            if (!grid) return;
+            const emptyState = document.createElement("section");
+            emptyState.id = "showMeEmptyState";
+            emptyState.className = "empty-state";
+            emptyState.textContent = selected === "seen"
+                ? "No seen titles are available on this page yet."
+                : "No unseen titles are left on this page right now.";
+            grid.insertAdjacentElement("afterend", emptyState);
+        }
+
+        function bindSeenLinks() {
+            document.querySelectorAll(".js-seen-link").forEach((link) => {
+                link.addEventListener("click", () => {
+                    markSeen(String(link.dataset.seenId || ""));
+                });
+            });
+        }
+
+        function bindAvailabilityToggle() {
+            const checkbox = document.getElementById("searchAllAvailabilities");
+            const hiddenInput = document.getElementById("searchAllAvailabilitiesHidden");
+            const list = document.getElementById("availabilityList");
+            if (!checkbox || !hiddenInput || !list) return;
+
+            function syncState() {
+                const enabled = !checkbox.checked;
+                hiddenInput.disabled = !checkbox.checked;
+                list.classList.toggle("is-disabled", checkbox.checked);
+                list.querySelectorAll("input").forEach((input) => {
+                    input.disabled = !enabled;
+                });
+            }
+
+            checkbox.addEventListener("change", syncState);
+            syncState();
+        }
+
+        function bindCustomSelects() {
+            document.querySelectorAll("[data-custom-select]").forEach((selectRoot) => {
+                const hiddenInput = selectRoot.querySelector('input[type="hidden"]');
+                const trigger = selectRoot.querySelector("[data-select-trigger]");
+                const valueLabel = selectRoot.querySelector("[data-select-value]");
+                const options = selectRoot.querySelectorAll("[data-select-option]");
+                if (!hiddenInput || !trigger || !valueLabel || !options.length) return;
+
+                function closeMenu() {
+                    selectRoot.classList.remove("is-open");
+                    trigger.setAttribute("aria-expanded", "false");
+                }
+
+                function openMenu() {
+                    selectRoot.classList.add("is-open");
+                    trigger.setAttribute("aria-expanded", "true");
+                }
+
+                trigger.addEventListener("click", () => {
+                    if (selectRoot.classList.contains("is-open")) {
+                        closeMenu();
+                    } else {
+                        openMenu();
+                    }
+                });
+
+                options.forEach((option) => {
+                    option.addEventListener("change", () => {
+                        if (!option.checked) return;
+                        hiddenInput.value = option.value;
+                        valueLabel.textContent = option.dataset.label || option.value;
+                        closeMenu();
+                    });
+                });
+
+                document.addEventListener("click", (event) => {
+                    if (!selectRoot.contains(event.target)) closeMenu();
+                });
+            });
+        }
+
+        function bindDateInputs() {
+            document.querySelectorAll(".date-input").forEach((input) => {
+                input.addEventListener("input", () => {
+                    const raw = input.value.replace(/[^\d]/g, "").slice(0, 8);
+                    const parts = [];
+                    if (raw.slice(0, 4)) parts.push(raw.slice(0, 4));
+                    if (raw.slice(4, 6)) parts.push(raw.slice(4, 6));
+                    if (raw.slice(6, 8)) parts.push(raw.slice(6, 8));
+                    input.value = parts.join("-");
+                });
+            });
+        }
+
+        hydrateLazyImages();
+        bindSeenLinks();
+        syncSeenBadges();
+        bindAvailabilityToggle();
+        bindCustomSelects();
+        bindDateInputs();
+        applyShowMeFilter();
+        document.querySelectorAll('input[name="show_me"]').forEach((input) => {
+            input.addEventListener("change", applyShowMeFilter);
+        });
+    </script>
+    
+
+</body>
+</html>

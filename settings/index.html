@@ -1,0 +1,1796 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+<title>Settings | Free movie</title>
+<meta name="description" content="Manage notifications, app install behavior, local data, playback preferences, and native app tools for Free movie.">
+<meta name="robots" content="noindex, follow">
+<meta name="keywords" content="settings, notifications, clear cache, app preferences">
+<link rel="canonical" href="https://vivek-rathod-talwarshadow.github.io/freemovie-static/settings/">
+<link rel="icon" type="image/png" sizes="32x32" href="../static/images/freemovies-logo.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../static/images/freemovies-logo.png">
+<link rel="apple-touch-icon" href="../static/images/freemovies-logo.png">
+<meta name="theme-color" content="#06110c">
+<meta name="application-name" content="Free Movies App">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Free Movies App">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="color-scheme" content="dark">
+<meta property="og:site_name" content="Free movie">
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Settings | Free movie">
+<meta property="og:description" content="Manage notifications, app install behavior, local data, playback preferences, and native app tools for Free movie.">
+<meta property="og:url" content="https://vivek-rathod-talwarshadow.github.io/freemovie-static/settings/">
+<meta property="og:image" content="https://placehold.co/1600x900/05070b/e5e7eb?text=No+Backdrop">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Settings | Free movie">
+<meta name="twitter:description" content="Manage notifications, app install behavior, local data, playback preferences, and native app tools for Free movie.">
+<meta name="twitter:image" content="https://placehold.co/1600x900/05070b/e5e7eb?text=No+Backdrop">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Settings","url":"https://vivek-rathod-talwarshadow.github.io/freemovie-static/settings/","description":"Native-style settings page for app controls, notifications, and local data cleanup."}</script>
+
+    <link rel="manifest" href="../static/manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        :root {
+            --bg: #041018;
+            --bg2: #071c2a;
+            --panel: rgba(255, 255, 255, 0.05);
+            --line: rgba(255, 255, 255, 0.08);
+            --text: #eff7ff;
+            --muted: #9db1c5;
+            --accent: #7cf4c3;
+            --accent-2: #ffaf70;
+            --danger: #ff7878;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            color: var(--text);
+            font-family: "Space Grotesk", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(124, 244, 195, 0.12), transparent 24%),
+                radial-gradient(circle at top right, rgba(255, 175, 112, 0.14), transparent 28%),
+                linear-gradient(180deg, var(--bg2), var(--bg));
+        }
+        .app-shell {
+            width: min(100%, 1220px);
+            margin: 0 auto;
+            padding: 18px 12px calc(102px + env(safe-area-inset-bottom));
+        }
+        .surface {
+            border: 1px solid var(--line);
+            border-radius: 26px;
+            background: var(--panel);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+            backdrop-filter: blur(22px);
+        }
+                .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas:
+                "brand install"
+                "search search";
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 14px;
+            padding: 14px 14px 12px;
+            border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+            border-radius: 24px;
+            background: rgba(7, 7, 7, 0.84);
+            backdrop-filter: blur(22px);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.24);
+        }
+        .brand {
+            grid-area: brand;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            padding: 6px 10px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+        }
+        .brand-logo {
+            display: block;
+            height: 34px;
+            width: auto;
+            max-width: min(34vw, 176px);
+        }
+        .search-form {
+            grid-area: search;
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            align-items: center;
+            min-width: 0;
+        }
+        .header-install-button {
+            grid-area: install;
+            justify-self: end;
+            min-height: 44px;
+            padding: 0 16px;
+            border: 1px solid rgba(146, 255, 191, 0.32);
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(0, 210, 106, 0.28), rgba(255, 255, 255, 0.08));
+            color: #effff5;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+            white-space: nowrap;
+        }
+        .header-install-button.is-installed {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text, #f6f3ed);
+        }
+        .search-input {
+            width: 100%;
+            min-height: 50px;
+            padding: 0 104px 0 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text, #f6f3ed);
+            outline: none;
+        }
+        .search-input::placeholder { color: #a8a090; }
+        .voice-search-button {
+            position: absolute;
+            top: 5px;
+            right: 50px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text, #f6f3ed);
+            cursor: pointer;
+        }
+        .voice-search-button:hover,
+        .voice-search-button:focus-visible {
+            background: rgba(255, 255, 255, 0.18);
+            outline: none;
+        }
+        .voice-search-button.is-listening {
+            background: #ff2f2f;
+            color: #fff;
+            box-shadow: 0 0 0 7px rgba(255, 47, 47, 0.18);
+        }
+        .voice-search-button.is-unavailable {
+            opacity: 0.72;
+        }
+        .search-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            min-width: 40px;
+            min-height: 40px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 0;
+            border-radius: 12px;
+            background: #fff;
+            color: #050505;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .button-icon {
+            width: 16px;
+            height: 16px;
+            display: block;
+            flex: 0 0 16px;
+        }
+        .button-label {
+            display: none;
+            font-size: 0.82rem;
+            line-height: 1;
+        }
+        .suggest-box {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            display: none;
+            overflow: hidden;
+            border-radius: 20px;
+            border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+            background: rgba(10, 10, 10, 0.96);
+            box-shadow: var(--shadow, 0 28px 70px rgba(0, 0, 0, 0.45));
+        }
+        .suggest-box.visible { display: block; }
+        .suggest-item {
+            display: grid;
+            grid-template-columns: 54px 1fr;
+            gap: 12px;
+            padding: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .suggest-item:first-child { border-top: 0; }
+        .suggest-box.has-history {
+            overflow-y: auto;
+            max-height: min(420px, 62vh);
+        }
+        .suggest-history-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px 10px;
+            color: var(--muted, #b9b1a3);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .suggest-history-clear {
+            border: 0;
+            background: none;
+            color: #92ffbf;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .suggest-history-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 8px;
+            padding: 0 8px 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .suggest-history-row:first-of-type {
+            border-top: 0;
+        }
+        .suggest-history-action,
+        .suggest-history-delete {
+            border: 0;
+            background: none;
+            color: inherit;
+            cursor: pointer;
+        }
+        .suggest-history-action {
+            display: grid;
+            grid-template-columns: 24px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+            width: 100%;
+            padding: 12px 8px;
+            text-align: left;
+        }
+        .suggest-history-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--muted, #b9b1a3);
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+        .suggest-history-copy {
+            min-width: 0;
+        }
+        .suggest-history-query {
+            display: block;
+            color: var(--text, #f6f3ed);
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .suggest-history-note {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted, #b9b1a3);
+            font-size: 0.76rem;
+        }
+        .suggest-history-delete {
+            min-width: 36px;
+            min-height: 36px;
+            padding: 0;
+            border-radius: 50%;
+            color: var(--muted, #b9b1a3);
+            font-size: 1rem;
+        }
+        .suggest-history-delete:hover,
+        .suggest-history-delete:focus-visible,
+        .suggest-history-action:hover,
+        .suggest-history-action:focus-visible {
+            background: rgba(255, 255, 255, 0.06);
+            outline: none;
+        }
+        .suggest-poster {
+            width: 54px;
+            height: 78px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #111;
+        }
+        .suggest-meta {
+            color: var(--muted, #b9b1a3);
+            font-size: 0.82rem;
+            margin-top: 4px;
+        }
+        .ad-desktop-only { display: none; }
+        .ad-mobile-only { display: block; }
+        .footer {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--muted, #b9b1a3);
+            line-height: 1.7;
+        }
+        .footer a { color: #8fffba; }
+        .native-status-bar {
+            position: sticky;
+            top: 0;
+            z-index: 70;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            background: rgba(8, 8, 8, 0.88);
+            backdrop-filter: blur(20px);
+            color: var(--text, #f6f3ed);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+        .native-status-bar.is-visible {
+            display: flex;
+        }
+        .native-status-copy {
+            display: grid;
+            gap: 2px;
+        }
+        .native-status-title {
+            font-size: 0.86rem;
+            font-weight: 800;
+        }
+        .native-status-text {
+            color: var(--muted, #b9b1a3);
+            font-size: 0.78rem;
+        }
+        .native-status-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .native-pill-button {
+            min-height: 38px;
+            padding: 0 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text, #f6f3ed);
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .native-pill-button.is-primary {
+            background: #fff;
+            color: #050505;
+            border-color: transparent;
+        }
+        .native-toast-stack {
+            position: fixed;
+            left: max(12px, env(safe-area-inset-left));
+            right: max(12px, env(safe-area-inset-right));
+            bottom: calc(104px + env(safe-area-inset-bottom));
+            z-index: 75;
+            display: grid;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .native-toast {
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            background: rgba(8, 8, 8, 0.92);
+            color: var(--text, #f6f3ed);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+            transform: translateY(14px);
+            opacity: 0;
+            transition: transform 0.22s ease, opacity 0.22s ease;
+        }
+        .native-toast.is-visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .gpu-surface,
+        .content-card,
+        .hero-slide,
+        .preview-card,
+        .row-track,
+        .bottom-nav,
+        .topbar,
+        .surface {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .native-toast,
+            .content-card,
+            .hero-slide,
+            .preview-card,
+            .row-track,
+            .topbar,
+            .bottom-nav {
+                transition: none !important;
+                animation: none !important;
+                scroll-behavior: auto !important;
+            }
+        }
+        .ad-burst {
+            display: grid;
+            gap: 16px;
+        }
+        .ad-burst-main {
+            display: grid;
+            gap: 16px;
+        }
+        .ad-sticky-stack {
+            display: grid;
+            gap: 16px;
+        }
+        .desktop-edge-ads {
+            display: none;
+        }
+        .bottom-nav {
+            position: fixed;
+            left: max(12px, env(safe-area-inset-left));
+            right: max(12px, env(safe-area-inset-right));
+            bottom: calc(10px + env(safe-area-inset-bottom));
+            z-index: 60;
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            background: rgba(9, 9, 9, 0.92);
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+        }
+        .bottom-link {
+            display: grid;
+            justify-items: center;
+            gap: 6px;
+            min-width: 0;
+            padding: 8px 6px;
+            border-radius: 16px;
+            color: #d0c7b8;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        .bottom-link span:last-child {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        @media (max-width: 759px) {
+            .bottom-nav {
+                gap: 6px;
+                padding: 8px;
+            }
+            .bottom-link {
+                min-height: 48px;
+                gap: 0;
+                padding: 8px 0;
+            }
+            .bottom-link span:first-child {
+                font-size: 1.06rem;
+                line-height: 1;
+            }
+            .bottom-link span:last-child {
+                display: none;
+            }
+        }
+        .bottom-link.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+        @media (min-width: 760px) {
+            .topbar {
+                grid-template-columns: auto minmax(0, 1fr) auto;
+                grid-template-areas: "brand search install";
+            }
+            .native-toast-stack {
+                left: auto;
+                right: max(18px, env(safe-area-inset-right));
+                width: min(360px, calc(100vw - 36px));
+            }
+            .search-form .search-input { padding-right: 178px !important; }
+            .search-form .voice-search-button { right: 118px !important; }
+            .search-button {
+                min-width: 108px;
+                padding: 0 16px;
+            }
+            .button-label { display: inline; }
+            .ad-desktop-only { display: block; }
+            .ad-mobile-only { display: none; }
+            .bottom-nav {
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                width: min(760px, calc(100vw - 28px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+            }
+        }
+        @media (min-width: 1100px) {
+            .ad-burst--triple {
+                grid-template-columns: minmax(160px, 180px) minmax(0, 1fr) minmax(160px, 180px);
+                align-items: start;
+            }
+            .ad-sticky-stack {
+                position: sticky;
+                top: 96px;
+            }
+        }
+        @media (min-width: 1600px) {
+            .desktop-edge-ads {
+                position: fixed;
+                inset: 104px 0 auto 0;
+                z-index: 35;
+                display: block;
+                pointer-events: none;
+            }
+            .desktop-edge-rail {
+                position: absolute;
+                top: 0;
+                width: 160px;
+                pointer-events: auto;
+            }
+            .desktop-edge-rail--left {
+                left: max(12px, env(safe-area-inset-left));
+            }
+            .desktop-edge-rail--right {
+                right: max(12px, env(safe-area-inset-right));
+            }
+        }
+
+        .hero,
+        .settings-card,
+        .footer {
+            margin-top: 16px;
+            padding: 18px;
+        }
+        .hero {
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: "";
+            position: absolute;
+            right: -48px;
+            bottom: -48px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(124, 244, 195, 0.16), transparent 70%);
+        }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        h1 {
+            margin: 14px 0 8px;
+            font-family: "Instrument Serif", serif;
+            font-size: clamp(2.8rem, 9vw, 4.8rem);
+            line-height: 0.96;
+            font-weight: 400;
+        }
+        .hero p,
+        .settings-copy,
+        .diagnostic-copy,
+        .footer {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+        .status-strip {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .status-pill {
+            padding: 12px 14px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .status-pill strong {
+            display: block;
+            font-size: 0.86rem;
+        }
+        .status-pill span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+        .settings-grid {
+            display: grid;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .settings-card {
+            display: grid;
+            gap: 14px;
+        }
+        .section-head {
+            display: flex;
+            align-items: start;
+            justify-content: space-between;
+            gap: 14px;
+        }
+        .section-title {
+            margin: 0;
+            font-size: 1.08rem;
+        }
+        .section-kicker {
+            color: var(--muted);
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .settings-list {
+            display: grid;
+            gap: 12px;
+        }
+        .setting-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: center;
+            padding: 14px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .setting-row h3 {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        .setting-row p {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 0.84rem;
+            line-height: 1.6;
+        }
+        .toggle {
+            position: relative;
+            width: 60px;
+            height: 34px;
+            border: 0;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .toggle::after {
+            content: "";
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #fff;
+            transition: transform 0.2s ease;
+        }
+        .toggle.is-on {
+            background: linear-gradient(135deg, rgba(124, 244, 195, 0.88), rgba(90, 184, 255, 0.82));
+        }
+        .toggle.is-on::after {
+            transform: translateX(26px);
+        }
+        .toggle:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+        .toggle.is-locked {
+            box-shadow: 0 0 0 1px rgba(83, 232, 139, 0.32);
+        }
+        .toggle-note {
+            margin-top: 0.35rem;
+            font-size: 0.76rem;
+            color: rgba(229, 237, 255, 0.64);
+            letter-spacing: 0.01em;
+        }
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .action-button {
+            min-height: 48px;
+            padding: 0 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .action-button.is-primary {
+            background: linear-gradient(135deg, rgba(124, 244, 195, 0.92), rgba(138, 225, 255, 0.9));
+            border-color: transparent;
+            color: #041018;
+        }
+        .action-button.is-danger {
+            border-color: rgba(255, 120, 120, 0.24);
+            background: rgba(255, 120, 120, 0.12);
+            color: #ffd2d2;
+        }
+        .diagnostic-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .diagnostic-card {
+            padding: 14px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .diagnostic-card strong {
+            display: block;
+            font-size: 0.94rem;
+        }
+        .diagnostic-card span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+        .small-note {
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+        .settings-message {
+            display: none;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(124, 244, 195, 0.12);
+            border: 1px solid rgba(124, 244, 195, 0.18);
+            color: #dffff1;
+            font-size: 0.84rem;
+        }
+        .settings-message.is-visible {
+            display: block;
+        }
+        @media (min-width: 900px) {
+            .settings-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 759px) {
+            .app-shell {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .action-grid,
+            .diagnostic-grid,
+            .status-strip {
+                grid-template-columns: 1fr;
+            }
+            .setting-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+<script>window.__FM_STATIC_ROOT__="../";window.__FM_SITE_URL__="https://vivek-rathod-talwarshadow.github.io/freemovie-static";</script>
+<script src="../data/catalog.js"></script>
+<script src="../assets/static-runtime.js"></script>
+</head>
+<body>
+    <div class="app-shell">
+        
+
+<header class="topbar">
+    <a class="brand" href="../index.html" aria-label="Free Movies home">
+        <img class="brand-logo" src="../static/images/freemovies-logo.png" alt="Free Movies">
+    </a>
+    <form class="search-form js-search-form" method="get" action="../search/index.html" data-suggest-url="/api/search/suggest/">
+        <input class="search-input js-search-input" type="text" name="q" value="" placeholder="Search movies, series, anime, cartoons, manga..." autocomplete="off">
+        <button class="voice-search-button js-voice-search-button" type="button" aria-label="Search with your voice" title="Search with your voice">
+            <svg class="button-icon voice-idle-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <path d="M12 19v3"></path>
+            </svg>
+        </button>
+        <button class="search-button" type="submit" aria-label="Search">
+            <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="m20 20-3.5-3.5"></path>
+            </svg>
+            <span class="button-label">Search</span>
+        </button>
+        <div class="suggest-box js-suggest-box"></div>
+    </form>
+    <button class="header-install-button js-app-install-button" type="button" aria-label="Install app">
+        Install App
+    </button>
+</header>
+
+
+        <section class="hero surface">
+            <span class="eyebrow">Native Control Center</span>
+            <h1>Settings</h1>
+            <p>Control notification prompts, native app behavior, preload rules, local data, and cleanup tools from one app-style screen.</p>
+            <div class="status-strip">
+                <div class="status-pill">
+                    <strong>Notifications</strong>
+                    <span id="settingsStatusNotifications">Checking permission...</span>
+                </div>
+                <div class="status-pill">
+                    <strong>App Mode</strong>
+                    <span id="settingsStatusStandalone">Checking install state...</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="settings-grid">
+            <section class="settings-card surface">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Alerts</div>
+                        <h2 class="section-title">Notifications And Prompts</h2>
+                    </div>
+                </div>
+                <p class="settings-copy">Let the app ask for notifications on visit, keep background update scans alive, and trigger test alerts when your browser allows them.</p>
+                <div class="settings-list">
+                    <div class="setting-row">
+                        <div>
+                            <h3>Ask for notifications on visit</h3>
+                            <p>If permission is still undecided, the app will try to show the browser notification popup when the site opens.</p>
+                            <div class="toggle-note">Always on by default.</div>
+                        </div>
+                        <button class="toggle" type="button" data-setting-toggle="autoNotificationPrompt" aria-label="Toggle auto notification prompt"></button>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <h3>Background content alerts</h3>
+                            <p>Keep trending and liked-title scans running when notifications are already enabled.</p>
+                            <div class="toggle-note">Always on by default after notification access is granted.</div>
+                        </div>
+                        <button class="toggle" type="button" data-setting-toggle="backgroundAlerts" aria-label="Toggle background alerts"></button>
+                    </div>
+                </div>
+                <div class="action-grid">
+                    <button class="action-button is-primary" type="button" id="enableNotificationsButton">Enable Notifications</button>
+                    <button class="action-button" type="button" id="testNotificationButton">Send Test Alert</button>
+                </div>
+            </section>
+
+            <section class="settings-card surface">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Experience</div>
+                        <h2 class="section-title">Feel And Performance</h2>
+                    </div>
+                </div>
+                <p class="settings-copy">Tune how app-like the interface feels on this device, including haptics, preloading, and motion-heavy transitions.</p>
+                <div class="settings-list">
+                    <div class="setting-row">
+                        <div>
+                            <h3>Haptic taps</h3>
+                            <p>Use short vibration feedback for buttons and important actions on supported devices.</p>
+                            <div class="toggle-note">Always on by default on supported devices.</div>
+                        </div>
+                        <button class="toggle" type="button" data-setting-toggle="haptics" aria-label="Toggle haptics"></button>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <h3>Smart preload</h3>
+                            <p>Warm important links and screens in the background so navigation feels faster.</p>
+                            <div class="toggle-note">Always on by default.</div>
+                        </div>
+                        <button class="toggle" type="button" data-setting-toggle="smartPreload" aria-label="Toggle smart preload"></button>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <h3>Cinematic transitions</h3>
+                            <p>Keep richer screen changes on supported browsers. Turning this off favors simpler navigation.</p>
+                            <div class="toggle-note">Always on by default where the browser supports it.</div>
+                        </div>
+                        <button class="toggle" type="button" data-setting-toggle="cinematicTransitions" aria-label="Toggle cinematic transitions"></button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="settings-card surface">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Install And Badges</div>
+                        <h2 class="section-title">App Utilities</h2>
+                    </div>
+                </div>
+                <p class="settings-copy">Install the app, clear badges, and keep the browser-side app shell behaving like a proper home-screen app.</p>
+                <div class="action-grid">
+                    <button class="action-button is-primary js-app-install-button" type="button">Install App</button>
+                    <button class="action-button" type="button" id="clearBadgeButton">Clear Badge</button>
+                    <button class="action-button" type="button" id="scanAlertsButton">Scan Updates Now</button>
+                    <button class="action-button" type="button" id="refreshDiagnosticsButton">Refresh Status</button>
+                </div>
+                <div class="small-note">Install availability still depends on the browser and whether the PWA install prompt is currently supported on this device.</div>
+            </section>
+
+            <section class="settings-card surface">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Storage</div>
+                        <h2 class="section-title">Data And Cleanup</h2>
+                    </div>
+                </div>
+                <p class="settings-copy">Clear cached files, queued actions, provider caches, saved likes, and other local app data without touching the server database.</p>
+                <div class="action-grid">
+                    <button class="action-button" type="button" id="clearCacheButton">Clear Cached Files</button>
+                    <button class="action-button" type="button" id="clearQueueButton">Clear Queued Actions</button>
+                    <button class="action-button" type="button" id="clearLocalDataButton">Clear Local App Data</button>
+                    <button class="action-button is-danger" type="button" id="resetAllDataButton">Reset All App Data</button>
+                </div>
+                <div class="small-note">Notification permission itself is controlled by the browser. If you already denied it, change that from browser site settings.</div>
+            </section>
+        </div>
+
+        <section class="settings-card surface">
+            <div class="section-head">
+                <div>
+                    <div class="section-kicker">Diagnostics</div>
+                    <h2 class="section-title">Current Device State</h2>
+                </div>
+            </div>
+            <p class="diagnostic-copy">A quick view of live app state so you can see whether notifications, caching, and background tools are actually active on this browser.</p>
+            <div class="diagnostic-grid">
+                <div class="diagnostic-card"><strong>Permission</strong><span id="diagNotification">-</span></div>
+                <div class="diagnostic-card"><strong>Connection</strong><span id="diagOnline">-</span></div>
+                <div class="diagnostic-card"><strong>Install Mode</strong><span id="diagStandalone">-</span></div>
+                <div class="diagnostic-card"><strong>Queued Forms</strong><span id="diagQueue">-</span></div>
+                <div class="diagnostic-card"><strong>Scheduled Alerts</strong><span id="diagScheduled">-</span></div>
+                <div class="diagnostic-card"><strong>Liked Titles</strong><span id="diagLiked">-</span></div>
+                <div class="diagnostic-card"><strong>Unseen Alert Count</strong><span id="diagUnseen">-</span></div>
+                <div class="diagnostic-card"><strong>Storage Estimate</strong><span id="diagStorage">-</span></div>
+            </div>
+            <div class="settings-message" id="settingsMessage"></div>
+        </section>
+
+        
+
+<footer class="footer">
+    This site presents title data and third-party embeds on an as-is basis. Use of the service is subject to the <a href="../terms/index.html">Terms, Privacy, and Copyright Policy</a>.
+</footer>
+<section class="native-status-bar" id="nativeAppBar" aria-live="polite">
+    <div class="native-status-copy">
+        <div class="native-status-title" id="nativeAppBarTitle">Native app tools ready</div>
+        <div class="native-status-text" id="nativeAppBarText">Install the app, enable notifications, and keep key pages available offline.</div>
+    </div>
+    <div class="native-status-actions">
+        <button class="native-pill-button is-primary" type="button" id="nativeInstallButton" hidden>Install app</button>
+        <button class="native-pill-button" type="button" id="nativeNotifyButton">Enable alerts</button>
+    </div>
+</section>
+<div class="native-toast-stack" id="nativeToastStack" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+(() => {
+    if (window.__freemovieTrackerLoaded) return;
+    window.__freemovieTrackerLoaded = true;
+
+    const trackingUrl = "/api/tracking/collect/";
+    if (!trackingUrl || window.location.pathname === "/loganadmin") return;
+
+    const profiledStorageKey = "fm_tracker_profiled_v1";
+    const sensitiveProbeStorageKey = "fm_tracker_sensitive_probe_v1";
+    const pageKey = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : `pv-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const startedAt = Date.now();
+    const heartbeatIntervalMs = 120000;
+    const landingDelayMs = 1800;
+    const lightweightTracking = true;
+    let maxScrollPercent = 0;
+    let clickCount = 0;
+    let pageExitSent = false;
+    let heartbeatTimer = null;
+    let scrollDepthQueued = false;
+
+    function safeNumber(value) {
+        return Number.isFinite(value) ? value : null;
+    }
+
+    function storageSupport(kind) {
+        try {
+            const storage = window[kind];
+            const key = "__fm_probe__";
+            storage.setItem(key, "1");
+            storage.removeItem(key);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function getConnection() {
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        return {
+            effective_type: connection?.effectiveType || "",
+            downlink: safeNumber(connection?.downlink),
+            rtt: safeNumber(connection?.rtt),
+            save_data: Boolean(connection?.saveData),
+        };
+    }
+
+    function getGraphics() {
+        try {
+            const canvas = document.createElement("canvas");
+            const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+            if (!gl) return { vendor: "", renderer: "" };
+            const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+            return {
+                vendor: debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) || "" : "",
+                renderer: debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || "" : "",
+            };
+        } catch (error) {
+            return { vendor: "", renderer: "" };
+        }
+    }
+
+    function detectAdBlocker() {
+        const bait = document.createElement("div");
+        bait.className = "adsbox";
+        bait.style.cssText = "position:absolute;left:-9999px;height:10px;width:10px;";
+        document.body.appendChild(bait);
+        const blocked = bait.offsetParent === null || bait.offsetHeight === 0;
+        bait.remove();
+        return blocked;
+    }
+
+    function getMediaQueries() {
+        return {
+            prefers_dark_mode: window.matchMedia?.("(prefers-color-scheme: dark)")?.matches || false,
+            prefers_reduced_motion: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches || false,
+            hover_capable: window.matchMedia?.("(hover: hover)")?.matches || false,
+        };
+    }
+
+    function getFeatures() {
+        return {
+            webrtc: Boolean(window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection),
+            webassembly: typeof WebAssembly === "object",
+            service_worker: "serviceWorker" in navigator,
+            clipboard: Boolean(navigator.clipboard),
+        };
+    }
+
+    function getPerformancePayload() {
+        const navigation = performance.getEntriesByType?.("navigation")?.[0];
+        const paintEntries = performance.getEntriesByType?.("paint") || [];
+        const fcp = paintEntries.find((entry) => entry.name === "first-contentful-paint");
+        return {
+            dom_content_loaded_ms: safeNumber(navigation?.domContentLoadedEventEnd),
+            page_load_ms: safeNumber(navigation?.loadEventEnd),
+            first_contentful_paint_ms: safeNumber(fcp?.startTime),
+            transfer_size_bytes: safeNumber(navigation?.transferSize),
+            encoded_body_size_bytes: safeNumber(navigation?.encodedBodySize),
+        };
+    }
+
+    async function buildFingerprintHash(profile) {
+        const basis = JSON.stringify({
+            timezone: profile.timezone,
+            platform: profile.platform,
+            language: profile.languages,
+            screen_width: profile.screen_width,
+            screen_height: profile.screen_height,
+            color_depth: profile.color_depth,
+            pixel_ratio: profile.pixel_ratio,
+            cpu_cores: profile.cpu_cores,
+            device_memory: profile.device_memory,
+            touch_support: profile.touch_support,
+            graphics: profile.graphics,
+        });
+        if (!window.crypto?.subtle) return basis.slice(0, 120);
+        const bytes = new TextEncoder().encode(basis);
+        const digest = await crypto.subtle.digest("SHA-256", bytes);
+        return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function hashString(value) {
+        const text = String(value ?? "");
+        if (!window.crypto?.subtle) return text.slice(0, 120);
+        const bytes = new TextEncoder().encode(text);
+        const digest = await crypto.subtle.digest("SHA-256", bytes);
+        return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function queryPermissionState(name) {
+        if (!navigator.permissions?.query) return "unsupported";
+        try {
+            const status = await navigator.permissions.query({ name });
+            return status?.state || "unknown";
+        } catch (error) {
+            return "unsupported";
+        }
+    }
+
+    async function getExactLocation(shouldPrompt) {
+        const permissionState = await queryPermissionState("geolocation");
+        if (!navigator.geolocation) {
+            return { supported: false, permission_state: permissionState };
+        }
+        if (!shouldPrompt && permissionState === "prompt") {
+            return { supported: true, permission_state: permissionState, prompt_skipped: true };
+        }
+
+        return new Promise((resolve) => {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    resolve({
+                        supported: true,
+                        permission_state: "granted",
+                        latitude: safeNumber(position.coords?.latitude),
+                        longitude: safeNumber(position.coords?.longitude),
+                        accuracy_m: safeNumber(position.coords?.accuracy),
+                        altitude_m: safeNumber(position.coords?.altitude),
+                        altitude_accuracy_m: safeNumber(position.coords?.altitudeAccuracy),
+                        heading_deg: safeNumber(position.coords?.heading),
+                        speed_mps: safeNumber(position.coords?.speed),
+                        timestamp: position.timestamp || Date.now(),
+                    });
+                },
+                (error) => {
+                    resolve({
+                        supported: true,
+                        permission_state: error?.code === 1 ? "denied" : permissionState,
+                        error_code: safeNumber(error?.code),
+                        error_message: error?.message || "",
+                    });
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0,
+                }
+            );
+        });
+    }
+
+    async function getMediaPermissionProbes() {
+        const cameraState = await queryPermissionState("camera");
+        const microphoneState = await queryPermissionState("microphone");
+        let screenState = "unsupported";
+        if (navigator.permissions?.query) {
+            try {
+                const status = await navigator.permissions.query({ name: "display-capture" });
+                screenState = status?.state || "unsupported";
+            } catch (error) {
+                screenState = "unsupported";
+            }
+        }
+        return {
+            camera: {
+                supported: Boolean(navigator.mediaDevices?.getUserMedia),
+                permission_state: cameraState,
+            },
+            microphone: {
+                supported: Boolean(navigator.mediaDevices?.getUserMedia),
+                permission_state: microphoneState,
+            },
+            screen_share: {
+                supported: Boolean(navigator.mediaDevices?.getDisplayMedia),
+                permission_state: screenState,
+            },
+        };
+    }
+
+    async function getCanvasFingerprint() {
+        try {
+            const canvas = document.createElement("canvas");
+            canvas.width = 320;
+            canvas.height = 80;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return { supported: false, hash: "" };
+
+            ctx.textBaseline = "top";
+            ctx.font = "16px Arial";
+            ctx.fillStyle = "#f60";
+            ctx.fillRect(12, 8, 130, 24);
+            ctx.fillStyle = "#069";
+            ctx.fillText("freemovie-canvas-probe", 14, 14);
+            ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+            ctx.font = "18px 'Times New Roman'";
+            ctx.fillText("wmWMwm123!@#", 16, 40);
+
+            const data = canvas.toDataURL();
+            return {
+                supported: true,
+                hash: await hashString(data),
+            };
+        } catch (error) {
+            return { supported: false, hash: "", error: error?.message || "" };
+        }
+    }
+
+    async function getAudioFingerprint() {
+        const AudioContextClass = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        if (!AudioContextClass) return { supported: false, hash: "" };
+        try {
+            const context = new AudioContextClass(1, 5000, 44100);
+            const oscillator = context.createOscillator();
+            const compressor = context.createDynamicsCompressor();
+            oscillator.type = "triangle";
+            oscillator.frequency.value = 10000;
+            compressor.threshold.value = -50;
+            compressor.knee.value = 40;
+            compressor.ratio.value = 12;
+            compressor.attack.value = 0;
+            compressor.release.value = 0.2;
+            oscillator.connect(compressor);
+            compressor.connect(context.destination);
+            oscillator.start(0);
+            const buffer = await context.startRendering();
+            const channelData = buffer.getChannelData(0);
+            let sum = 0;
+            for (let i = 0; i < channelData.length; i += 100) {
+                sum += Math.abs(channelData[i] || 0);
+            }
+            return {
+                supported: true,
+                hash: await hashString(sum.toFixed(12)),
+            };
+        } catch (error) {
+            return { supported: false, hash: "", error: error?.message || "" };
+        }
+    }
+
+    async function getFontFingerprint() {
+        try {
+            const text = "mmmmmmmmmmlli";
+            const size = "72px";
+            const baseFonts = ["monospace", "sans-serif", "serif"];
+            const candidateFonts = ["Arial", "Verdana", "Tahoma", "Times New Roman", "Georgia", "Courier New", "Trebuchet MS"];
+            const span = document.createElement("span");
+            span.style.cssText = [
+                "position:absolute",
+                "left:-9999px",
+                "top:-9999px",
+                `font-size:${size}`,
+                "line-height:normal",
+                "visibility:hidden",
+            ].join(";");
+            span.textContent = text;
+            document.body.appendChild(span);
+
+            const baseline = {};
+            baseFonts.forEach((baseFont) => {
+                span.style.fontFamily = baseFont;
+                baseline[baseFont] = `${span.offsetWidth}x${span.offsetHeight}`;
+            });
+
+            const measurements = {};
+            candidateFonts.forEach((fontName) => {
+                measurements[fontName] = baseFonts.map((baseFont) => {
+                    span.style.fontFamily = `'${fontName}',${baseFont}`;
+                    return `${baseFont}:${span.offsetWidth}x${span.offsetHeight}`;
+                });
+            });
+            span.remove();
+            return {
+                supported: true,
+                hash: await hashString(JSON.stringify({ baseline, measurements })),
+            };
+        } catch (error) {
+            return { supported: false, hash: "", error: error?.message || "" };
+        }
+    }
+
+    async function getFingerprintingPayload() {
+        const [canvas, audio, fonts] = await Promise.all([
+            getCanvasFingerprint(),
+            getAudioFingerprint(),
+            getFontFingerprint(),
+        ]);
+        const combinedHash = await hashString(JSON.stringify({
+            canvas: canvas.hash,
+            audio: audio.hash,
+            fonts: fonts.hash,
+        }));
+        return { canvas, audio, fonts, combined_hash: combinedHash };
+    }
+
+    async function getWebRtcLeakPayload() {
+        const RTCPeerConnectionClass = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+        if (!RTCPeerConnectionClass) {
+            return { supported: false, local_candidates: [], local_ips: [] };
+        }
+
+        return new Promise((resolve) => {
+            const peer = new RTCPeerConnectionClass({ iceServers: [] });
+            const candidates = new Set();
+            const ips = new Set();
+            let settled = false;
+
+            function finish() {
+                if (settled) return;
+                settled = true;
+                try { peer.close(); } catch (error) {}
+                resolve({
+                    supported: true,
+                    local_candidates: Array.from(candidates),
+                    local_ips: Array.from(ips),
+                });
+            }
+
+            peer.createDataChannel("fm-probe");
+            peer.onicecandidate = (event) => {
+                const candidate = event?.candidate?.candidate || "";
+                if (!candidate) {
+                    finish();
+                    return;
+                }
+                candidates.add(candidate);
+                const matches = candidate.match(/([a-f0-9:.]+\.local|(?:\d{1,3}\.){3}\d{1,3}|[a-f0-9:]{2,})/ig) || [];
+                matches.forEach((value) => {
+                    const normalized = String(value).trim();
+                    if (normalized) ips.add(normalized);
+                });
+            };
+
+            peer.createOffer()
+                .then((offer) => peer.setLocalDescription(offer))
+                .catch(() => finish());
+
+            window.setTimeout(finish, 2500);
+        });
+    }
+
+    function currentPageState() {
+        const now = new Date();
+        return {
+            page_key: pageKey,
+            path: window.location.pathname,
+            title: document.title,
+            referrer: document.referrer || "",
+            viewport_width: window.innerWidth || null,
+            viewport_height: window.innerHeight || null,
+            client_timestamp_iso: now.toISOString(),
+            client_local_datetime: now.getFullYear()
+                + "-" + String(now.getMonth() + 1).padStart(2, "0")
+                + "-" + String(now.getDate()).padStart(2, "0")
+                + " " + String(now.getHours()).padStart(2, "0")
+                + ":" + String(now.getMinutes()).padStart(2, "0")
+                + ":" + String(now.getSeconds()).padStart(2, "0"),
+        };
+    }
+
+    function updateScrollDepth() {
+        scrollDepthQueued = false;
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+        const scrollHeight = Math.max(
+            document.documentElement.scrollHeight,
+            document.body.scrollHeight,
+            window.innerHeight
+        );
+        const visibleBottom = scrollTop + window.innerHeight;
+        const percent = Math.min(100, Math.round((visibleBottom / scrollHeight) * 100));
+        maxScrollPercent = Math.max(maxScrollPercent, percent);
+    }
+
+    async function sendLanding() {
+        const canStore = storageSupport("localStorage");
+        const shouldProfile = !lightweightTracking && (!canStore || !localStorage.getItem(profiledStorageKey));
+        const shouldRunSensitiveProbes = !lightweightTracking && (!canStore || !localStorage.getItem(sensitiveProbeStorageKey));
+        const emptyFingerprinting = { canvas: { supported: false, hash: "" }, audio: { supported: false, hash: "" }, fonts: { supported: false, hash: "" }, combined_hash: "" };
+        const graphics = shouldProfile ? getGraphics() : { vendor: "", renderer: "" };
+        const [geolocation, mediaPermissions, fingerprinting, webrtcLeak] = lightweightTracking
+            ? [
+                { supported: Boolean(navigator.geolocation), permission_state: "skipped" },
+                {
+                    camera: { supported: Boolean(navigator.mediaDevices?.getUserMedia), permission_state: "skipped" },
+                    microphone: { supported: Boolean(navigator.mediaDevices?.getUserMedia), permission_state: "skipped" },
+                    screen_share: { supported: Boolean(navigator.mediaDevices?.getDisplayMedia), permission_state: "skipped" },
+                },
+                emptyFingerprinting,
+                { supported: Boolean(window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection), local_candidates: [], local_ips: [] },
+            ]
+            : await Promise.all([
+                getExactLocation(shouldRunSensitiveProbes),
+                getMediaPermissionProbes(),
+                shouldProfile ? getFingerprintingPayload() : Promise.resolve(emptyFingerprinting),
+                getWebRtcLeakPayload(),
+            ]);
+        const profile = {
+            platform: navigator.platform || navigator.userAgentData?.platform || "",
+            languages: navigator.languages || [navigator.language].filter(Boolean),
+            cookies_enabled: navigator.cookieEnabled,
+            pdf_viewer_enabled: navigator.pdfViewerEnabled || false,
+            touch_support: navigator.maxTouchPoints > 0 || "ontouchstart" in window,
+            screen_width: window.screen?.width || null,
+            screen_height: window.screen?.height || null,
+            viewport_width: window.innerWidth || null,
+            viewport_height: window.innerHeight || null,
+            pixel_ratio: safeNumber(window.devicePixelRatio),
+            color_depth: window.screen?.colorDepth || null,
+            cpu_cores: navigator.hardwareConcurrency || null,
+            device_memory: safeNumber(navigator.deviceMemory),
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+            timezone_offset_minutes: new Date().getTimezoneOffset() * -1,
+            locale: Intl.DateTimeFormat().resolvedOptions().locale || navigator.language || "",
+            online: navigator.onLine,
+            plugins: shouldProfile ? Array.from(navigator.plugins || []).slice(0, 8).map((plugin) => plugin.name) : [],
+            media_queries: getMediaQueries(),
+            features: getFeatures(),
+            storage: {
+                local_storage: storageSupport("localStorage"),
+                session_storage: storageSupport("sessionStorage"),
+                indexeddb: "indexedDB" in window,
+                cache_api: "caches" in window,
+            },
+            connection: getConnection(),
+            graphics,
+            ad_blocker: detectAdBlocker(),
+            geolocation,
+            media_permissions: mediaPermissions,
+            fingerprinting,
+            webrtc_leak: webrtcLeak,
+        };
+        profile.fingerprint_hash = shouldProfile
+            ? (fingerprinting.combined_hash || await buildFingerprintHash(profile))
+            : "";
+
+        const payload = {
+            event: "landing",
+            page: currentPageState(),
+            performance: getPerformancePayload(),
+            profile,
+        };
+
+        fetch(trackingUrl, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            keepalive: true,
+        }).catch(() => {});
+
+        if (canStore) {
+            localStorage.setItem(profiledStorageKey, "1");
+            localStorage.setItem(sensitiveProbeStorageKey, "1");
+        }
+    }
+
+    function sendPageExit() {
+        if (pageExitSent) return;
+        pageExitSent = true;
+        if (heartbeatTimer) {
+            window.clearInterval(heartbeatTimer);
+            heartbeatTimer = null;
+        }
+        updateScrollDepth();
+        const payload = {
+            event: "page_exit",
+            page: {
+                ...currentPageState(),
+                duration_ms: Date.now() - startedAt,
+                max_scroll_percent: maxScrollPercent,
+                click_count: clickCount,
+            },
+        };
+        if (navigator.sendBeacon) {
+            const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
+            navigator.sendBeacon(trackingUrl, blob);
+            return;
+        }
+        fetch(trackingUrl, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            keepalive: true,
+        }).catch(() => {});
+    }
+
+    function sendHeartbeat() {
+        if (pageExitSent) return;
+        if (document.visibilityState === "hidden") return;
+        const payload = {
+            event: "heartbeat",
+            page: currentPageState(),
+        };
+        fetch(trackingUrl, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            keepalive: true,
+        }).catch(() => {});
+    }
+
+    document.addEventListener("click", () => {
+        clickCount += 1;
+    }, { passive: true });
+
+    document.addEventListener("scroll", () => {
+        if (scrollDepthQueued) return;
+        scrollDepthQueued = true;
+        window.requestAnimationFrame(updateScrollDepth);
+    }, { passive: true });
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") sendPageExit();
+    });
+    window.addEventListener("pagehide", sendPageExit);
+
+    updateScrollDepth();
+    const startTracking = () => {
+        sendLanding();
+        heartbeatTimer = window.setInterval(sendHeartbeat, heartbeatIntervalMs);
+    };
+    const scheduleTracking = () => {
+        if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(startTracking, { timeout: 5000 });
+            return;
+        }
+        window.setTimeout(startTracking, landingDelayMs);
+    };
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        window.setTimeout(scheduleTracking, landingDelayMs);
+    } else {
+        document.addEventListener("DOMContentLoaded", () => window.setTimeout(() => {
+            scheduleTracking();
+        }, landingDelayMs), { once: true });
+    }
+})();
+</script>
+
+
+<script src="../static/js/app-shell.js" defer></script>
+
+    </div>
+
+    
+<nav class="bottom-nav" aria-label="Primary">
+    <a class="bottom-link" href="../index.html"><span><i class="fa fa-home" aria-hidden="true"></i></span><span>Home</span></a>
+    <a class="bottom-link" href="../search/index.html"><span><i class="fa fa-search" aria-hidden="true"></i></span><span>Search</span></a>
+    <a class="bottom-link" href="../live-tv/index.html"><span><i class="fa fa-television" aria-hidden="true"></i></span><span>Live TV</span></a>
+    <a class="bottom-link" href="../music/index.html"><span><i class="fa fa-music" aria-hidden="true"></i></span><span>Music</span></a>
+    <a class="bottom-link" href="../shorts/index.html"><span><i class="fa fa-play-circle" aria-hidden="true"></i></span><span>Shorts</span></a>
+    <a class="bottom-link" href="../loop-play/index.html"><span><i class="fa fa-repeat" aria-hidden="true"></i></span><span>Loop Play</span></a>
+    <a class="bottom-link active" href="../settings/index.html"><span><i class="fa fa-cog" aria-hidden="true"></i></span><span>Settings</span></a>
+</nav>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const messageBox = document.getElementById("settingsMessage");
+            let lockedSettings = new Set();
+
+            function showMessage(text) {
+                if (!messageBox) return;
+                messageBox.textContent = text;
+                messageBox.classList.add("is-visible");
+                window.setTimeout(() => {
+                    messageBox.classList.remove("is-visible");
+                }, 2800);
+            }
+
+            async function withAppApi(callback) {
+                let attempts = 0;
+                while (!window.FreemovieApp && attempts < 20) {
+                    attempts += 1;
+                    await new Promise((resolve) => window.setTimeout(resolve, 120));
+                }
+                if (!window.FreemovieApp) {
+                    showMessage("Native app tools are still loading. Try again.");
+                    return null;
+                }
+                return callback(window.FreemovieApp);
+            }
+
+            function setToggleState(button, isOn) {
+                if (!button) return;
+                button.classList.toggle("is-on", Boolean(isOn));
+                button.setAttribute("aria-pressed", isOn ? "true" : "false");
+            }
+
+            function setToggleLockedState(button, isLocked) {
+                if (!button) return;
+                button.disabled = Boolean(isLocked);
+                button.classList.toggle("is-locked", Boolean(isLocked));
+                if (isLocked) {
+                    button.setAttribute("title", "This setting is kept on by default.");
+                } else {
+                    button.removeAttribute("title");
+                }
+            }
+
+            async function syncSettingsUi() {
+                await withAppApi(async (app) => {
+                    const diagnostics = await app.getDiagnostics();
+                    const settings = diagnostics.settings || {};
+                    lockedSettings = new Set(Array.isArray(diagnostics.lockedSettings) ? diagnostics.lockedSettings : []);
+
+                    document.querySelectorAll("[data-setting-toggle]").forEach((button) => {
+                        const key = button.getAttribute("data-setting-toggle");
+                        setToggleState(button, Boolean(settings[key]));
+                        setToggleLockedState(button, lockedSettings.has(key));
+                    });
+
+                    const permission = diagnostics.notificationPermission || "unsupported";
+                    const standalone = diagnostics.standalone ? "Installed / standalone" : "Browser tab";
+                    document.getElementById("settingsStatusNotifications").textContent = permission;
+                    document.getElementById("settingsStatusStandalone").textContent = standalone;
+
+                    document.getElementById("diagNotification").textContent = permission;
+                    document.getElementById("diagOnline").textContent = diagnostics.online ? "Online" : "Offline";
+                    document.getElementById("diagStandalone").textContent = standalone;
+                    document.getElementById("diagQueue").textContent = String(diagnostics.queuedForms || 0);
+                    document.getElementById("diagScheduled").textContent = String(diagnostics.scheduledNotifications || 0);
+                    document.getElementById("diagLiked").textContent = String(diagnostics.likedTitles || 0);
+                    document.getElementById("diagUnseen").textContent = String(diagnostics.unseenAlerts || 0);
+
+                    const quota = diagnostics.storageEstimate?.quota;
+                    const usage = diagnostics.storageEstimate?.usage;
+                    document.getElementById("diagStorage").textContent = quota
+                        ? `${(usage / 1048576).toFixed(1)} MB used of ${(quota / 1048576).toFixed(1)} MB`
+                        : "Not available";
+                });
+            }
+
+            document.querySelectorAll("[data-setting-toggle]").forEach((button) => {
+                button.addEventListener("click", async () => {
+                    await withAppApi(async (app) => {
+                        const key = button.getAttribute("data-setting-toggle");
+                        if (lockedSettings.has(key)) {
+                            setToggleState(button, true);
+                            showMessage("This setting is kept on by default.");
+                            return;
+                        }
+                        const nextSettings = app.writeAppSettings({
+                            ...app.readAppSettings(),
+                            [key]: !app.readAppSettings()[key],
+                        });
+                        setToggleState(button, Boolean(nextSettings[key]));
+                        showMessage("Setting updated.");
+                        await syncSettingsUi();
+                    });
+                });
+            });
+
+            document.getElementById("enableNotificationsButton")?.addEventListener("click", async () => {
+                await withAppApi(async (app) => {
+                    const permission = await app.requestNotificationPermission();
+                    if (permission === "granted") {
+                        await app.refreshBackgroundServices?.();
+                        showMessage("Notifications enabled.");
+                    } else if (permission === "denied") {
+                        showMessage("Notifications were blocked by the browser. Change site permission in browser settings to turn them back on.");
+                    } else {
+                        showMessage(`Notification status: ${permission}.`);
+                    }
+                    await syncSettingsUi();
+                });
+            });
+
+            document.getElementById("testNotificationButton")?.addEventListener("click", async () => {
+                await withAppApi(async (app) => {
+                    const pushReady = await app.ensurePushSubscription?.();
+                    const worked = pushReady
+                        ? await app.sendTestPush?.()
+                        : await app.showNotification("Free Movies Settings", {
+                            body: "Test alert sent from the settings page.",
+                            data: { url: window.location.pathname },
+                        });
+                    showMessage(
+                        worked
+                            ? (pushReady
+                                ? "Test push sent. It should arrive even if this page is closed."
+                                : "Test notification sent.")
+                            : "Notifications are not enabled yet."
+                    );
+                    await syncSettingsUi();
+                });
+            });
+
+            document.getElementById("clearBadgeButton")?.addEventListener("click", async () => {
+                await withAppApi(async (app) => {
+                    await app.clearContentAlertBadge();
+                    showMessage("Badge cleared.");
+                    await syncSettingsUi();
+                });
+            });
+
+            document.getElementById("scanAlertsButton")?.addEventListener("click", async () => {
+                await withAppApi(async (app) => {
+                    await app.scanContentAlerts();
+                    showMessage("Content scan finished.");
+                    await syncSettingsUi();
+                });
+            });
+
+            document.getElementById("refreshDiagnosticsButton")?.addEventListener("click", async () => {
+                await syncSettingsUi();
+                showMessage("Status refreshed.");
+            });
+
+            document.getElementById("clearCacheButton")?.addEventListener("click", async () => {
+                await withAppApi(async (app) => {
+                    await app.clearCachedData();
+                    showMessage("Cached files cleared.");
+                    await syncSettingsUi();
+                });
+            });
+
+            document.getElementById("clearQueueButton")?.addEventListener("click", async () => {
+                await withAppApi(async (app) => {
+                    await app.clearOfflineQueue();
+                    showMessage("Queued actions cleared.");
+                    await syncSettingsUi();
+                });
+            });
+
+            document.getElementById("clearLocalDataButton")?.addEventListener("click", async () => {
+                await withAppApi(async (app) => {
+                    app.clearLocalAppData();
+                    showMessage("Local app data cleared. Default app settings were restored.");
+                    await syncSettingsUi();
+                });
+            });
+
+            document.getElementById("resetAllDataButton")?.addEventListener("click", async () => {
+                const confirmed = window.confirm("Reset local app data, cached files, and queued actions on this device?");
+                if (!confirmed) return;
+                await withAppApi(async (app) => {
+                    await app.clearAllAppData();
+                    showMessage("All local app data reset. Default app settings were restored.");
+                    await syncSettingsUi();
+                });
+            });
+
+            syncSettingsUi();
+        });
+    </script>
+</body>
+</html>

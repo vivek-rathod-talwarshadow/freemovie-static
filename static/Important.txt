@@ -1,0 +1,5 @@
+Domain - https://dash.infinityfree.com/login
+Hosted on - https://dashboard.render.com/
+Email used - vivek.rathod.prowerse@gmail.com
+db - https://railway.com/
+db public url - postgresql://postgres:wCMuNetSwHMsyQTMsWUBflKmVbGFiabW@tramway.proxy.rlwy.net:45400/railway
