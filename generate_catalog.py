@@ -47,7 +47,8 @@ def title_url(item: dict) -> str:
     for key in ("tmdb_id", "manga_id", "anilist_id", "imdb_id"):
         if item.get(key):
             params[key] = item[key]
-    return "/title/index.html?" + urlencode(params)
+    media_type = str(item.get("type") or "movie")
+    return f"/title/{media_type}/{slugify(item['title'])}/?" + urlencode(params)
 
 
 def normalize_tmdb(entry: dict, media_type: str, source="tmdb") -> dict:

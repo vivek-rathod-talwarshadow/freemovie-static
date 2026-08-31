@@ -78,6 +78,15 @@ def prepare_html(content: str, destination: Path) -> str:
         lambda match: f"{match.group('head')}{rewrite_root_url(match.group('url'), prefix)}{match.group('tail')}",
         content,
     )
+    # Inline page scripts also navigate to Django-root URLs.  Route those
+    # assignments through the static runtime when opened with file://.
+    content = content.replace(
+        "window.location.href = destination;",
+        "if (window.__fmStaticNavigate) window.__fmStaticNavigate(destination); else window.location.href = destination;",
+    ).replace(
+        "window.location.href = detailUrl;",
+        "if (window.__fmStaticNavigate) window.__fmStaticNavigate(detailUrl); else window.location.href = detailUrl;",
+    )
 
     config = (
         f'<script>window.__FM_STATIC_ROOT__={json.dumps(prefix)};'
@@ -225,6 +234,11 @@ def generate_and_apply_public_catalog() -> dict:
     home = home.replace(
         'const initialHomepagePayload = JSON.parse(document.getElementById("homepage-initial-data").textContent);',
         'const initialHomepagePayload = window.__FM_CATALOG__ || window.__fmStaticNormalizeCatalogLinks(JSON.parse(document.getElementById("homepage-initial-data").textContent));',
+        1,
+    )
+    home = home.replace(
+        'const shouldReplaceInitialHomepage = !initialHomepagePayload.has_home_content || true;',
+        'const shouldReplaceInitialHomepage = false;',
         1,
     )
     marker = 'inMemoryProviderCatalogs.set("all", initialHomepagePayload);'
@@ -429,15 +443,23 @@ def main() -> None:
     export("/title/movie/title/?title=Title", destination=TARGET_ROOT / "title" / "index.html")
     export_catalog_title_pages(catalog_payloads)
     export_linked_reader_pages()
-    generate_and_apply_public_catalog()
+    static_catalog = generate_and_apply_public_catalog()
+    # The static catalog must open the same pre-rendered title pages as the
+    # Django application.  Those pages contain Django's complete stream server
+    # payload, episode maps, manga reader links, and player controls.
+    export_catalog_title_pages([static_catalog], limit=500)
+    export_linked_reader_pages(limit=120)
     make_page_links_explicit()
 
     # GitHub Pages serves this for arbitrary dynamic title/read routes.  The
     # runtime redirects those URLs to the matching static generic shell.
     shutil.copyfile(TARGET_ROOT / "index.html", TARGET_ROOT / "404.html")
     not_found = (TARGET_ROOT / "404.html").read_text(encoding="utf-8")
-    not_found = not_found.replace('window.__FM_STATIC_ROOT__="./"', 'window.__FM_STATIC_ROOT__="/freemovie-static/"')
-    not_found = not_found.replace('src="./data/catalog.js"', 'src="/freemovie-static/data/catalog.js"')
+    not_found = not_found.replace(
+        'const shouldReplaceInitialHomepage = !initialHomepagePayload.has_home_content || true;',
+        'const shouldReplaceInitialHomepage = false;',
+        1,
+    )
     not_found = not_found.replace('src="./assets/static-runtime.js"', 'src="/freemovie-static/assets/static-runtime.js"')
     (TARGET_ROOT / "404.html").write_text(not_found, encoding="utf-8")
     (TARGET_ROOT / ".nojekyll").touch()

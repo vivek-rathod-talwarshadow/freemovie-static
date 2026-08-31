@@ -1,0 +1,124 @@
+200 /                                                       -> index.html
+200 /r-rated/                                               -> r-rated\index.html
+200 /offline/                                               -> offline\index.html
+200 /settings/                                              -> settings\index.html
+200 /live-tv/                                               -> live-tv\index.html
+200 /music/                                                 -> music\index.html
+200 /loop-play/                                             -> loop-play\index.html
+200 /shorts/                                                -> shorts\index.html
+200 /terms/                                                 -> terms\index.html
+200 /search/                                                -> search\index.html
+200 /service-worker.js                                      -> service-worker.js
+200 /robots.txt                                             -> robots.txt
+200 /sitemap.xml                                            -> sitemap.xml
+200 /api/homepage/                                          -> api\homepage\index.html
+200 /api/r-rated/                                           -> api\r-rated\index.html
+200 /api/shorts/                                            -> api\shorts\index.html
+200 /api/live-tv/                                           -> api\live-tv\index.html
+ALL /api/live-tv/ (12881 channels)
+200 /providers/netflix/                                     -> providers\netflix\index.html
+200 /api/providers/netflix/                                 -> api\providers\netflix\index.html
+200 /providers/prime-video/                                 -> providers\prime-video\index.html
+200 /api/providers/prime-video/                             -> api\providers\prime-video\index.html
+200 /providers/apple-tv/                                    -> providers\apple-tv\index.html
+200 /api/providers/apple-tv/                                -> api\providers\apple-tv\index.html
+200 /providers/disney-plus/                                 -> providers\disney-plus\index.html
+200 /api/providers/disney-plus/                             -> api\providers\disney-plus\index.html
+200 /providers/hulu/                                        -> providers\hulu\index.html
+200 /api/providers/hulu/                                    -> api\providers\hulu\index.html
+200 /providers/amazon-video/                                -> providers\amazon-video\index.html
+200 /api/providers/amazon-video/                            -> api\providers\amazon-video\index.html
+200 /providers/apple-tv-store/                              -> providers\apple-tv-store\index.html
+200 /api/providers/apple-tv-store/                          -> api\providers\apple-tv-store\index.html
+200 /providers/crunchyroll/                                 -> providers\crunchyroll\index.html
+200 /api/providers/crunchyroll/                             -> api\providers\crunchyroll\index.html
+200 /providers/fubotv/                                      -> providers\fubotv\index.html
+200 /api/providers/fubotv/                                  -> api\providers\fubotv\index.html
+200 /providers/hbo-max/                                     -> providers\hbo-max\index.html
+200 /api/providers/hbo-max/                                 -> api\providers\hbo-max\index.html
+200 /browse/trending-movies/                                -> browse\trending-movies\index.html
+200 /browse/top-movies/                                     -> browse\top-movies\index.html
+200 /browse/top-series/                                     -> browse\top-series\index.html
+200 /browse/trending-series/                                -> browse\trending-series\index.html
+200 /browse/trending-anime/                                 -> browse\trending-anime\index.html
+200 /browse/top-anime/                                      -> browse\top-anime\index.html
+200 /browse/trending-cartoons/                              -> browse\trending-cartoons\index.html
+200 /browse/top-cartoons/                                   -> browse\top-cartoons\index.html
+200 /browse/top-manga/                                      -> browse\top-manga\index.html
+200 /browse/latest-manga/                                   -> browse\latest-manga\index.html
+200 /browse/adult-movies/                                   -> browse\adult-movies\index.html
+200 /browse/adult-series/                                   -> browse\adult-series\index.html
+200 /browse/adult-anime/                                    -> browse\adult-anime\index.html
+200 /browse/adult-cartoons/                                 -> browse\adult-cartoons\index.html
+200 /browse/adult-hentai/                                   -> browse\adult-hentai\index.html
+200 /browse/adult-rule34-latest/                            -> browse\adult-rule34-latest\index.html
+200 /browse/adult-eporner-latest/                           -> browse\adult-eporner-latest\index.html
+200 /browse/adult-redtube-latest/                           -> browse\adult-redtube-latest\index.html
+200 /browse/adult-e621-latest/                              -> browse\adult-e621-latest\index.html
+200 /browse/adult-trending-manga/                           -> browse\adult-trending-manga\index.html
+200 /browse/adult-latest-manga/                             -> browse\adult-latest-manga\index.html
+200 /browse-mode/movies/                                    -> browse-mode\movies\index.html
+200 /browse-mode/series/                                    -> browse-mode\series\index.html
+200 /browse-mode/anime/                                     -> browse-mode\anime\index.html
+200 /browse-mode/cartoon/                                   -> browse-mode\cartoon\index.html
+200 /browse-mode/classic-cartoons/                          -> browse-mode\classic-cartoons\index.html
+200 /browse-mode/manga/                                     -> browse-mode\manga\index.html
+200 /title/movie/title/?title=Title                         -> title\index.html
+200 /title/movie/the-whisper-man/?title=The+Whisper+Man&imdb_id=tt11561116&tmdb_id=860508&source=tmdb -> title\movie\the-whisper-man\index.html
+200 /title/series/lanterns/?title=Lanterns&imdb_id=tt26545992&tmdb_id=95350&source=tmdb -> title\series\lanterns\index.html
+200 /title/movie/the-odyssey/?title=The+Odyssey&imdb_id=tt33764258&tmdb_id=1368337&source=tmdb -> title\movie\the-odyssey\index.html
+200 /title/series/lioness/?title=Lioness&imdb_id=tt13111078&tmdb_id=113962&source=tmdb -> title\series\lioness\index.html
+200 /title/movie/coyote-vs-acme/?title=Coyote+vs.+Acme&imdb_id=tt1756855&tmdb_id=1204680&source=tmdb -> title\movie\coyote-vs-acme\index.html
+200 /title/movie/spider-man-brand-new-day/?title=Spider-Man%3A+Brand+New+Day&imdb_id=tt22084616&tmdb_id=969681&source=tmdb -> title\movie\spider-man-brand-new-day\index.html
+200 /title/movie/backrooms/?title=Backrooms&imdb_id=tt26657236&tmdb_id=1083381&source=tmdb -> title\movie\backrooms\index.html
+200 /title/movie/the-mongoose/?title=The+Mongoose&imdb_id=tt13611778&tmdb_id=1294189&source=tmdb -> title\movie\the-mongoose\index.html
+200 /title/movie/mutiny/?title=Mutiny&imdb_id=tt32338669&tmdb_id=1288445&source=tmdb -> title\movie\mutiny\index.html
+200 /title/movie/the-secret-woman/?title=The+Secret+Woman&imdb_id=tt37275992&tmdb_id=1631807&source=tmdb -> title\movie\the-secret-woman\index.html
+200 /title/series/mousetrap/?title=Mousetrap&imdb_id=tt36996011&tmdb_id=290193&source=tmdb -> title\series\mousetrap\index.html
+200 /title/series/silo/?title=Silo&imdb_id=tt14688458&tmdb_id=125988&source=tmdb -> title\series\silo\index.html
+200 /title/series/furious/?title=Furious&imdb_id=tt36303968&tmdb_id=287238&source=tmdb -> title\series\furious\index.html
+200 /title/cartoon/bleach/?title=Bleach&imdb_id=tt0434665&tmdb_id=30984&source=tmdb -> title\cartoon\bleach\index.html
+200 /title/series/dark-matter/?title=Dark+Matter&imdb_id=tt19231492&tmdb_id=196322&source=tmdb -> title\series\dark-matter\index.html
+200 /title/series/four-hands-two-sonatas/?title=Four+Hands%2C+Two+Sonatas&imdb_id=tt39368345&tmdb_id=305644&source=tmdb -> title\series\four-hands-two-sonatas\index.html
+200 /title/anime/mushoku-tensei-jobless-reincarnation-season-3/?title=Mushoku+Tensei%3A+Jobless+Reincarnation+Season+3&mal_id=59193&anilist_id=178789&source=anilist -> title\anime\mushoku-tensei-jobless-reincarnation-season-3\index.html
+200 /title/anime/one-piece/?title=ONE+PIECE&mal_id=21&anilist_id=21&source=anilist -> title\anime\one-piece\index.html
+200 /title/anime/you-and-i-are-polar-opposites-season-2/?title=You+and+I+Are+Polar+Opposites+Season+2&mal_id=63832&anilist_id=210031&source=anilist -> title\anime\you-and-i-are-polar-opposites-season-2\index.html
+200 /title/anime/that-time-i-got-reincarnated-as-a-slime-season-4/?title=That+Time+I+Got+Reincarnated+as+a+Slime+Season+4&mal_id=59970&anilist_id=182205&source=anilist -> title\anime\that-time-i-got-reincarnated-as-a-slime-season-4\index.html
+200 /title/anime/though-i-am-an-inept-villainess/?title=Though+I+Am+an+Inept+Villainess&mal_id=61240&anilist_id=188139&source=anilist -> title\anime\though-i-am-an-inept-villainess\index.html
+200 /title/anime/bleach/?title=Bleach&mal_id=269&anilist_id=269&source=anilist -> title\anime\bleach\index.html
+200 /title/anime/bleach-thousand-year-blood-war-the-calamity/?title=BLEACH%3A+Thousand-Year+Blood+War+-+The+Calamity&mal_id=60636&anilist_id=185874&source=anilist -> title\anime\bleach-thousand-year-blood-war-the-calamity\index.html
+200 /title/anime/daemons-of-the-shadow-realm/?title=Daemons+of+the+Shadow+Realm&mal_id=62001&anilist_id=195600&source=anilist -> title\anime\daemons-of-the-shadow-realm\index.html
+200 /title/movie/toy-story-5/?title=Toy+Story+5&imdb_id=tt29355505&tmdb_id=1084244&source=tmdb -> title\movie\toy-story-5\index.html
+200 /title/movie/minions-monsters/?title=Minions+%26+Monsters&imdb_id=tt32890033&tmdb_id=1315772&source=tmdb -> title\movie\minions-monsters\index.html
+200 /title/movie/batman-knightfall-part-1-knightfall/?title=Batman%3A+Knightfall+Part+1%3A+Knightfall&imdb_id=tt32333324&tmdb_id=1560520&source=tmdb -> title\movie\batman-knightfall-part-1-knightfall\index.html
+200 /title/movie/avatar-aang-the-last-airbender/?title=Avatar+Aang%3A+The+Last+Airbender&imdb_id=tt18259538&tmdb_id=980431&source=tmdb -> title\movie\avatar-aang-the-last-airbender\index.html
+200 /title/movie/demon-slayer-kimetsu-no-yaiba-infinity-castle/?title=Demon+Slayer%3A+Kimetsu+no+Yaiba+Infinity+Castle&imdb_id=tt32820897&tmdb_id=1311031&source=tmdb -> title\movie\demon-slayer-kimetsu-no-yaiba-infinity-castle\index.html
+200 /title/movie/spider-man-across-the-spider-verse/?title=Spider-Man%3A+Across+the+Spider-Verse&imdb_id=tt9362722&tmdb_id=569094&source=tmdb -> title\movie\spider-man-across-the-spider-verse\index.html
+200 /title/movie/the-super-mario-galaxy-movie/?title=The+Super+Mario+Galaxy+Movie&imdb_id=tt28650488&tmdb_id=1226863&source=tmdb -> title\movie\the-super-mario-galaxy-movie\index.html
+200 /title/movie/zootopia-2/?title=Zootopia+2&imdb_id=tt26443597&tmdb_id=1084242&source=tmdb -> title\movie\zootopia-2\index.html
+200 /title/manga/na-honjaman-level-up/?title=Na+Honjaman+Level-Up&manga_id=32d76d19-8a05-4db0-9fc2-e0b0648fe9d0&source=mangadex -> title\manga\na-honjaman-level-up\index.html
+200 /title/manga/sono-bisque-doll-wa-koi-o-suru/?title=Sono+Bisque+Doll+wa+Koi+o+Suru&manga_id=aa6c76f7-5f5f-46b6-a800-911145f81b9b&source=mangadex -> title\manga\sono-bisque-doll-wa-koi-o-suru\index.html
+200 /title/manga/kage-no-jitsuryokusha-ni-naritakute/?title=Kage+no+Jitsuryokusha+ni+Naritakute%21&manga_id=77bee52c-d2d6-44ad-a33a-1734c1fe696a&source=mangadex -> title\manga\kage-no-jitsuryokusha-ni-naritakute\index.html
+200 /title/manga/mato-seihei-no-slave/?title=Mato+Seihei+no+Slave&manga_id=e1e38166-20e4-4468-9370-187f985c550e&source=mangadex -> title\manga\mato-seihei-no-slave\index.html
+200 /title/manga/tensei-shitara-slime-datta-ken/?title=Tensei+Shitara+Slime+datta+Ken&manga_id=e78a489b-6632-4d61-b00b-5206f5b8b22b&source=mangadex -> title\manga\tensei-shitara-slime-datta-ken\index.html
+200 /title/manga/berserk/?title=Berserk&manga_id=801513ba-a712-498c-8f57-cae55b38cc92&source=mangadex -> title\manga\berserk\index.html
+200 /title/manga/chainsaw-man/?title=Chainsaw+Man&manga_id=a77742b1-befd-49a4-bff5-1ad4e6b0ef7b&source=mangadex -> title\manga\chainsaw-man\index.html
+200 /title/manga/sousou-no-frieren/?title=Sousou+no+Frieren&manga_id=b0b721ff-c388-4486-aa0f-c2b0bb321512&source=mangadex -> title\manga\sousou-no-frieren\index.html
+200 /read/berserk/?chapter_id=6310f6a1-17ee-4890-b837-2ec1b372905b&page=1&quality=data&title=Berserk&manga_id=801513ba-a712-498c-8f57-cae55b38cc92 -> read\berserk\index.html
+200 /read/chainsaw-man/?chapter_id=73af4d8d-1532-4a72-b1b9-8f4e5cd295c9&page=1&quality=data&title=Chainsaw+Man&manga_id=a77742b1-befd-49a4-bff5-1ad4e6b0ef7b -> read\chainsaw-man\index.html
+200 /read/kage-no-jitsuryokusha-ni-naritakute/?chapter_id=3c652754-fbf7-4465-be54-f61e50eadc5a&page=1&quality=data&title=Kage+no+Jitsuryokusha+ni+Naritakute%21&manga_id=77bee52c-d2d6-44ad-a33a-1734c1fe696a -> read\kage-no-jitsuryokusha-ni-naritakute\index.html
+200 /read/mato-seihei-no-slave/?chapter_id=c86722da-b63e-4859-8cd3-8ecd4ae52b88&page=1&quality=data&title=Mato+Seihei+no+Slave&manga_id=e1e38166-20e4-4468-9370-187f985c550e -> read\mato-seihei-no-slave\index.html
+{
+  "trending-movies": 16,
+  "trending-series": 16,
+  "trending-anime": 16,
+  "trending-cartoons": 16,
+  "trending-manga": 16,
+  "top-movies": 16,
+  "top-series": 16,
+  "top-anime": 16,
+  "top-cartoons": 16,
+  "top-manga": 16,
+  "latest-manga": 16
+}
+Static export complete.

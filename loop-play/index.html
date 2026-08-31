@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     
@@ -2298,7 +2298,7 @@
                     <div class="queue-card-copy">
                         <div>
                             <h4 class="queue-card-title">${escapeHtml(entry.title || "Untitled")}</h4>
-                            <div class="queue-card-subtitle">${escapeHtml(entry.year || "")}${entry.type ? ` â€¢ ${escapeHtml(String(entry.type).replace(/^./, (letter) => letter.toUpperCase()))}` : ""}</div>
+                            <div class="queue-card-subtitle">${escapeHtml(entry.year || "")}${entry.type ? ` • ${escapeHtml(String(entry.type).replace(/^./, (letter) => letter.toUpperCase()))}` : ""}</div>
                         </div>
                         <div class="queue-actions">
                             <button class="queue-action" type="button" data-select-entry="${escapeHtml(String(entry.id || ""))}">Play Here</button>
