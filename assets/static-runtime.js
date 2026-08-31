@@ -288,79 +288,48 @@
         (adPanel || summary).insertAdjacentElement("afterend", section);
     }
 
+    function tmdbImage(path, size) { return path ? "https://image.tmdb.org/t/p/" + (size || "w780") + path : ""; }
+    function trailerEmbed(videos) { const video = ((videos || {}).results || []).find(function (entry) { return entry.site === "YouTube" && (entry.type === "Trailer" || entry.type === "Teaser"); }); return video ? "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(video.key) : ""; }
+    function tmdbStreamUrl(kind, id, season, episode) { return kind === "tv" ? "https://vidsrc.in/embed/tv/" + encodeURIComponent(id) + "/" + encodeURIComponent(season || 1) + "/" + encodeURIComponent(episode || 1) : "https://vidsrc.in/embed/movie/" + encodeURIComponent(id); }
+    function fact(label, value) { return value ? '<div class="fact"><span class="fact-label">' + escapeHtml(label) + '</span><div class="fact-value">' + escapeHtml(value) + '</div></div>' : ""; }
+    function castMarkup(cast) { return (cast || []).slice(0, 12).map(function (person) { const photo = tmdbImage(person.profile_path, "w185"); return '<article class="cast-item cast-card"><div class="cast-photo-shell">' + (photo ? '<img class="cast-photo" src="' + escapeHtml(photo) + '" alt="' + escapeHtml(person.name) + '" loading="lazy" referrerpolicy="no-referrer">' : '<div class="cast-photo-fallback">' + escapeHtml((person.name || "?").charAt(0).toUpperCase()) + '</div>') + '</div><div class="cast-name">' + escapeHtml(person.name) + '</div><div class="cast-meta">' + escapeHtml(person.character || "Cast") + '</div><a class="cast-search-link" href="' + escapeHtml(withBase('/search/index.html?q=' + encodeURIComponent(person.name || ""))) + '">Watch titles with ' + escapeHtml(person.name) + '</a></article>'; }).join(""); }
+    function snapshotsMarkup(title, poster, backdrop) { return [[backdrop, "Backdrop snapshot"], [poster, "Poster snapshot"], [backdrop || poster, "Scene snapshot"]].filter(function (entry) { return entry[0]; }).map(function (entry) { return '<figure class="snapshot-card"><img src="' + escapeHtml(entry[0]) + '" alt="' + escapeHtml(title + " " + entry[1]) + '" loading="lazy"><figcaption class="snapshot-caption">' + escapeHtml(entry[1]) + '</figcaption></figure>'; }).join(""); }
+
     async function hydrateGenericTitle() {
         if (!location.pathname.endsWith("/title/index.html")) return;
         const params = new URLSearchParams(location.search);
-        const param = function (name) {
-            return params.get(name) || params.get(name.replace("_", "\\_")) || "";
-        };
-        const tmdbId = param("tmdb_id");
-        const mangaId = param("manga_id");
-        const anilistId = param("anilist_id");
-        const mediaType = param("media_type") === "series" ? "tv" : "movie";
-        const fallback = localCatalogItems().find(function (entry) {
-            return (tmdbId && String(entry.tmdb_id || "") === tmdbId) || (mangaId && String(entry.manga_id || "") === mangaId) || (anilistId && String(entry.anilist_id || "") === anilistId);
-        }) || {};
-        let item = fallback;
-        let title = fallback.title || param("title") || "Title";
-        let plot = fallback.plot || "";
-        let poster = fallback.poster || "";
-        let backdrop = fallback.backdrop || poster;
+        const param = function (name) { return params.get(name) || params.get(name.replace("_", "\\_")) || ""; };
+        const tmdbId = param("tmdb_id"), mangaId = param("manga_id"), anilistId = param("anilist_id");
+        const kind = param("media_type") === "series" || param("media_type") === "tv" ? "tv" : "movie";
         if (!tmdbId && !mangaId && !anilistId) return;
+        const fallback = localCatalogItems().find(function (entry) { return (tmdbId && String(entry.tmdb_id || "") === tmdbId) || (mangaId && String(entry.manga_id || "") === mangaId) || (anilistId && String(entry.anilist_id || "") === anilistId); }) || {};
+        let title = fallback.title || param("title") || "Title", plot = fallback.plot || "", poster = fallback.poster || "", backdrop = fallback.backdrop || poster, detail = null, seasonData = null;
+        let selectedSeason = Math.max(1, Number(param("season") || 1)), selectedEpisode = Math.max(1, Number(param("episode") || 1));
         try {
-        if (tmdbId) {
-            const response = await originalFetch("https://api.themoviedb.org/3/" + mediaType + "/" + encodeURIComponent(tmdbId) + "?api_key=" + encodeURIComponent(tmdbApiKey));
-            if (!response.ok) throw new Error("TMDb detail failed");
-            item = await response.json();
-            title = item.title || item.name || title;
-            plot = item.overview || "";
-            poster = item.poster_path ? "https://image.tmdb.org/t/p/w342" + item.poster_path : "";
-            backdrop = item.backdrop_path ? "https://image.tmdb.org/t/p/original" + item.backdrop_path : poster;
-        } else if (mangaId) {
-            const response = await originalFetch("https://api.mangadex.org/manga/" + encodeURIComponent(mangaId) + "?includes[]=cover_art");
-            if (!response.ok) throw new Error("MangaDex detail failed");
-            item = (await response.json()).data || {};
-            const attrs = item.attributes || {};
-            const titles = attrs.title || {};
-            const descriptions = attrs.description || {};
-            title = titles.en || Object.values(titles)[0] || title;
-            plot = descriptions.en || Object.values(descriptions)[0] || "";
-            const cover = (item.relationships || []).find(function (relation) { return relation.type === "cover_art"; });
-            const fileName = cover && cover.attributes && cover.attributes.fileName;
-            poster = fileName ? "https://uploads.mangadex.org/covers/" + mangaId + "/" + fileName + ".512.jpg" : "";
-            backdrop = poster;
-        } else if (anilistId) {
-            const query = "query($id:Int){Media(id:$id,type:ANIME){title{english romaji native}description bannerImage coverImage{extraLarge large}}}";
-            const response = await originalFetch("https://graphql.anilist.co", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query: query, variables: { id: Number(anilistId) } }) });
-            if (!response.ok) throw new Error("AniList detail failed");
-            item = (await response.json()).data.Media || {};
-            const titles = item.title || {};
-            title = titles.english || titles.romaji || titles.native || title;
-            plot = String(item.description || "").replace(/<[^>]+>/g, "");
-            poster = (item.coverImage || {}).extraLarge || (item.coverImage || {}).large || "";
-            backdrop = item.bannerImage || poster;
-        }
-        } catch (_) {}
+            if (tmdbId) {
+                const response = await originalFetch("https://api.themoviedb.org/3/" + kind + "/" + encodeURIComponent(tmdbId) + "?api_key=" + encodeURIComponent(tmdbApiKey) + "&append_to_response=credits,videos");
+                if (!response.ok) throw new Error("TMDb detail failed"); detail = await response.json(); title = detail.title || detail.name || title; plot = detail.overview || plot; poster = tmdbImage(detail.poster_path, "w500") || poster; backdrop = tmdbImage(detail.backdrop_path, "original") || poster || backdrop;
+                if (kind === "tv") { const seasons = (detail.seasons || []).filter(function (season) { return Number(season.season_number) > 0; }); if (!seasons.some(function (season) { return Number(season.season_number) === selectedSeason; })) selectedSeason = Number(seasons[0] && seasons[0].season_number) || 1; const seasonResponse = await originalFetch("https://api.themoviedb.org/3/tv/" + encodeURIComponent(tmdbId) + "/season/" + selectedSeason + "?api_key=" + encodeURIComponent(tmdbApiKey)); if (seasonResponse.ok) seasonData = await seasonResponse.json(); const episodes = (seasonData || {}).episodes || []; if (!episodes.some(function (episode) { return Number(episode.episode_number) === selectedEpisode; })) selectedEpisode = Number(episodes[0] && episodes[0].episode_number) || 1; }
+            } else if (mangaId) {
+                const response = await originalFetch("https://api.mangadex.org/manga/" + encodeURIComponent(mangaId) + "?includes[]=cover_art"); if (!response.ok) throw new Error("MangaDex detail failed"); detail = (await response.json()).data || {}; const attrs = detail.attributes || {}, titles = attrs.title || {}, descriptions = attrs.description || {}; title = titles.en || Object.values(titles)[0] || title; plot = descriptions.en || Object.values(descriptions)[0] || plot; const cover = (detail.relationships || []).find(function (relation) { return relation.type === "cover_art"; }); const fileName = cover && cover.attributes && cover.attributes.fileName; poster = fileName ? "https://uploads.mangadex.org/covers/" + mangaId + "/" + fileName + ".512.jpg" : poster; backdrop = poster || backdrop;
+            } else {
+                const query = "query($id:Int){Media(id:$id,type:ANIME){title{english romaji native}description bannerImage coverImage{extraLarge large}episodes averageScore genres status seasonYear}}"; const response = await originalFetch("https://graphql.anilist.co", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query: query, variables: { id: Number(anilistId) } }) }); if (!response.ok) throw new Error("AniList detail failed"); detail = (await response.json()).data.Media || {}; title = detail.title.english || detail.title.romaji || detail.title.native || title; plot = String(detail.description || plot).replace(/<[^>]+>/g, ""); poster = detail.coverImage.extraLarge || detail.coverImage.large || poster; backdrop = detail.bannerImage || poster || backdrop;
+            }
+        } catch (_) { detail = detail || fallback; }
         document.title = title + " | Free movie";
-        const hero = document.querySelector(".hero");
-        if (!hero) return;
-        const heroTitle = hero.querySelector("h1"); if (heroTitle) heroTitle.textContent = title;
-        const heroPlot = hero.querySelector(".hero-copy > p"); if (heroPlot) heroPlot.textContent = plot;
-        const heroPoster = hero.querySelector(".poster-card img"); if (heroPoster && poster) { heroPoster.src = poster; heroPoster.alt = title; }
-        const heroBackdrop = hero.querySelector(".hero-backdrop"); if (heroBackdrop && backdrop) heroBackdrop.style.backgroundImage = 'linear-gradient(90deg, rgba(0,0,0,.88), rgba(0,0,0,.2)), url("' + backdrop.replace(/"/g, "") + '")';
-        document.querySelectorAll(".detail-plot").forEach(function (node) { node.textContent = plot; });
-        const watchHeading = document.querySelector(".watch-topline h2"); if (watchHeading) watchHeading.textContent = "Watch " + title;
-        const streamFrame = document.getElementById("streamFrame");
-        if (streamFrame && tmdbId) streamFrame.src = mediaType === "movie" ? "https://vidsrc.in/embed/movie/" + tmdbId : "https://vidsrc.in/embed/tv/" + tmdbId + "/1/1";
-        if (!tmdbId) {
-            const streamSection = document.getElementById("streamSection");
-            if (streamSection) streamSection.hidden = true;
-            const actions = hero.querySelector(".hero-actions");
-            if (actions && mangaId) actions.insertAdjacentHTML("beforeend", '<a class="title-like-button" href="https://mangadex.org/title/' + encodeURIComponent(mangaId) + '" target="_blank" rel="noopener">Open MangaDex</a>');
-            if (actions && anilistId) actions.insertAdjacentHTML("beforeend", '<a class="title-like-button" href="https://anilist.co/anime/' + encodeURIComponent(anilistId) + '" target="_blank" rel="noopener">Open AniList</a>');
-        }
+        const hero = document.querySelector(".hero"), stack = document.querySelector(".page-stack"); if (!hero || !stack) return;
+        const rating = tmdbId && detail ? (detail.vote_average ? Number(detail.vote_average).toFixed(1) : "—") : (detail && detail.averageScore ? (detail.averageScore / 10).toFixed(1) : "—");
+        const year = tmdbId && detail ? String((detail.first_air_date || detail.release_date || "").slice(0, 4)) : String((detail && detail.seasonYear) || fallback.year || "");
+        const genres = tmdbId && detail ? (detail.genres || []).map(function (genre) { return genre.name; }).join(", ") : ((detail && detail.genres) || []).join(", ");
+        const trailer = tmdbId && detail ? trailerEmbed(detail.videos) : "", cast = tmdbId && detail ? ((detail.credits || {}).cast || []) : [], runtime = tmdbId && detail ? (kind === "tv" ? ((detail.episode_run_time || [])[0] ? detail.episode_run_time[0] + " min / episode" : "") : (detail.runtime ? detail.runtime + " min" : "")) : "";
+        const seasons = kind === "tv" && detail ? (detail.seasons || []).filter(function (season) { return Number(season.season_number) > 0; }) : [], episodes = (seasonData || {}).episodes || [];
+        hero.innerHTML = '<div class="hero-backdrop" style="background-image:linear-gradient(90deg,rgba(0,0,0,.88),rgba(0,0,0,.2)),url(\'' + escapeHtml(backdrop).replace(/&#39;/g, "%27") + '\')"></div><div class="hero-content"><div class="poster-card">' + (poster ? '<img src="' + escapeHtml(poster) + '" alt="' + escapeHtml(title) + '">' : '') + '</div><div class="hero-copy"><div class="eyebrow">' + escapeHtml(kind === "tv" ? "Series spotlight" : "Movie spotlight") + '</div><h1>' + escapeHtml(title) + '</h1><div class="hero-meta"><span>' + escapeHtml(year || "—") + '</span><span>' + escapeHtml(kind === "tv" ? "Series" : (mangaId ? "Manga" : anilistId ? "Anime" : "Movie")) + '</span><span>TMDb ' + escapeHtml(rating) + '</span></div><p>' + escapeHtml(plot || "Details were not returned by the source.") + '</p><div class="hero-actions"><button class="title-like-button" type="button">Like</button><button class="title-like-button" type="button">Loop Play</button></div></div></div>';
+        const facts = fact("Genre", genres) + fact("Released", year) + fact("Runtime", runtime) + fact("Language", tmdbId && detail ? ((detail.spoken_languages || [])[0] || {}).english_name : "") + fact(kind === "tv" ? "Network" : "Director", tmdbId && detail ? (kind === "tv" ? ((detail.networks || [])[0] || {}).name : (((detail.credits || {}).crew || []).filter(function (person) { return person.job === "Director"; }).map(function (person) { return person.name; }).join(", "))) : "") + fact("Source", tmdbId ? "TMDb" : mangaId ? "MangaDex" : "AniList");
+        const episodeControls = kind === "tv" ? '<div class="stream-control-group"><div class="stream-control-head"><div class="stream-label">Season</div></div><select id="watchSeasonSelect" class="season-select" aria-label="Select season">' + seasons.map(function (season) { return '<option value="' + season.season_number + '"' + (Number(season.season_number) === selectedSeason ? " selected" : "") + '>Season ' + season.season_number + '</option>'; }).join("") + '</select></div><div class="stream-control-group"><div class="stream-control-head"><div class="stream-label">Episodes</div><div class="stream-subcopy">Choose an episode to update the player.</div></div><div class="episode-chip-row" id="playerEpisodeRail">' + episodes.map(function (episode) { const image = tmdbImage(episode.still_path, "w300") || backdrop; return '<button class="episode-chip' + (Number(episode.episode_number) === selectedEpisode ? " active" : "") + '" type="button" data-episode="' + episode.episode_number + '">' + (image ? '<img class="episode-chip-image" src="' + escapeHtml(image) + '" alt="">' : "") + '<strong>Episode ' + episode.episode_number + '</strong><span class="episode-chip-title">' + escapeHtml(episode.name || "Episode " + episode.episode_number) + '</span></button>'; }).join("") + '</div></div>' : "";
+        const player = tmdbId ? '<section class="surface stream-shell" id="streamSection"><div class="stream-panel"><div class="watch-header"><div class="watch-topline"><div><div class="section-kicker">Main Player</div><h2>Watch ' + escapeHtml(title) + '</h2></div><div class="stream-meta"><span class="status-chip">Server <strong>VidSrc</strong></span>' + (kind === "tv" ? '<span class="status-chip">Season <strong id="activeSeasonNumber">' + selectedSeason + '</strong></span><span class="status-chip">Episode <strong id="activeEpisodeNumber">' + selectedEpisode + '</strong></span>' : "") + '</div></div><div class="watch-note">If one server does not work, try another supported source.</div></div><div class="stream-stage" id="streamStage"><iframe id="streamFrame" class="stream-frame" src="' + escapeHtml(tmdbStreamUrl(kind, tmdbId, selectedSeason, selectedEpisode)) + '" allow="fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe></div><div class="stream-actions"><button class="stream-action" id="fullscreenToggle" type="button">Fullscreen</button></div><div class="stream-controls">' + episodeControls + '</div></div></section>' : "";
+        stack.innerHTML = player + (trailer ? '<section class="panel surface" id="trailerSection"><div class="section-head"><div><div class="section-kicker">Preview</div><h2>Trailer</h2></div></div><div class="trailer-shell"><iframe class="trailer-frame" src="' + escapeHtml(trailer) + '" title="' + escapeHtml(title) + ' trailer" loading="lazy" allowfullscreen></iframe></div></section>' : "") + '<section class="panel surface"><div class="section-head"><div><div class="section-kicker">Full Details</div><h2>About ' + escapeHtml(title) + '</h2></div></div><div class="snapshot-strip">' + snapshotsMarkup(title, poster, backdrop) + '</div><div class="detail-clusters"><div class="details-card"><div class="stream-label" style="margin-bottom:10px">Story</div><p class="detail-plot">' + escapeHtml(plot || "Details were not returned by the source.") + '</p></div><div class="details-grid">' + facts + '</div>' + (cast.length ? '<div><div class="section-head"><div><div class="section-kicker">Cast</div><h3>Watch More From The Cast</h3></div></div><div class="cast-grid">' + castMarkup(cast) + '</div></div>' : "") + '</div></section>';
+        const frame = document.getElementById("streamFrame"); document.getElementById("fullscreenToggle")?.addEventListener("click", function () { const stage = document.getElementById("streamStage"); if (stage && stage.requestFullscreen) stage.requestFullscreen(); }); document.getElementById("watchSeasonSelect")?.addEventListener("change", function (event) { const next = new URL(location.href); next.searchParams.set("season", event.target.value); next.searchParams.set("episode", "1"); location.href = next.toString(); }); document.querySelectorAll("[data-episode]").forEach(function (button) { button.addEventListener("click", function () { const episode = button.dataset.episode; if (frame) frame.src = tmdbStreamUrl(kind, tmdbId, selectedSeason, episode); document.querySelectorAll("[data-episode]").forEach(function (node) { node.classList.toggle("active", node === button); }); const label = document.getElementById("activeEpisodeNumber"); if (label) label.textContent = episode; const next = new URL(location.href); next.searchParams.set("episode", episode); history.replaceState({}, "", next.toString()); }); });
     }
-
     document.addEventListener("DOMContentLoaded", function () {
         const relativePath = basePath && location.pathname.startsWith(basePath) ? location.pathname.slice(basePath.length) : location.pathname;
         if (/^\/title\/[^/]+\/[^/]+\/?$/.test(relativePath) && !document.getElementById("title-item-data")) {
